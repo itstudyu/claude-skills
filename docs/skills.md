@@ -215,7 +215,7 @@ Every review (CEO, Eng, Design) logs its result. At the end of each review, you 
 +====================================================================+
 ```
 
-Eng Review is the only required gate (disable with `gstack-config set skip_eng_review true`). CEO and Design are informational — recommended for product and UI changes respectively.
+Eng Review is the only required gate (disable with `cs-config set skip_eng_review true`). CEO and Design are informational — recommended for product and UI changes respectively.
 
 ### Plan-to-QA flow
 

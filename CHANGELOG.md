@@ -32,7 +32,7 @@
 ### Changed
 
 - **Skill descriptions are now clean and readable.** Removed the ugly "MANUAL TRIGGER ONLY" prefix from every skill description that was wasting 58 characters and causing build errors for Codex integration.
-- **You can now opt out of proactive skill suggestions.** The first time you run any gstack skill, you'll be asked whether you want gstack to suggest skills during your workflow. If you prefer to invoke skills manually, just say no — it's saved as a global setting. You can change your mind anytime with `gstack-config set proactive true/false`.
+- **You can now opt out of proactive skill suggestions.** The first time you run any gstack skill, you'll be asked whether you want gstack to suggest skills during your workflow. If you prefer to invoke skills manually, just say no — it's saved as a global setting. You can change your mind anytime with `cs-config set proactive true/false`.
 
 ### Fixed
 
@@ -189,7 +189,7 @@ Thanks to @osc, @Explorer1092, @Qike-Li, @francoisaubert1, @itstimwhite, @yinanl
 ### For contributors
 
 - `test/gen-skill-docs.test.ts` validates all `.agents/` descriptions stay within 1024 chars
-- `gstack-update-check` includes a one-time migration that deletes oversized Codex SKILL.md files
+- `cs-update-check` includes a one-time migration that deletes oversized Codex SKILL.md files
 - P1 TODO added: Codex→Claude reverse buddy check skill
 
 ## [0.11.8.0] - 2026-03-23 — zsh Compatibility Fix
@@ -253,9 +253,9 @@ Thanks to @osc, @Explorer1092, @Qike-Li, @francoisaubert1, @itstimwhite, @yinanl
 
 ### Fixed
 
-- **`gstack-review-read` and `gstack-review-log` no longer crash under bash.** These scripts used `source <(gstack-slug)` which silently fails to set variables under bash with `set -euo pipefail`, causing `SLUG: unbound variable` errors. Replaced with `eval "$(gstack-slug)"` which works correctly in both bash and zsh.
-- **All SKILL.md templates updated.** Every template that instructed agents to run `source <(gstack-slug)` now uses `eval "$(gstack-slug)"` for cross-shell compatibility. Regenerated all SKILL.md files from templates.
-- **Regression tests added.** New tests verify `eval "$(gstack-slug)"` works under bash strict mode, and guard against `source <(.*gstack-slug` patterns reappearing in templates or bin scripts.
+- **`cs-review-read` and `cs-review-log` no longer crash under bash.** These scripts used `source <(cs-slug)` which silently fails to set variables under bash with `set -euo pipefail`, causing `SLUG: unbound variable` errors. Replaced with `eval "$(cs-slug)"` which works correctly in both bash and zsh.
+- **All SKILL.md templates updated.** Every template that instructed agents to run `source <(cs-slug)` now uses `eval "$(cs-slug)"` for cross-shell compatibility. Regenerated all SKILL.md files from templates.
+- **Regression tests added.** New tests verify `eval "$(cs-slug)"` works under bash strict mode, and guard against `source <(.*cs-slug` patterns reappearing in templates or bin scripts.
 
 ## [0.11.4.0] - 2026-03-22 — Codex in Office Hours
 
@@ -307,7 +307,7 @@ Thanks to @osc, @Explorer1092, @Qike-Li, @francoisaubert1, @itstimwhite, @yinanl
 
 - **`/retro global` — see everything you shipped across every project in one report.** Scans your Claude Code, Codex CLI, and Gemini CLI sessions, traces each back to its git repo, deduplicates by remote, then runs a full retro across all of them. Global shipping streak, context-switching metrics, per-project breakdowns with personal contributions, and cross-tool usage patterns. Run `/retro global 14d` for a two-week view.
 - **Per-project personal contributions in global retro.** Each project in the global retro now shows YOUR commits, LOC, key work, commit type mix, and biggest ship — separate from team totals. Solo projects say "Solo project — all commits are yours." Team projects you didn't touch show session count only.
-- **`gstack-global-discover` — the engine behind global retro.** Standalone discovery script that finds all AI coding sessions on your machine, resolves working directories to git repos, normalizes SSH/HTTPS remotes for dedup, and outputs structured JSON. Compiled binary ships with gstack — no `bun` runtime needed.
+- **`cs-global-discover` — the engine behind global retro.** Standalone discovery script that finds all AI coding sessions on your machine, resolves working directories to git repos, normalizes SSH/HTTPS remotes for dedup, and outputs structured JSON. Compiled binary ships with gstack — no `bun` runtime needed.
 
 ### Fixed
 
@@ -327,7 +327,7 @@ Thanks to @osc, @Explorer1092, @Qike-Li, @francoisaubert1, @itstimwhite, @yinanl
 
 ### Fixed
 
-- **`gstack-slug` hardened against shell injection.** Output sanitized to alphanumeric, dot, dash, and underscore only. All remaining `eval $(gstack-slug)` callers migrated to `source <(...)`.
+- **`cs-slug` hardened against shell injection.** Output sanitized to alphanumeric, dot, dash, and underscore only. All remaining `eval $(cs-slug)` callers migrated to `source <(...)`.
 - **DNS rebinding protection.** `browse goto` now resolves hostnames to IPs and checks against the metadata blocklist — prevents attacks where a domain initially resolves to a safe IP, then switches to a cloud metadata endpoint.
 - **Concurrent server start race fixed.** An exclusive lockfile prevents two CLI invocations from both killing the old server and starting new ones simultaneously, which could leave orphaned Chromium processes.
 - **Smarter storage redaction.** Key matching now uses underscore-aware boundaries (won't false-positive on `keyboardShortcuts` or `monkeyPatch`). Value detection expanded to cover AWS, Stripe, Anthropic, Google, Sendgrid, and Supabase key prefixes.
@@ -360,8 +360,8 @@ Thanks to @osc, @Explorer1092, @Qike-Li, @francoisaubert1, @itstimwhite, @yinanl
 
 ### Fixed
 
-- **gstack no longer crashes in repos without an `origin` remote.** The `gstack-repo-mode` helper now gracefully handles missing remotes, bare repos, and empty git output — defaulting to `unknown` mode instead of crashing the preamble.
-- **`REPO_MODE` defaults correctly when the helper emits nothing.** Previously an empty response from `gstack-repo-mode` left `REPO_MODE` unset, causing downstream template errors.
+- **gstack no longer crashes in repos without an `origin` remote.** The `cs-repo-mode` helper now gracefully handles missing remotes, bare repos, and empty git output — defaulting to `unknown` mode instead of crashing the preamble.
+- **`REPO_MODE` defaults correctly when the helper emits nothing.** Previously an empty response from `cs-repo-mode` left `REPO_MODE` unset, causing downstream template errors.
 
 ## [0.10.0.0] - 2026-03-22 — Autoplan
 
@@ -430,7 +430,7 @@ Thanks to @osc, @Explorer1092, @Qike-Li, @francoisaubert1, @itstimwhite, @yinanl
 
 ### Changed
 
-- **Codex code reviews now run automatically in `/ship` and `/review`.** No more "want a second opinion?" prompt every time — Codex reviews both your code (with a pass/fail gate) and runs an adversarial challenge by default. First-time users get a one-time opt-in prompt; after that, it's hands-free. Configure with `gstack-config set codex_reviews enabled|disabled`.
+- **Codex code reviews now run automatically in `/ship` and `/review`.** No more "want a second opinion?" prompt every time — Codex reviews both your code (with a pass/fail gate) and runs an adversarial challenge by default. First-time users get a one-time opt-in prompt; after that, it's hands-free. Configure with `cs-config set codex_reviews enabled|disabled`.
 - **All Codex operations use maximum reasoning power.** Review, adversarial, and consult modes all use `xhigh` reasoning effort — when an AI is reviewing your code, you want it thinking as hard as possible.
 - **Codex review errors can't corrupt the dashboard.** Auth failures, timeouts, and empty responses are now detected before logging results, so the Review Readiness Dashboard never shows a false "passed" entry. Adversarial stderr is captured separately.
 - **Codex review log includes commit hash.** Staleness detection now works correctly for Codex reviews, matching the same commit-tracking behavior as eng/CEO/design reviews.
@@ -491,9 +491,9 @@ Thanks to @osc, @Explorer1092, @Qike-Li, @francoisaubert1, @itstimwhite, @yinanl
 
 ### Added
 
-- **You can now see how you use gstack.** Run `gstack-analytics` to see a personal usage dashboard — which skills you use most, how long they take, your success rate. All data stays local on your machine.
-- **Opt-in community telemetry.** On first run, gstack asks if you want to share anonymous usage data (skill names, duration, crash info — never code or file paths). Choose "yes" and you're part of the community pulse. Change anytime with `gstack-config set telemetry off`.
-- **Community health dashboard.** Run `gstack-community-dashboard` to see what the gstack community is building — most popular skills, crash clusters, version distribution. All powered by Supabase.
+- **You can now see how you use gstack.** Run `cs-analytics` to see a personal usage dashboard — which skills you use most, how long they take, your success rate. All data stays local on your machine.
+- **Opt-in community telemetry.** On first run, gstack asks if you want to share anonymous usage data (skill names, duration, crash info — never code or file paths). Choose "yes" and you're part of the community pulse. Change anytime with `cs-config set telemetry off`.
+- **Community health dashboard.** Run `cs-community-dashboard` to see what the gstack community is building — most popular skills, crash clusters, version distribution. All powered by Supabase.
 - **Install base tracking via update check.** When telemetry is enabled, gstack fires a parallel ping to Supabase during update checks — giving us an install-base count without adding any latency. Respects your telemetry setting (default off). GitHub remains the primary version source.
 - **Crash clustering.** Errors are automatically grouped by type and version in the Supabase backend, so the most impactful bugs surface first.
 - **Upgrade funnel tracking.** We can now see how many people see upgrade prompts vs actually upgrade — helps us ship better releases.
@@ -505,7 +505,7 @@ Thanks to @osc, @Explorer1092, @Qike-Li, @francoisaubert1, @itstimwhite, @yinanl
 ### Fixed
 
 - **`/retro` now counts full calendar days.** Running a retro late at night no longer silently misses commits from earlier in the day. Git treats bare dates like `--since="2026-03-11"` as "11pm on March 11" if you run it at 11pm — now we pass `--since="2026-03-11T00:00:00"` so it always starts from midnight. Compare mode windows get the same fix.
-- **Review log no longer breaks on branch names with `/`.** Branch names like `garrytan/design-system` caused review log writes to fail because Claude Code runs multi-line bash blocks as separate shell invocations, losing variables between commands. New `gstack-review-log` and `gstack-review-read` atomic helpers encapsulate the entire operation in a single command.
+- **Review log no longer breaks on branch names with `/`.** Branch names like `garrytan/design-system` caused review log writes to fail because Claude Code runs multi-line bash blocks as separate shell invocations, losing variables between commands. New `cs-review-log` and `cs-review-read` atomic helpers encapsulate the entire operation in a single command.
 - **All skill templates are now platform-agnostic.** Removed Rails-specific patterns (`bin/test-lane`, `RAILS_ENV`, `.includes()`, `rescue StandardError`, etc.) from `/ship`, `/review`, `/plan-ceo-review`, and `/plan-eng-review`. The review checklist now shows examples for Rails, Node, Python, and Django side-by-side.
 - **`/ship` reads CLAUDE.md to discover test commands** instead of hardcoding `bin/test-lane` and `npm run test`. If no test commands are found, it asks the user and persists the answer to CLAUDE.md.
 
@@ -537,7 +537,7 @@ Thanks to @osc, @Explorer1092, @Qike-Li, @francoisaubert1, @itstimwhite, @yinanl
 - **Browse no longer navigates to dangerous URLs.** `goto`, `diff`, and `newtab` now block `file://`, `javascript:`, `data:` schemes and cloud metadata endpoints (`169.254.169.254`, `metadata.google.internal`). Localhost and private IPs are still allowed for local QA testing. (Closes #17)
 - **Setup script tells you what's missing.** Running `./setup` without `bun` installed now shows a clear error with install instructions instead of a cryptic "command not found." (Closes #147)
 - **`/debug` renamed to `/investigate`.** Claude Code has a built-in `/debug` command that shadowed the gstack skill. The systematic root-cause debugging workflow now lives at `/investigate`. (Closes #190)
-- **Shell injection surface reduced.** gstack-slug output is now sanitized to `[a-zA-Z0-9._-]` only, making both `eval` and `source` callers safe. (Closes #133)
+- **Shell injection surface reduced.** cs-slug output is now sanitized to `[a-zA-Z0-9._-]` only, making both `eval` and `source` callers safe. (Closes #133)
 - **25 new security tests.** URL validation (16 tests) and path traversal validation (14 tests) now have dedicated unit test suites covering scheme blocking, metadata IP blocking, directory escapes, and prefix collision edge cases.
 
 ## [0.8.2] - 2026-03-19
@@ -645,7 +645,7 @@ When something is broken and you don't know why, `/debug` is your systematic deb
 ### Added
 
 - **Every PR touching frontend code now gets a design review automatically.** `/review` and `/ship` apply a 20-item design checklist against changed CSS, HTML, JSX, and view files. Catches AI slop patterns (purple gradients, 3-column icon grids, generic hero copy), typography issues (body text < 16px, blacklisted fonts), accessibility gaps (`outline: none`), and `!important` abuse. Mechanical CSS fixes are auto-applied; design judgment calls ask you first.
-- **`gstack-diff-scope` categorizes what changed in your branch.** Run `source <(gstack-diff-scope main)` and get `SCOPE_FRONTEND=true/false`, `SCOPE_BACKEND`, `SCOPE_PROMPTS`, `SCOPE_TESTS`, `SCOPE_DOCS`, `SCOPE_CONFIG`. Design review uses it to skip silently on backend-only PRs. Ship pre-flight uses it to recommend design review when frontend files are touched.
+- **`cs-diff-scope` categorizes what changed in your branch.** Run `source <(cs-diff-scope main)` and get `SCOPE_FRONTEND=true/false`, `SCOPE_BACKEND`, `SCOPE_PROMPTS`, `SCOPE_TESTS`, `SCOPE_DOCS`, `SCOPE_CONFIG`. Design review uses it to skip silently on backend-only PRs. Ship pre-flight uses it to recommend design review when frontend files are touched.
 - **Design review shows up in the Review Readiness Dashboard.** The dashboard now distinguishes between "LITE" (code-level, runs automatically in /review and /ship) and "FULL" (visual audit via /plan-design-review with browse binary). Both show up as Design Review entries.
 - **E2E eval for design review detection.** Planted CSS/HTML fixtures with 7 known anti-patterns (Papyrus font, 14px body text, `outline: none`, `!important`, purple gradient, generic hero copy, 3-column feature grid). The eval verifies `/review` catches at least 4 of 7.
 
@@ -740,7 +740,7 @@ Read the philosophy: https://garryslist.org/posts/boil-the-ocean
 - **New mode: SELECTIVE EXPANSION.** Hold your current scope as the baseline, but see what else is possible. The agent surfaces expansion opportunities one by one with neutral recommendations — you cherry-pick the ones worth doing. Perfect for iterating on existing features where you want rigor but also want to be tempted by adjacent improvements.
 - **Your CEO review visions are saved, not lost.** Expansion ideas, cherry-pick decisions, and 10x visions are now persisted to `~/.gstack/projects/{repo}/ceo-plans/` as structured design documents. Stale plans get archived automatically. If a vision is exceptional, you can promote it to `docs/designs/` in your repo for the team.
 
-- **Smarter ship gates.** `/ship` no longer nags you about CEO and Design reviews when they're not relevant. Eng Review is the only required gate (and you can disable even that with `gstack-config set skip_eng_review true`). CEO Review is recommended for big product changes; Design Review for UI work. The dashboard still shows all three — it just won't block you for the optional ones.
+- **Smarter ship gates.** `/ship` no longer nags you about CEO and Design reviews when they're not relevant. Eng Review is the only required gate (and you can disable even that with `cs-config set skip_eng_review true`). CEO Review is recommended for big product changes; Design Review for UI work. The dashboard still shows all three — it just won't block you for the optional ones.
 
 ### For contributors
 
@@ -761,13 +761,13 @@ Read the philosophy: https://garryslist.org/posts/boil-the-ocean
 ## 0.5.1 — 2026-03-17
 - **Know where you stand before you ship.** Every `/plan-ceo-review`, `/plan-eng-review`, and `/plan-design-review` now logs its result to a review tracker. At the end of each review, you see a **Review Readiness Dashboard** showing which reviews are done, when they ran, and whether they're clean — with a clear CLEARED TO SHIP or NOT READY verdict.
 - **`/ship` checks your reviews before creating the PR.** Pre-flight now reads the dashboard and asks if you want to continue when reviews are missing. Informational only — it won't block you, but you'll know what you skipped.
-- **One less thing to copy-paste.** The SLUG computation (that opaque sed pipeline for computing `owner-repo` from git remote) is now a shared `bin/gstack-slug` helper. All 14 inline copies across templates replaced with `source <(gstack-slug)`. If the format ever changes, fix it once.
+- **One less thing to copy-paste.** The SLUG computation (that opaque sed pipeline for computing `owner-repo` from git remote) is now a shared `bin/cs-slug` helper. All 14 inline copies across templates replaced with `source <(cs-slug)`. If the format ever changes, fix it once.
 - **Screenshots are now visible during QA and browse sessions.** When gstack takes screenshots, they now show up as clickable image elements in your output — no more invisible `/tmp/browse-screenshot.png` paths you can't see. Works in `/qa`, `/qa-only`, `/plan-design-review`, `/qa-design-review`, `/browse`, and `/gstack`.
 
 ### For contributors
 
 - Added `{{REVIEW_DASHBOARD}}` resolver to `gen-skill-docs.ts` — shared dashboard reader injected into 4 templates (3 review skills + ship).
-- Added `bin/gstack-slug` helper (5-line bash) with unit tests. Outputs `SLUG=` and `BRANCH=` lines, sanitizes `/` to `-`.
+- Added `bin/cs-slug` helper (5-line bash) with unit tests. Outputs `SLUG=` and `BRANCH=` lines, sanitizes `/` to `-`.
 - New TODOs: smart review relevance detection (P3), `/merge` skill for review-gated PR merge (P2).
 
 ## 0.5.0 — 2026-03-16
@@ -814,7 +814,7 @@ Read the philosophy: https://garryslist.org/posts/boil-the-ocean
 ### For contributors
 
 - Split `last-update-check` cache TTL: 60 min for `UP_TO_DATE`, 720 min for `UPGRADE_AVAILABLE`.
-- Added `--force` flag to `bin/gstack-update-check` (deletes cache file before checking).
+- Added `--force` flag to `bin/cs-update-check` (deletes cache file before checking).
 - 3 new tests: `--force` busts UP_TO_DATE cache, `--force` busts UPGRADE_AVAILABLE cache, 60-min TTL boundary test with `utimesSync`.
 
 ## 0.4.3 — 2026-03-16
@@ -851,7 +851,7 @@ Read the philosophy: https://garryslist.org/posts/boil-the-ocean
 
 ## 0.4.1 — 2026-03-16
 
-- **gstack now notices when it screws up.** Turn on contributor mode (`gstack-config set gstack_contributor true`) and gstack automatically writes up what went wrong — what you were doing, what broke, repro steps. Next time something annoys you, the bug report is already written. Fork gstack and fix it yourself.
+- **gstack now notices when it screws up.** Turn on contributor mode (`cs-config set gstack_contributor true`) and gstack automatically writes up what went wrong — what you were doing, what broke, repro steps. Next time something annoys you, the bug report is already written. Fork gstack and fix it yourself.
 - **Juggling multiple sessions? gstack keeps up.** When you have 3+ gstack windows open, every question now tells you which project, which branch, and what you were working on. No more staring at a question thinking "wait, which window is this?"
 - **Every question now comes with a recommendation.** Instead of dumping options on you and making you think, gstack tells you what it would pick and why. Same clear format across every skill.
 - **/review now catches forgotten enum handlers.** Add a new status, tier, or type constant? /review traces it through every switch statement, allowlist, and filter in your codebase — not just the files you changed. Catches the "added the value but forgot to handle it" class of bugs before they ship.
@@ -890,12 +890,12 @@ Read the philosophy: https://garryslist.org/posts/boil-the-ocean
 ## 0.3.9 — 2026-03-15
 
 ### Added
-- **`bin/gstack-config` CLI** — simple get/set/list interface for `~/.gstack/config.yaml`. Used by update-check and upgrade skill for persistent settings (auto_upgrade, update_check).
+- **`bin/cs-config` CLI** — simple get/set/list interface for `~/.gstack/config.yaml`. Used by update-check and upgrade skill for persistent settings (auto_upgrade, update_check).
 - **Smart update check** — 12h cache TTL (was 24h), exponential snooze backoff (24h → 48h → 1 week) when user declines upgrades, `update_check: false` config option to disable checks entirely. Snooze resets when a new version is released.
 - **Auto-upgrade mode** — set `auto_upgrade: true` in config or `GSTACK_AUTO_UPGRADE=1` env var to skip the upgrade prompt and update automatically.
 - **4-option upgrade prompt** — "Yes, upgrade now", "Always keep me up to date", "Not now" (snooze), "Never ask again" (disable).
 - **Vendored copy sync** — `/gstack-upgrade` now detects and updates local vendored copies in the current project after upgrading the primary install.
-- 25 new tests: 11 for gstack-config CLI, 14 for snooze/config paths in update-check.
+- 25 new tests: 11 for cs-config CLI, 14 for snooze/config paths in update-check.
 
 ### Changed
 - README upgrade/troubleshooting sections simplified to reference `/gstack-upgrade` instead of long paste commands.

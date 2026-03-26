@@ -70,8 +70,8 @@ After the user chooses, execute their choice (commit or stash), then continue wi
 ```bash
 _ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
 B=""
-[ -n "$_ROOT" ] && [ -x "$_ROOT/.claude/skills/claude-skills/browse/dist/browse" ] && B="$_ROOT/.claude/skills/claude-skills/browse/dist/browse"
-[ -z "$B" ] && B=~/.claude/skills/claude-skills/browse/dist/browse
+[ -n "$_ROOT" ] && [ -x "$_ROOT/.claude/skills/browse/dist/browse" ] && B="$_ROOT/.claude/skills/browse/dist/browse"
+[ -z "$B" ] && B=~/.claude/skills/browse/dist/browse
 if [ -x "$B" ]; then
   echo "READY: $B"
 else
@@ -499,7 +499,7 @@ Compare screenshots and observations across pages for:
 
 **Project-scoped:**
 ```bash
-eval "$(~/.claude/skills/claude-skills/bin/gstack-slug 2>/dev/null)" && mkdir -p ~/.claude-skills/projects/$SLUG
+eval "$(~/.claude/skills/claude-skills/bin/cs-slug 2>/dev/null)" && mkdir -p ~/.claude-skills/projects/$SLUG
 ```
 Write to: `~/.claude-skills/projects/{slug}/{user}-{branch}-design-audit-{datetime}.md`
 
@@ -750,7 +750,7 @@ Merge findings into the triage with `[codex]` / `[subagent]` / `[cross-model]` t
 
 **Log the result:**
 ```bash
-~/.claude/skills/claude-skills/bin/gstack-review-log '{"skill":"design-outside-voices","timestamp":"'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'","status":"STATUS","source":"SOURCE","commit":"'"$(git rev-parse --short HEAD)"'"}'
+~/.claude/skills/claude-skills/bin/cs-review-log '{"skill":"design-outside-voices","timestamp":"'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'","status":"STATUS","source":"SOURCE","commit":"'"$(git rev-parse --short HEAD)"'"}'
 ```
 Replace STATUS with "clean" or "issues_found", SOURCE with "codex+subagent", "codex-only", "subagent-only", or "unavailable".
 
@@ -867,7 +867,7 @@ Write the report to both local and project-scoped locations:
 
 **Project-scoped:**
 ```bash
-eval "$(~/.claude/skills/claude-skills/bin/gstack-slug 2>/dev/null)" && mkdir -p ~/.claude-skills/projects/$SLUG
+eval "$(~/.claude/skills/claude-skills/bin/cs-slug 2>/dev/null)" && mkdir -p ~/.claude-skills/projects/$SLUG
 ```
 Write to `~/.claude-skills/projects/{slug}/{user}-{branch}-design-audit-{datetime}.md`
 

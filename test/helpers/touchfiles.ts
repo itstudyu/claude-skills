@@ -77,7 +77,7 @@ export const E2E_TOUCHFILES: Record<string, string[]> = {
   'codex-offered-eng-review':    ['plan-eng-review/**', 'scripts/gen-skill-docs.ts'],
 
   // Ship
-  'ship-base-branch': ['ship/**', 'bin/gstack-repo-mode'],
+  'ship-base-branch': ['ship/**', 'bin/cs-repo-mode'],
   'ship-local-workflow': ['ship/**', 'scripts/gen-skill-docs.ts'],
 
   // Retro
@@ -85,7 +85,7 @@ export const E2E_TOUCHFILES: Record<string, string[]> = {
   'retro-base-branch': ['retro/**'],
 
   // Global discover
-  'global-discover':   ['bin/gstack-global-discover.ts', 'test/global-discover.test.ts'],
+  'global-discover':   ['bin/cs-global-discover.ts', 'test/global-discover.test.ts'],
 
   // CSO
   'cso-full-audit':   ['cso/**'],
@@ -108,10 +108,10 @@ export const E2E_TOUCHFILES: Record<string, string[]> = {
 
 
   // Coverage audit (shared fixture) + triage + gates
-  'ship-coverage-audit': ['ship/**', 'test/fixtures/coverage-audit-fixture.ts', 'bin/gstack-repo-mode'],
+  'ship-coverage-audit': ['ship/**', 'test/fixtures/coverage-audit-fixture.ts', 'bin/cs-repo-mode'],
   'review-coverage-audit': ['review/**', 'test/fixtures/coverage-audit-fixture.ts'],
   'plan-eng-coverage-audit': ['plan-eng-review/**', 'test/fixtures/coverage-audit-fixture.ts'],
-  'ship-triage': ['ship/**', 'bin/gstack-repo-mode'],
+  'ship-triage': ['ship/**', 'bin/cs-repo-mode'],
 
   // Plan completion audit + verification
   'ship-plan-completion': ['ship/**', 'scripts/gen-skill-docs.ts'],

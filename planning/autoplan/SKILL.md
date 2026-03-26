@@ -11,7 +11,6 @@ description: |
   automatically", or "make the decisions for me".
   Proactively suggest when the user has a plan file and wants to run the full review
   gauntlet without answering 15-30 intermediate questions.
-benefits-from: [office-hours]
 allowed-tools:
   - Bash
   - Read
@@ -42,57 +41,6 @@ Print the detected base branch name. In every subsequent `git diff`, `git log`,
 branch name wherever the instructions say "the base branch."
 
 ---
-
-## Prerequisite Skill Offer
-
-When the design doc check above prints "No design doc found," offer the prerequisite
-skill before proceeding.
-
-Say to the user via AskUserQuestion:
-
-> "No design doc found for this branch. `/office-hours` produces a structured problem
-> statement, premise challenge, and explored alternatives — it gives this review much
-> sharper input to work with. Takes about 10 minutes. The design doc is per-feature,
-> not per-product — it captures the thinking behind this specific change."
-
-Options:
-- A) Run /office-hours now (we'll pick up the review right after)
-- B) Skip — proceed with standard review
-
-If they skip: "No worries — standard review. If you ever want sharper input, try
-/office-hours first next time." Then proceed normally. Do not re-offer later in the session.
-
-If they choose A:
-
-Say: "Running /office-hours inline. Once the design doc is ready, I'll pick up
-the review right where we left off."
-
-Read the office-hours skill file from disk using the Read tool:
-`~/.claude/skills/claude-skills/office-hours/SKILL.md`
-
-Follow it inline, **skipping these sections** (already handled by the parent skill):
-- Preamble (run first)
-- AskUserQuestion Format
-- Completeness Principle — Boil the Lake
-- Search Before Building
-- Contributor Mode
-- Completion Status Protocol
-- Telemetry (run last)
-
-If the Read fails (file not found), say:
-"Could not load /office-hours — proceeding with standard review."
-
-After /office-hours completes, re-run the design doc check:
-```bash
-SLUG=$(~/.claude/skills/claude-skills/browse/bin/remote-slug 2>/dev/null || basename "$(git rev-parse --show-toplevel 2>/dev/null || pwd)")
-BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null | tr '/' '-' || echo 'no-branch')
-DESIGN=$(ls -t ~/.claude-skills/projects/$SLUG/*-$BRANCH-design-*.md 2>/dev/null | head -1)
-[ -z "$DESIGN" ] && DESIGN=$(ls -t ~/.claude-skills/projects/$SLUG/*-design-*.md 2>/dev/null | head -1)
-[ -n "$DESIGN" ] && echo "Design doc found: $DESIGN" || echo "No design doc found"
-```
-
-If a design doc is now found, read it and continue the review.
-If none was produced (user may have cancelled), proceed with standard review.
 
 # /autoplan — Auto-Review Pipeline
 
@@ -184,7 +132,7 @@ State what you examined and why nothing was flagged (1-2 sentences minimum).
 Before doing anything, save the plan file's current state to an external file:
 
 ```bash
-eval "$(~/.claude/skills/claude-skills/bin/gstack-slug 2>/dev/null)" && mkdir -p ~/.claude-skills/projects/$SLUG
+eval "$(~/.claude/skills/claude-skills/bin/cs-slug 2>/dev/null)" && mkdir -p ~/.claude-skills/projects/$SLUG
 BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null | tr '/' '-')
 DATETIME=$(date +%Y%m%d-%H%M%S)
 echo "RESTORE_PATH=$HOME/.claude-skills/projects/$SLUG/${BRANCH}-autoplan-restore-${DATETIME}.md"
@@ -223,17 +171,10 @@ Read each file using the Read tool:
 
 **Section skip list — when following a loaded skill file, SKIP these sections
 (they are already handled by /autoplan):**
-- Preamble (run first)
-- AskUserQuestion Format
-- Completeness Principle — Boil the Lake
-- Search Before Building
-- Contributor Mode
-- Completion Status Protocol
-- Telemetry (run last)
 - Step 0: Detect base branch
 - Review Readiness Dashboard
 - Plan File Review Report
-- Prerequisite Skill Offer (BENEFITS_FROM)
+- Prerequisite Skill Offer
 - Outside Voice — Independent Plan Challenge
 - Design Outside Voices (parallel)
 
@@ -655,28 +596,28 @@ On approval, write 3 separate review log entries so /ship's dashboard recognizes
 COMMIT=$(git rev-parse --short HEAD 2>/dev/null)
 TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 
-~/.claude/skills/claude-skills/bin/gstack-review-log '{"skill":"plan-ceo-review","timestamp":"'"$TIMESTAMP"'","status":"clean","unresolved":0,"critical_gaps":0,"mode":"SELECTIVE_EXPANSION","via":"autoplan","commit":"'"$COMMIT"'"}'
+~/.claude/skills/claude-skills/bin/cs-review-log '{"skill":"plan-ceo-review","timestamp":"'"$TIMESTAMP"'","status":"clean","unresolved":0,"critical_gaps":0,"mode":"SELECTIVE_EXPANSION","via":"autoplan","commit":"'"$COMMIT"'"}'
 
-~/.claude/skills/claude-skills/bin/gstack-review-log '{"skill":"plan-eng-review","timestamp":"'"$TIMESTAMP"'","status":"clean","unresolved":0,"critical_gaps":0,"issues_found":0,"mode":"FULL_REVIEW","via":"autoplan","commit":"'"$COMMIT"'"}'
+~/.claude/skills/claude-skills/bin/cs-review-log '{"skill":"plan-eng-review","timestamp":"'"$TIMESTAMP"'","status":"clean","unresolved":0,"critical_gaps":0,"issues_found":0,"mode":"FULL_REVIEW","via":"autoplan","commit":"'"$COMMIT"'"}'
 ```
 
 If Phase 2 ran (UI scope):
 ```bash
-~/.claude/skills/claude-skills/bin/gstack-review-log '{"skill":"plan-design-review","timestamp":"'"$TIMESTAMP"'","status":"clean","unresolved":0,"via":"autoplan","commit":"'"$COMMIT"'"}'
+~/.claude/skills/claude-skills/bin/cs-review-log '{"skill":"plan-design-review","timestamp":"'"$TIMESTAMP"'","status":"clean","unresolved":0,"via":"autoplan","commit":"'"$COMMIT"'"}'
 ```
 
 Replace field values with actual counts from the review.
 
 Dual voice logs (one per phase that ran):
 ```bash
-~/.claude/skills/claude-skills/bin/gstack-review-log '{"skill":"autoplan-voices","timestamp":"'"$TIMESTAMP"'","status":"STATUS","source":"SOURCE","phase":"ceo","via":"autoplan","consensus_confirmed":N,"consensus_disagree":N,"commit":"'"$COMMIT"'"}'
+~/.claude/skills/claude-skills/bin/cs-review-log '{"skill":"autoplan-voices","timestamp":"'"$TIMESTAMP"'","status":"STATUS","source":"SOURCE","phase":"ceo","via":"autoplan","consensus_confirmed":N,"consensus_disagree":N,"commit":"'"$COMMIT"'"}'
 
-~/.claude/skills/claude-skills/bin/gstack-review-log '{"skill":"autoplan-voices","timestamp":"'"$TIMESTAMP"'","status":"STATUS","source":"SOURCE","phase":"eng","via":"autoplan","consensus_confirmed":N,"consensus_disagree":N,"commit":"'"$COMMIT"'"}'
+~/.claude/skills/claude-skills/bin/cs-review-log '{"skill":"autoplan-voices","timestamp":"'"$TIMESTAMP"'","status":"STATUS","source":"SOURCE","phase":"eng","via":"autoplan","consensus_confirmed":N,"consensus_disagree":N,"commit":"'"$COMMIT"'"}'
 ```
 
 If Phase 2 ran (UI scope), also log:
 ```bash
-~/.claude/skills/claude-skills/bin/gstack-review-log '{"skill":"autoplan-voices","timestamp":"'"$TIMESTAMP"'","status":"STATUS","source":"SOURCE","phase":"design","via":"autoplan","consensus_confirmed":N,"consensus_disagree":N,"commit":"'"$COMMIT"'"}'
+~/.claude/skills/claude-skills/bin/cs-review-log '{"skill":"autoplan-voices","timestamp":"'"$TIMESTAMP"'","status":"STATUS","source":"SOURCE","phase":"design","via":"autoplan","consensus_confirmed":N,"consensus_disagree":N,"commit":"'"$COMMIT"'"}'
 ```
 
 SOURCE = "codex+subagent", "codex-only", "subagent-only", or "unavailable".

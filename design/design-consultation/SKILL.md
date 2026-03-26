@@ -52,7 +52,7 @@ ls src/ app/ pages/ components/ 2>/dev/null | head -30
 Look for office-hours output:
 
 ```bash
-eval "$(~/.claude/skills/claude-skills/bin/gstack-slug 2>/dev/null)"
+eval "$(~/.claude/skills/claude-skills/bin/cs-slug 2>/dev/null)"
 ls ~/.claude-skills/projects/$SLUG/*office-hours* 2>/dev/null | head -5
 ls .context/*office-hours* .context/attachments/*office-hours* 2>/dev/null | head -5
 ```
@@ -68,8 +68,8 @@ If the codebase is empty and purpose is unclear, say: *"I don't have a clear pic
 ```bash
 _ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
 B=""
-[ -n "$_ROOT" ] && [ -x "$_ROOT/.claude/skills/claude-skills/browse/dist/browse" ] && B="$_ROOT/.claude/skills/claude-skills/browse/dist/browse"
-[ -z "$B" ] && B=~/.claude/skills/claude-skills/browse/dist/browse
+[ -n "$_ROOT" ] && [ -x "$_ROOT/.claude/skills/browse/dist/browse" ] && B="$_ROOT/.claude/skills/browse/dist/browse"
+[ -z "$B" ] && B=~/.claude/skills/browse/dist/browse
 if [ -x "$B" ]; then
   echo "READY: $B"
 else
@@ -209,7 +209,7 @@ Present subagent output under a `CLAUDE SUBAGENT (design direction):` header.
 
 **Log the result:**
 ```bash
-~/.claude/skills/claude-skills/bin/gstack-review-log '{"skill":"design-outside-voices","timestamp":"'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'","status":"STATUS","source":"SOURCE","commit":"'"$(git rev-parse --short HEAD)"'"}'
+~/.claude/skills/claude-skills/bin/cs-review-log '{"skill":"design-outside-voices","timestamp":"'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'","status":"STATUS","source":"SOURCE","commit":"'"$(git rev-parse --short HEAD)"'"}'
 ```
 Replace STATUS with "clean" or "issues_found", SOURCE with "codex+subagent", "codex-only", "subagent-only", or "unavailable".
 

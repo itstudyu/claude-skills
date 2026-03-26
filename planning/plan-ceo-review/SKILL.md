@@ -11,7 +11,6 @@ description: |
   or "is this ambitious enough".
   Proactively suggest when the user is questioning scope or ambition of a plan,
   or when the plan feels like it could be thinking bigger.
-benefits-from: [office-hours]
 allowed-tools:
   - Read
   - Grep
@@ -127,94 +126,7 @@ DESIGN=$(ls -t ~/.claude-skills/projects/$SLUG/*-$BRANCH-design-*.md 2>/dev/null
 [ -z "$DESIGN" ] && DESIGN=$(ls -t ~/.claude-skills/projects/$SLUG/*-design-*.md 2>/dev/null | head -1)
 [ -n "$DESIGN" ] && echo "Design doc found: $DESIGN" || echo "No design doc found"
 ```
-If a design doc exists (from `/office-hours`), read it. Use it as the source of truth for the problem statement, constraints, and chosen approach. If it has a `Supersedes:` field, note that this is a revised design.
-
-**Handoff note check** (reuses $SLUG and $BRANCH from the design doc check above):
-```bash
-HANDOFF=$(ls -t ~/.claude-skills/projects/$SLUG/*-$BRANCH-ceo-handoff-*.md 2>/dev/null | head -1)
-[ -n "$HANDOFF" ] && echo "HANDOFF_FOUND: $HANDOFF" || echo "NO_HANDOFF"
-```
-If this block runs in a separate shell from the design doc check, recompute $SLUG and $BRANCH first using the same commands from that block.
-If a handoff note is found: read it. This contains system audit findings and discussion
-from a prior CEO review session that paused so the user could run `/office-hours`. Use it
-as additional context alongside the design doc. The handoff note helps you avoid re-asking
-questions the user already answered. Do NOT skip any steps — run the full review, but use
-the handoff note to inform your analysis and avoid redundant questions.
-
-Tell the user: "Found a handoff note from your prior CEO review session. I'll use that
-context to pick up where we left off."
-
-## Prerequisite Skill Offer
-
-When the design doc check above prints "No design doc found," offer the prerequisite
-skill before proceeding.
-
-Say to the user via AskUserQuestion:
-
-> "No design doc found for this branch. `/office-hours` produces a structured problem
-> statement, premise challenge, and explored alternatives — it gives this review much
-> sharper input to work with. Takes about 10 minutes. The design doc is per-feature,
-> not per-product — it captures the thinking behind this specific change."
-
-Options:
-- A) Run /office-hours now (we'll pick up the review right after)
-- B) Skip — proceed with standard review
-
-If they skip: "No worries — standard review. If you ever want sharper input, try
-/office-hours first next time." Then proceed normally. Do not re-offer later in the session.
-
-If they choose A:
-
-Say: "Running /office-hours inline. Once the design doc is ready, I'll pick up
-the review right where we left off."
-
-Read the office-hours skill file from disk using the Read tool:
-`~/.claude/skills/claude-skills/office-hours/SKILL.md`
-
-Follow it inline, **skipping these sections** (already handled by the parent skill):
-- Preamble (run first)
-- AskUserQuestion Format
-- Completeness Principle — Boil the Lake
-- Search Before Building
-- Contributor Mode
-- Completion Status Protocol
-- Telemetry (run last)
-
-If the Read fails (file not found), say:
-"Could not load /office-hours — proceeding with standard review."
-
-After /office-hours completes, re-run the design doc check:
-```bash
-SLUG=$(~/.claude/skills/claude-skills/browse/bin/remote-slug 2>/dev/null || basename "$(git rev-parse --show-toplevel 2>/dev/null || pwd)")
-BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null | tr '/' '-' || echo 'no-branch')
-DESIGN=$(ls -t ~/.claude-skills/projects/$SLUG/*-$BRANCH-design-*.md 2>/dev/null | head -1)
-[ -z "$DESIGN" ] && DESIGN=$(ls -t ~/.claude-skills/projects/$SLUG/*-design-*.md 2>/dev/null | head -1)
-[ -n "$DESIGN" ] && echo "Design doc found: $DESIGN" || echo "No design doc found"
-```
-
-If a design doc is now found, read it and continue the review.
-If none was produced (user may have cancelled), proceed with standard review.
-
-**Mid-session detection:** During Step 0A (Premise Challenge), if the user can't
-articulate the problem, keeps changing the problem statement, answers with "I'm not
-sure," or is clearly exploring rather than reviewing — offer `/office-hours`:
-
-> "It sounds like you're still figuring out what to build — that's totally fine, but
-> that's what /office-hours is designed for. Want to run /office-hours right now?
-> We'll pick up right where we left off."
-
-Options: A) Yes, run /office-hours now. B) No, keep going.
-If they keep going, proceed normally — no guilt, no re-asking.
-
-If they choose A: Read the office-hours skill file from disk:
-`~/.claude/skills/claude-skills/office-hours/SKILL.md`
-
-Follow it inline, skipping these sections (already handled by parent skill):
-Preamble, AskUserQuestion Format, Completeness Principle, Search Before Building,
-Contributor Mode, Completion Status Protocol, Telemetry.
-
-Note current Step 0A progress so you don't re-ask questions already answered.
-After completion, re-run the design doc check and resume the review.
+If a design doc exists, read it. Use it as the source of truth for the problem statement, constraints, and chosen approach. If it has a `Supersedes:` field, note that this is a revised design.
 
 When reading TODOS.md, specifically:
 * Note any TODOs this plan touches, blocks, or unlocks
@@ -331,7 +243,7 @@ Rules:
 After the opt-in/cherry-pick ceremony, write the plan to disk so the vision and decisions survive beyond this conversation. Only run this step for EXPANSION and SELECTIVE EXPANSION modes.
 
 ```bash
-eval "$(~/.claude/skills/claude-skills/bin/gstack-slug 2>/dev/null)" && mkdir -p ~/.claude-skills/projects/$SLUG/ceo-plans
+eval "$(~/.claude/skills/claude-skills/bin/cs-slug 2>/dev/null)" && mkdir -p ~/.claude-skills/projects/$SLUG/ceo-plans
 ```
 
 Before writing, check for existing CEO plans in the ceo-plans/ directory. If any are >30 days old or their branch has been merged/deleted, offer to archive them:
@@ -824,7 +736,7 @@ If no tension points exist, note: "No cross-model tension — both reviewers agr
 
 **Persist the result:**
 ```bash
-~/.claude/skills/claude-skills/bin/gstack-review-log '{"skill":"codex-plan-review","timestamp":"'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'","status":"STATUS","source":"SOURCE","commit":"'"$(git rev-parse --short HEAD)"'"}'
+~/.claude/skills/claude-skills/bin/cs-review-log '{"skill":"codex-plan-review","timestamp":"'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'","status":"STATUS","source":"SOURCE","commit":"'"$(git rev-parse --short HEAD)"'"}'
 ```
 
 Substitute: STATUS = "clean" if no findings, "issues_found" if findings exist.
@@ -945,7 +857,7 @@ After producing the Completion Summary, clean up any handoff notes for this bran
 the review is complete and the context is no longer needed.
 
 ```bash
-eval "$(~/.claude/skills/claude-skills/bin/gstack-slug 2>/dev/null)"
+eval "$(~/.claude/skills/claude-skills/bin/cs-slug 2>/dev/null)"
 rm -f ~/.claude-skills/projects/$SLUG/*-$BRANCH-ceo-handoff-*.md 2>/dev/null || true
 ```
 
@@ -960,7 +872,7 @@ the same pattern. The review dashboard depends on this data. Skipping this
 command breaks the review readiness dashboard in /ship.
 
 ```bash
-~/.claude/skills/claude-skills/bin/gstack-review-log '{"skill":"plan-ceo-review","timestamp":"TIMESTAMP","status":"STATUS","unresolved":N,"critical_gaps":N,"mode":"MODE","scope_proposed":N,"scope_accepted":N,"scope_deferred":N,"commit":"COMMIT"}'
+~/.claude/skills/claude-skills/bin/cs-review-log '{"skill":"plan-ceo-review","timestamp":"TIMESTAMP","status":"STATUS","unresolved":N,"critical_gaps":N,"mode":"MODE","scope_proposed":N,"scope_accepted":N,"scope_deferred":N,"commit":"COMMIT"}'
 ```
 
 Before running this command, substitute the placeholder values from the Completion Summary you just produced:
@@ -979,7 +891,7 @@ Before running this command, substitute the placeholder values from the Completi
 After completing the review, read the review log and config to display the dashboard.
 
 ```bash
-~/.claude/skills/claude-skills/bin/gstack-review-read
+~/.claude/skills/claude-skills/bin/cs-review-read
 ```
 
 Parse the output. Find the most recent entry for each skill (plan-ceo-review, plan-eng-review, review, plan-design-review, design-review-lite, adversarial-review, codex-review, codex-plan-review). Ignore entries with timestamps older than 7 days. For the Eng Review row, show whichever is more recent between `review` (diff-scoped pre-landing review) and `plan-eng-review` (plan-stage architecture review). Append "(DIFF)" or "(PLAN)" to the status to distinguish. For the Adversarial row, show whichever is more recent between `adversarial-review` (new auto-scaled) and `codex-review` (legacy). For Design Review, show whichever is more recent between `plan-design-review` (full visual audit) and `design-review-lite` (code-level check). Append "(FULL)" or "(LITE)" to the status to distinguish. Display:
@@ -1001,7 +913,7 @@ Parse the output. Find the most recent entry for each skill (plan-ceo-review, pl
 ```
 
 **Review tiers:**
-- **Eng Review (required by default):** The only review that gates shipping. Covers architecture, code quality, tests, performance. Can be disabled globally with \`gstack-config set skip_eng_review true\` (the "don't bother me" setting).
+- **Eng Review (required by default):** The only review that gates shipping. Covers architecture, code quality, tests, performance. Can be disabled globally with \`cs-config set skip_eng_review true\` (the "don't bother me" setting).
 - **CEO Review (optional):** Use your judgment. Recommend it for big product/business changes, new user-facing features, or scope decisions. Skip for bug fixes, refactors, infra, and cleanup.
 - **Design Review (optional):** Use your judgment. Recommend it for UI/UX changes. Skip for backend-only, infra, or prompt-only changes.
 - **Adversarial Review (automatic):** Auto-scales by diff size. Small diffs (<50 lines) skip adversarial. Medium diffs (50–199) get cross-model adversarial. Large diffs (200+) get all 4 passes: Claude structured, Codex structured, Claude adversarial subagent, Codex adversarial. No configuration needed.

@@ -42,8 +42,8 @@ You are a QA engineer. Test web applications like a real user — click everythi
 ```bash
 _ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
 B=""
-[ -n "$_ROOT" ] && [ -x "$_ROOT/.claude/skills/claude-skills/browse/dist/browse" ] && B="$_ROOT/.claude/skills/claude-skills/browse/dist/browse"
-[ -z "$B" ] && B=~/.claude/skills/claude-skills/browse/dist/browse
+[ -n "$_ROOT" ] && [ -x "$_ROOT/.claude/skills/browse/dist/browse" ] && B="$_ROOT/.claude/skills/browse/dist/browse"
+[ -z "$B" ] && B=~/.claude/skills/browse/dist/browse
 if [ -x "$B" ]; then
   echo "READY: $B"
 else
@@ -71,7 +71,7 @@ Before falling back to git diff heuristics, check for richer test plan sources:
 
 1. **Project-scoped test plans:** Check `~/.claude-skills/projects/` for recent `*-test-plan-*.md` files for this repo
    ```bash
-   eval "$(~/.claude/skills/claude-skills/bin/gstack-slug 2>/dev/null)"
+   eval "$(~/.claude/skills/claude-skills/bin/cs-slug 2>/dev/null)"
    ls -t ~/.claude-skills/projects/$SLUG/*-test-plan-*.md 2>/dev/null | head -1
    ```
 2. **Conversation context:** Check if a prior `/plan-eng-review` or `/plan-ceo-review` produced test plan output in this conversation
@@ -367,7 +367,7 @@ Write the report to both local and project-scoped locations:
 
 **Project-scoped:** Write test outcome artifact for cross-session context:
 ```bash
-eval "$(~/.claude/skills/claude-skills/bin/gstack-slug 2>/dev/null)" && mkdir -p ~/.claude-skills/projects/$SLUG
+eval "$(~/.claude/skills/claude-skills/bin/cs-slug 2>/dev/null)" && mkdir -p ~/.claude-skills/projects/$SLUG
 ```
 Write to `~/.claude-skills/projects/{slug}/{user}-{branch}-test-outcome-{datetime}.md`
 

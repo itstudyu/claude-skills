@@ -17,13 +17,13 @@ const SCHEMA_VERSION = 1;
 const LEGACY_EVAL_DIR = path.join(os.homedir(), '.gstack-dev', 'evals');
 
 /**
- * Detect project-scoped eval dir via gstack-slug.
+ * Detect project-scoped eval dir via cs-slug.
  * Falls back to legacy ~/.gstack-dev/evals/ if slug detection fails.
  */
 export function getProjectEvalDir(): string {
   try {
-    // Try repo-local gstack-slug first, then global install
-    const localSlug = spawnSync('bash', ['-c', '.claude/skills/gstack/bin/gstack-slug 2>/dev/null || ~/.claude/skills/gstack/bin/gstack-slug 2>/dev/null'], {
+    // Try repo-local cs-slug first, then global install
+    const localSlug = spawnSync('bash', ['-c', '.claude/skills/gstack/bin/cs-slug 2>/dev/null || ~/.claude/skills/gstack/bin/cs-slug 2>/dev/null'], {
       stdio: 'pipe', timeout: 3000,
     });
     const output = localSlug.stdout?.toString().trim();

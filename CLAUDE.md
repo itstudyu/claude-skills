@@ -152,6 +152,14 @@ Key rules:
 
 ---
 
+## Paths
+
+| Resource | Path |
+|----------|------|
+| Browse binary | `~/.claude/skills/browse/dist/browse` |
+| Standards | `~/.claude/standards/common/CODING-STANDARDS.md` |
+| Instincts | `~/.claude/skills/claude-skills/instincts/` |
+
 ## Communication
 
 - Respond in the **user's language**

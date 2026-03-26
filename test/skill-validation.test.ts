@@ -948,10 +948,10 @@ describe('CEO review mode validation', () => {
   });
 });
 
-// --- gstack-slug helper ---
+// --- cs-slug helper ---
 
-describe('gstack-slug', () => {
-  const SLUG_BIN = path.join(ROOT, 'bin', 'gstack-slug');
+describe('cs-slug', () => {
+  const SLUG_BIN = path.join(ROOT, 'bin', 'cs-slug');
 
   test('binary exists and is executable', () => {
     expect(fs.existsSync(SLUG_BIN)).toBe(true);
@@ -999,7 +999,7 @@ describe('gstack-slug', () => {
   });
   test('eval sets variables under bash with set -euo pipefail', () => {
     const result = Bun.spawnSync(
-      ['bash', '-c', 'set -euo pipefail; eval "$(./bin/gstack-slug 2>/dev/null)"; echo "SLUG=$SLUG"; echo "BRANCH=$BRANCH"'],
+      ['bash', '-c', 'set -euo pipefail; eval "$(./bin/cs-slug 2>/dev/null)"; echo "SLUG=$SLUG"; echo "BRANCH=$BRANCH"'],
       { cwd: ROOT, stdout: 'pipe', stderr: 'pipe' }
     );
     expect(result.exitCode).toBe(0);
@@ -1008,9 +1008,9 @@ describe('gstack-slug', () => {
     expect(output).toMatch(/^BRANCH=.+/m);
   });
 
-  test('no templates or bin scripts use source process substitution for gstack-slug', () => {
+  test('no templates or bin scripts use source process substitution for cs-slug', () => {
     const result = Bun.spawnSync(
-      ['grep', '-r', 'source <(.*gstack-slug', '--include=*.tmpl', '--include=gstack-review-*', '.'],
+      ['grep', '-r', 'source <(.*cs-slug', '--include=*.tmpl', '--include=gstack-review-*', '.'],
       { cwd: ROOT, stdout: 'pipe', stderr: 'pipe' }
     );
     // grep returns exit code 1 when no matches found — that's what we want
@@ -1285,7 +1285,7 @@ describe('Codex skill', () => {
   test('codex/SKILL.md contains review log persistence', () => {
     const content = fs.readFileSync(path.join(ROOT, 'codex', 'SKILL.md'), 'utf-8');
     expect(content).toContain('codex-review');
-    expect(content).toContain('gstack-review-log');
+    expect(content).toContain('cs-review-log');
   });
 
   test('codex/SKILL.md uses which for binary discovery, not hardcoded path', () => {
@@ -1503,7 +1503,7 @@ describe('Repo mode preamble validation', () => {
   test('generated SKILL.md preamble contains REPO_MODE output', () => {
     const content = fs.readFileSync(path.join(ROOT, 'SKILL.md'), 'utf-8');
     expect(content).toContain('REPO_MODE:');
-    expect(content).toContain('gstack-repo-mode');
+    expect(content).toContain('cs-repo-mode');
   });
 
   test('tier 3+ skills contain See Something Say Something section', () => {

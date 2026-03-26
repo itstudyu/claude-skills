@@ -254,10 +254,10 @@ Follow the output format specified in the checklist. Respect the suppressions â€
 
 ## Design Review (conditional, diff-scoped)
 
-Check if the diff touches frontend files using `gstack-diff-scope`:
+Check if the diff touches frontend files using `cs-diff-scope`:
 
 ```bash
-source <(~/.claude/skills/claude-skills/bin/gstack-diff-scope <base> 2>/dev/null)
+source <(~/.claude/skills/claude-skills/bin/cs-diff-scope <base> 2>/dev/null)
 ```
 
 **If `SCOPE_FRONTEND=false`:** Skip design review silently. No output.
@@ -280,7 +280,7 @@ source <(~/.claude/skills/claude-skills/bin/gstack-diff-scope <base> 2>/dev/null
 6. **Log the result** for the Review Readiness Dashboard:
 
 ```bash
-~/.claude/skills/claude-skills/bin/gstack-review-log '{"skill":"design-review-lite","timestamp":"TIMESTAMP","status":"STATUS","findings":N,"auto_fixed":M,"commit":"COMMIT"}'
+~/.claude/skills/claude-skills/bin/cs-review-log '{"skill":"design-review-lite","timestamp":"TIMESTAMP","status":"STATUS","findings":N,"auto_fixed":M,"commit":"COMMIT"}'
 ```
 
 Substitute: TIMESTAMP = ISO 8601 datetime, STATUS = "clean" if 0 findings or "issues_found", N = total findings, M = auto-fixed count, COMMIT = output of `git rev-parse --short HEAD`.
@@ -612,7 +612,7 @@ DIFF_DEL=$(git diff origin/<base> --stat | tail -1 | grep -oE '[0-9]+ deletion' 
 DIFF_TOTAL=$((DIFF_INS + DIFF_DEL))
 which codex 2>/dev/null && echo "CODEX_AVAILABLE" || echo "CODEX_NOT_AVAILABLE"
 # Respect old opt-out
-OLD_CFG=$(~/.claude/skills/claude-skills/bin/gstack-config get codex_reviews 2>/dev/null || true)
+OLD_CFG=$(~/.claude/skills/claude-skills/bin/cs-config get codex_reviews 2>/dev/null || true)
 echo "DIFF_SIZE: $DIFF_TOTAL"
 echo "OLD_CFG: ${OLD_CFG:-not_set}"
 ```
@@ -668,7 +668,7 @@ If the subagent fails or times out: "Claude adversarial subagent unavailable. Co
 
 **Persist the review result:**
 ```bash
-~/.claude/skills/claude-skills/bin/gstack-review-log '{"skill":"adversarial-review","timestamp":"'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'","status":"STATUS","source":"SOURCE","tier":"medium","commit":"'"$(git rev-parse --short HEAD)"'"}'
+~/.claude/skills/claude-skills/bin/cs-review-log '{"skill":"adversarial-review","timestamp":"'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'","status":"STATUS","source":"SOURCE","tier":"medium","commit":"'"$(git rev-parse --short HEAD)"'"}'
 ```
 Substitute STATUS: "clean" if no findings, "issues_found" if findings exist. SOURCE: "codex" if Codex ran, "claude" if subagent ran. If both failed, do NOT persist.
 
@@ -711,7 +711,7 @@ If Codex is not available for steps 1 and 3, note to the user: "Codex CLI not fo
 
 **Persist the review result AFTER all passes complete** (not after each sub-step):
 ```bash
-~/.claude/skills/claude-skills/bin/gstack-review-log '{"skill":"adversarial-review","timestamp":"'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'","status":"STATUS","source":"SOURCE","tier":"large","gate":"GATE","commit":"'"$(git rev-parse --short HEAD)"'"}'
+~/.claude/skills/claude-skills/bin/cs-review-log '{"skill":"adversarial-review","timestamp":"'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'","status":"STATUS","source":"SOURCE","tier":"large","gate":"GATE","commit":"'"$(git rev-parse --short HEAD)"'"}'
 ```
 Substitute: STATUS = "clean" if no findings across ALL passes, "issues_found" if any pass found issues. SOURCE = "both" if Codex ran, "claude" if only Claude subagent ran. GATE = the Codex structured review gate result ("pass"/"fail"), or "informational" if Codex was unavailable. If all passes failed, do NOT persist.
 
@@ -744,7 +744,7 @@ recognize that Eng Review was run on this branch.
 Run:
 
 ```bash
-~/.claude/skills/claude-skills/bin/gstack-review-log '{"skill":"review","timestamp":"TIMESTAMP","status":"STATUS","issues_found":N,"critical":N,"informational":N,"commit":"COMMIT"}'
+~/.claude/skills/claude-skills/bin/cs-review-log '{"skill":"review","timestamp":"TIMESTAMP","status":"STATUS","issues_found":N,"critical":N,"informational":N,"commit":"COMMIT"}'
 ```
 
 Substitute:

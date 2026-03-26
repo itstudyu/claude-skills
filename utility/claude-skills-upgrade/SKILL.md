@@ -26,7 +26,7 @@ First, check if auto-upgrade is enabled:
 ```bash
 _AUTO=""
 [ "${CLAUDE_SKILLS_AUTO_UPGRADE:-}" = "1" ] && _AUTO="true"
-[ -z "$_AUTO" ] && _AUTO=$(~/.claude/skills/claude-skills/bin/gstack-config get auto_upgrade 2>/dev/null || true)
+[ -z "$_AUTO" ] && _AUTO=$(~/.claude/skills/claude-skills/bin/cs-config get auto_upgrade 2>/dev/null || true)
 echo "AUTO_UPGRADE=$_AUTO"
 ```
 
@@ -40,7 +40,7 @@ echo "AUTO_UPGRADE=$_AUTO"
 
 **If "Always keep me up to date":**
 ```bash
-~/.claude/skills/claude-skills/bin/gstack-config set auto_upgrade true
+~/.claude/skills/claude-skills/bin/cs-config set auto_upgrade true
 ```
 Tell user: "Auto-upgrade enabled. Future updates will install automatically." Then proceed to Step 2.
 
@@ -66,9 +66,9 @@ Tell user the snooze duration: "Next reminder in 24h" (or 48h or 1 week, dependi
 
 **If "Never ask again":**
 ```bash
-~/.claude/skills/claude-skills/bin/gstack-config set update_check false
+~/.claude/skills/claude-skills/bin/cs-config set update_check false
 ```
-Tell user: "Update checks disabled. Run `~/.claude/skills/claude-skills/bin/gstack-config set update_check true` to re-enable."
+Tell user: "Update checks disabled. Run `~/.claude/skills/claude-skills/bin/cs-config set update_check true` to re-enable."
 Continue with the current skill.
 
 ### Step 2: Detect install type
@@ -205,8 +205,8 @@ When invoked directly as `/claude-skills-upgrade` (not from a preamble):
 
 1. Force a fresh update check (bypass cache):
 ```bash
-~/.claude/skills/claude-skills/bin/gstack-update-check --force 2>/dev/null || \
-.claude/skills/claude-skills/bin/gstack-update-check --force 2>/dev/null || true
+~/.claude/skills/claude-skills/bin/cs-update-check --force 2>/dev/null || \
+.claude/skills/claude-skills/bin/cs-update-check --force 2>/dev/null || true
 ```
 Use the output to determine if an upgrade is available.
 

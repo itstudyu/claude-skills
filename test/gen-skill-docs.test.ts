@@ -847,7 +847,7 @@ describe('Plan status footer in preamble', () => {
     const content = fs.readFileSync(path.join(ROOT, 'office-hours', 'SKILL.md'), 'utf-8');
     expect(content).toContain('Plan Status Footer');
     expect(content).toContain('GSTACK REVIEW REPORT');
-    expect(content).toContain('gstack-review-read');
+    expect(content).toContain('cs-review-read');
     expect(content).toContain('ExitPlanMode');
     expect(content).toContain('NO REVIEWS YET');
   });
@@ -1289,9 +1289,9 @@ describe('Codex generation (--host codex)', () => {
     const content = fs.readFileSync(path.join(AGENTS_DIR, 'gstack-review', 'SKILL.md'), 'utf-8');
     expect(content).toContain('GSTACK_ROOT');
     expect(content).toContain('$_ROOT/.agents/skills/gstack');
-    expect(content).toContain('$GSTACK_BIN/gstack-config');
+    expect(content).toContain('$GSTACK_BIN/cs-config');
     expect(content).toContain('$GSTACK_ROOT/gstack-upgrade/SKILL.md');
-    expect(content).not.toContain('~/.codex/skills/gstack/bin/gstack-config get telemetry');
+    expect(content).not.toContain('~/.codex/skills/gstack/bin/cs-config get telemetry');
   });
 
   // ─── Path rewriting regression tests ─────────────────────────
@@ -1350,7 +1350,7 @@ describe('Codex generation (--host codex)', () => {
       // No skill should reference Claude paths
       expect(content).not.toContain('~/.claude/skills');
       expect(content).not.toContain('.claude/skills');
-      if (content.includes('gstack-config') || content.includes('gstack-update-check') || content.includes('gstack-telemetry-log')) {
+      if (content.includes('cs-config') || content.includes('cs-update-check') || content.includes('cs-telemetry-log')) {
         expect(content).toContain('$GSTACK_ROOT');
       }
       // If a skill references checklist.md, it must use the correct sidecar path
@@ -1555,22 +1555,22 @@ describe('telemetry', () => {
     expect(content).toContain('_SESSION_ID');
     expect(content).toContain('TELEMETRY:');
     expect(content).toContain('TEL_PROMPTED:');
-    expect(content).toContain('gstack-config get telemetry');
+    expect(content).toContain('cs-config get telemetry');
   });
 
   test('generated SKILL.md contains telemetry opt-in prompt', () => {
     const content = fs.readFileSync(path.join(ROOT, 'SKILL.md'), 'utf-8');
     expect(content).toContain('.telemetry-prompted');
     expect(content).toContain('Help gstack get better');
-    expect(content).toContain('gstack-config set telemetry community');
-    expect(content).toContain('gstack-config set telemetry anonymous');
-    expect(content).toContain('gstack-config set telemetry off');
+    expect(content).toContain('cs-config set telemetry community');
+    expect(content).toContain('cs-config set telemetry anonymous');
+    expect(content).toContain('cs-config set telemetry off');
   });
 
   test('generated SKILL.md contains telemetry epilogue', () => {
     const content = fs.readFileSync(path.join(ROOT, 'SKILL.md'), 'utf-8');
     expect(content).toContain('Telemetry (run last)');
-    expect(content).toContain('gstack-telemetry-log');
+    expect(content).toContain('cs-telemetry-log');
     expect(content).toContain('_TEL_END');
     expect(content).toContain('_TEL_DUR');
     expect(content).toContain('SKILL_NAME');

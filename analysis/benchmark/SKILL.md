@@ -22,8 +22,8 @@ allowed-tools:
 ```bash
 _ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
 B=""
-[ -n "$_ROOT" ] && [ -x "$_ROOT/.claude/skills/claude-skills/browse/dist/browse" ] && B="$_ROOT/.claude/skills/claude-skills/browse/dist/browse"
-[ -z "$B" ] && B=~/.claude/skills/claude-skills/browse/dist/browse
+[ -n "$_ROOT" ] && [ -x "$_ROOT/.claude/skills/browse/dist/browse" ] && B="$_ROOT/.claude/skills/browse/dist/browse"
+[ -z "$B" ] && B=~/.claude/skills/browse/dist/browse
 if [ -x "$B" ]; then
   echo "READY: $B"
 else
@@ -58,7 +58,7 @@ When the user types `/benchmark`, run this skill.
 ### Phase 1: Setup
 
 ```bash
-eval "$(~/.claude/skills/claude-skills/bin/gstack-slug 2>/dev/null || echo "SLUG=unknown")"
+eval "$(~/.claude/skills/claude-skills/bin/cs-slug 2>/dev/null || echo "SLUG=unknown")"
 mkdir -p .claude-skills/benchmark-reports
 mkdir -p .claude-skills/benchmark-reports/baselines
 ```

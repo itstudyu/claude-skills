@@ -463,7 +463,7 @@ Narrative covering:
 Check review JSONL logs for plan completion data from /ship runs this period:
 
 ```bash
-eval "$(~/.claude/skills/claude-skills/bin/gstack-slug 2>/dev/null)"
+eval "$(~/.claude/skills/claude-skills/bin/cs-slug 2>/dev/null)"
 cat ~/.claude-skills/projects/$SLUG/*-reviews.jsonl 2>/dev/null | grep '"skill":"ship"' | grep '"plan_items_total"' || echo "NO_PLAN_DATA"
 ```
 
@@ -546,10 +546,10 @@ Locate and run the discovery script using this fallback chain:
 
 ```bash
 DISCOVER_BIN=""
-[ -x ~/.claude/skills/claude-skills/bin/gstack-global-discover ] && DISCOVER_BIN=~/.claude/skills/claude-skills/bin/gstack-global-discover
-[ -z "$DISCOVER_BIN" ] && [ -x .claude/skills/claude-skills/bin/gstack-global-discover ] && DISCOVER_BIN=.claude/skills/claude-skills/bin/gstack-global-discover
-[ -z "$DISCOVER_BIN" ] && which gstack-global-discover >/dev/null 2>&1 && DISCOVER_BIN=$(which gstack-global-discover)
-[ -z "$DISCOVER_BIN" ] && [ -f bin/gstack-global-discover.ts ] && DISCOVER_BIN="bun run bin/gstack-global-discover.ts"
+[ -x ~/.claude/skills/claude-skills/bin/cs-global-discover ] && DISCOVER_BIN=~/.claude/skills/claude-skills/bin/cs-global-discover
+[ -z "$DISCOVER_BIN" ] && [ -x .claude/skills/claude-skills/bin/cs-global-discover ] && DISCOVER_BIN=.claude/skills/claude-skills/bin/cs-global-discover
+[ -z "$DISCOVER_BIN" ] && which cs-global-discover >/dev/null 2>&1 && DISCOVER_BIN=$(which cs-global-discover)
+[ -z "$DISCOVER_BIN" ] && [ -f bin/cs-global-discover.ts ] && DISCOVER_BIN="bun run bin/cs-global-discover.ts"
 echo "DISCOVER_BIN: $DISCOVER_BIN"
 ```
 
@@ -557,10 +557,10 @@ If no binary is found, tell the user: "Discovery script not found. Run `bun run 
 
 Run the discovery:
 ```bash
-$DISCOVER_BIN --since "<window>" --format json 2>/tmp/gstack-discover-stderr
+$DISCOVER_BIN --since "<window>" --format json 2>/tmp/cs-discover-stderr
 ```
 
-Read the stderr output from `/tmp/gstack-discover-stderr` for diagnostic info. Parse the JSON output from stdout.
+Read the stderr output from `/tmp/cs-discover-stderr` for diagnostic info. Parse the JSON output from stdout.
 
 If `total_sessions` is 0, say: "No AI coding sessions found in the last <window>. Try a longer window: `/retro global 30d`" and stop.
 
@@ -683,7 +683,7 @@ align cleanly. Never truncate project names.
 - Top Work: 3 bullet points summarizing the user's major themes, inferred from
   commit messages. Not individual commits — synthesize into themes.
   E.g., "Built /retro global — cross-project retrospective with AI session discovery"
-  not "feat: gstack-global-discover" + "feat: /retro global template".
+  not "feat: cs-global-discover" + "feat: /retro global template".
 - The card must be self-contained. Someone seeing ONLY this block should understand
   the user's week without any surrounding context.
 - Do NOT include team members, project totals, or context switching data here.

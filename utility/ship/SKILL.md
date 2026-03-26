@@ -81,7 +81,7 @@ You are running the `/ship` workflow. This is a **non-interactive, fully automat
 After completing the review, read the review log and config to display the dashboard.
 
 ```bash
-~/.claude/skills/claude-skills/bin/gstack-review-read
+~/.claude/skills/claude-skills/bin/cs-review-read
 ```
 
 Parse the output. Find the most recent entry for each skill (plan-ceo-review, plan-eng-review, review, plan-design-review, design-review-lite, adversarial-review, codex-review, codex-plan-review). Ignore entries with timestamps older than 7 days. For the Eng Review row, show whichever is more recent between `review` (diff-scoped pre-landing review) and `plan-eng-review` (plan-stage architecture review). Append "(DIFF)" or "(PLAN)" to the status to distinguish. For the Adversarial row, show whichever is more recent between `adversarial-review` (new auto-scaled) and `codex-review` (legacy). For Design Review, show whichever is more recent between `plan-design-review` (full visual audit) and `design-review-lite` (code-level check). Append "(FULL)" or "(LITE)" to the status to distinguish. Display:
@@ -103,7 +103,7 @@ Parse the output. Find the most recent entry for each skill (plan-ceo-review, pl
 ```
 
 **Review tiers:**
-- **Eng Review (required by default):** The only review that gates shipping. Covers architecture, code quality, tests, performance. Can be disabled globally with \`gstack-config set skip_eng_review true\` (the "don't bother me" setting).
+- **Eng Review (required by default):** The only review that gates shipping. Covers architecture, code quality, tests, performance. Can be disabled globally with \`cs-config set skip_eng_review true\` (the "don't bother me" setting).
 - **CEO Review (optional):** Use your judgment. Recommend it for big product/business changes, new user-facing features, or scope decisions. Skip for bug fixes, refactors, infra, and cleanup.
 - **Design Review (optional):** Use your judgment. Recommend it for UI/UX changes. Skip for backend-only, infra, or prompt-only changes.
 - **Adversarial Review (automatic):** Auto-scales by diff size. Small diffs (<50 lines) skip adversarial. Medium diffs (50–199) get cross-model adversarial. Large diffs (200+) get all 4 passes: Claude structured, Codex structured, Claude adversarial subagent, Codex adversarial. No configuration needed.
@@ -125,7 +125,7 @@ If the Eng Review is NOT "CLEAR":
 
 1. **Check for a prior override on this branch:**
    ```bash
-   eval "$(~/.claude/skills/claude-skills/bin/gstack-slug 2>/dev/null)"
+   eval "$(~/.claude/skills/claude-skills/bin/cs-slug 2>/dev/null)"
    grep '"skill":"ship-review-override"' ~/.claude-skills/projects/$SLUG/$BRANCH-reviews.jsonl 2>/dev/null || echo "NO_OVERRIDE"
    ```
    If an override exists, display the dashboard and note "Review gate previously accepted — continuing." Do NOT ask again.
@@ -135,11 +135,11 @@ If the Eng Review is NOT "CLEAR":
    - RECOMMENDATION: Choose C if the change is obviously trivial (< 20 lines, typo fix, config-only); Choose B for larger changes
    - Options: A) Ship anyway  B) Abort — run /review or /plan-eng-review first  C) Change is too small to need eng review
    - If CEO Review is missing, mention as informational ("CEO Review not run — recommended for product changes") but do NOT block
-   - For Design Review: run `source <(~/.claude/skills/claude-skills/bin/gstack-diff-scope <base> 2>/dev/null)`. If `SCOPE_FRONTEND=true` and no design review (plan-design-review or design-review-lite) exists in the dashboard, mention: "Design Review not run — this PR changes frontend code. The lite design check will run automatically in Step 3.5, but consider running /design-review for a full visual audit post-implementation." Still never block.
+   - For Design Review: run `source <(~/.claude/skills/claude-skills/bin/cs-diff-scope <base> 2>/dev/null)`. If `SCOPE_FRONTEND=true` and no design review (plan-design-review or design-review-lite) exists in the dashboard, mention: "Design Review not run — this PR changes frontend code. The lite design check will run automatically in Step 3.5, but consider running /design-review for a full visual audit post-implementation." Still never block.
 
 3. **If the user chooses A or C,** persist the decision so future `/ship` runs on this branch skip the gate:
    ```bash
-   eval "$(~/.claude/skills/claude-skills/bin/gstack-slug 2>/dev/null)"
+   eval "$(~/.claude/skills/claude-skills/bin/cs-slug 2>/dev/null)"
    echo '{"skill":"ship-review-override","timestamp":"'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'","decision":"USER_CHOICE"}' >> ~/.claude-skills/projects/$SLUG/$BRANCH-reviews.jsonl
    ```
    Substitute USER_CHOICE with "ship_anyway" or "not_relevant".
@@ -726,7 +726,7 @@ Coverage line: `Test Coverage Audit: N new code paths. M covered (X%). K tests g
 After producing the coverage diagram, write a test plan artifact so `/qa` and `/qa-only` can consume it:
 
 ```bash
-eval "$(~/.claude/skills/claude-skills/bin/gstack-slug 2>/dev/null)" && mkdir -p ~/.claude-skills/projects/$SLUG
+eval "$(~/.claude/skills/claude-skills/bin/cs-slug 2>/dev/null)" && mkdir -p ~/.claude-skills/projects/$SLUG
 USER=$(whoami)
 DATETIME=$(date +%Y%m%d-%H%M%S)
 ```
@@ -943,10 +943,10 @@ Review the diff for structural issues that tests don't catch.
 
 ## Design Review (conditional, diff-scoped)
 
-Check if the diff touches frontend files using `gstack-diff-scope`:
+Check if the diff touches frontend files using `cs-diff-scope`:
 
 ```bash
-source <(~/.claude/skills/claude-skills/bin/gstack-diff-scope <base> 2>/dev/null)
+source <(~/.claude/skills/claude-skills/bin/cs-diff-scope <base> 2>/dev/null)
 ```
 
 **If `SCOPE_FRONTEND=false`:** Skip design review silently. No output.
@@ -969,7 +969,7 @@ source <(~/.claude/skills/claude-skills/bin/gstack-diff-scope <base> 2>/dev/null
 6. **Log the result** for the Review Readiness Dashboard:
 
 ```bash
-~/.claude/skills/claude-skills/bin/gstack-review-log '{"skill":"design-review-lite","timestamp":"TIMESTAMP","status":"STATUS","findings":N,"auto_fixed":M,"commit":"COMMIT"}'
+~/.claude/skills/claude-skills/bin/cs-review-log '{"skill":"design-review-lite","timestamp":"TIMESTAMP","status":"STATUS","findings":N,"auto_fixed":M,"commit":"COMMIT"}'
 ```
 
 Substitute: TIMESTAMP = ISO 8601 datetime, STATUS = "clean" if 0 findings or "issues_found", N = total findings, M = auto-fixed count, COMMIT = output of `git rev-parse --short HEAD`.
@@ -1073,7 +1073,7 @@ DIFF_DEL=$(git diff origin/<base> --stat | tail -1 | grep -oE '[0-9]+ deletion' 
 DIFF_TOTAL=$((DIFF_INS + DIFF_DEL))
 which codex 2>/dev/null && echo "CODEX_AVAILABLE" || echo "CODEX_NOT_AVAILABLE"
 # Respect old opt-out
-OLD_CFG=$(~/.claude/skills/claude-skills/bin/gstack-config get codex_reviews 2>/dev/null || true)
+OLD_CFG=$(~/.claude/skills/claude-skills/bin/cs-config get codex_reviews 2>/dev/null || true)
 echo "DIFF_SIZE: $DIFF_TOTAL"
 echo "OLD_CFG: ${OLD_CFG:-not_set}"
 ```
@@ -1129,7 +1129,7 @@ If the subagent fails or times out: "Claude adversarial subagent unavailable. Co
 
 **Persist the review result:**
 ```bash
-~/.claude/skills/claude-skills/bin/gstack-review-log '{"skill":"adversarial-review","timestamp":"'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'","status":"STATUS","source":"SOURCE","tier":"medium","commit":"'"$(git rev-parse --short HEAD)"'"}'
+~/.claude/skills/claude-skills/bin/cs-review-log '{"skill":"adversarial-review","timestamp":"'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'","status":"STATUS","source":"SOURCE","tier":"medium","commit":"'"$(git rev-parse --short HEAD)"'"}'
 ```
 Substitute STATUS: "clean" if no findings, "issues_found" if findings exist. SOURCE: "codex" if Codex ran, "claude" if subagent ran. If both failed, do NOT persist.
 
@@ -1172,7 +1172,7 @@ If Codex is not available for steps 1 and 3, note to the user: "Codex CLI not fo
 
 **Persist the review result AFTER all passes complete** (not after each sub-step):
 ```bash
-~/.claude/skills/claude-skills/bin/gstack-review-log '{"skill":"adversarial-review","timestamp":"'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'","status":"STATUS","source":"SOURCE","tier":"large","gate":"GATE","commit":"'"$(git rev-parse --short HEAD)"'"}'
+~/.claude/skills/claude-skills/bin/cs-review-log '{"skill":"adversarial-review","timestamp":"'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'","status":"STATUS","source":"SOURCE","tier":"large","gate":"GATE","commit":"'"$(git rev-parse --short HEAD)"'"}'
 ```
 Substitute: STATUS = "clean" if no findings across ALL passes, "issues_found" if any pass found issues. SOURCE = "both" if Codex ran, "claude" if only Claude subagent ran. GATE = the Codex structured review gate result ("pass"/"fail"), or "informational" if Codex was unavailable. If all passes failed, do NOT persist.
 
@@ -1446,7 +1446,7 @@ doc updates — the user runs `/ship` and documentation stays current without a 
 Log coverage and plan completion data so `/retro` can track trends:
 
 ```bash
-eval "$(~/.claude/skills/claude-skills/bin/gstack-slug 2>/dev/null)" && mkdir -p ~/.claude-skills/projects/$SLUG
+eval "$(~/.claude/skills/claude-skills/bin/cs-slug 2>/dev/null)" && mkdir -p ~/.claude-skills/projects/$SLUG
 ```
 
 Append to `~/.claude-skills/projects/$SLUG/$BRANCH-reviews.jsonl`:

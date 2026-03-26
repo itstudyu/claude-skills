@@ -6,15 +6,15 @@ import { spawnSync } from "child_process";
 
 // Import normalizeRemoteUrl for unit testing
 // We test the script end-to-end via CLI and normalizeRemoteUrl via import
-const scriptPath = join(import.meta.dir, "..", "bin", "gstack-global-discover.ts");
+const scriptPath = join(import.meta.dir, "..", "bin", "cs-global-discover.ts");
 
-describe("gstack-global-discover", () => {
+describe("cs-global-discover", () => {
   describe("normalizeRemoteUrl", () => {
     // Dynamically import to test the exported function
     let normalizeRemoteUrl: (url: string) => string;
 
     beforeEach(async () => {
-      const mod = await import("../bin/gstack-global-discover.ts");
+      const mod = await import("../bin/cs-global-discover.ts");
       normalizeRemoteUrl = mod.normalizeRemoteUrl;
     });
 
