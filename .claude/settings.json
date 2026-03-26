@@ -1,0 +1,50 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": ["startup", "compact", "resume"],
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/run-with-profile.sh inject-instructions minimal,standard,strict bash .claude/hooks/inject-instructions.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/run-with-profile.sh load-instincts minimal,standard,strict bash .claude/hooks/load-instincts.sh"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/run-with-profile.sh secret-scanner standard,strict bash .claude/hooks/secret-scanner.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/run-with-profile.sh learn-from-errors minimal,standard,strict bash .claude/hooks/learn-from-errors.sh"
+          }
+        ]
+      },
+      {
+        "matcher": ["Edit", "Write"],
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/run-with-profile.sh code-quality-check standard,strict bash .claude/hooks/code-quality-check.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
