@@ -25,8 +25,18 @@ this to shared components", "공통 컴포넌트 업데이트".
 - Figma MCP must be connected
 - `angular-web-common/` repo must be accessible (check for `registry.json`)
 
-If `angular-web-common/` is not found in the current directory or a known location,
-ask the user for the path.
+### angular-web-common Detection
+
+Check for `angular-web-common/registry.json` in this order:
+1. Current directory: `./angular-web-common/registry.json`
+2. Parent directory: `../angular-web-common/registry.json`
+3. Home: `~/Documents/GitHub/angular-web-common/registry.json`
+
+If NOT found anywhere:
+- Ask the user: "angular-web-common repo not found. Please provide the path, or should I initialize a new one?"
+- If user provides a path → use it
+- If user says "initialize" → create the directory structure with empty `registry.json` and `CLAUDE.md`
+- **Do NOT silently fail or skip.** This repo is required for this skill.
 
 ## Pipeline
 

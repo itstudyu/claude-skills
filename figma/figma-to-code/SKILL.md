@@ -26,6 +26,19 @@ Distinct from figma-component-writer which updates the shared library.
 - `project-context.md` should exist (run `/project-analyzer` first if missing)
 - `angular-web-common/registry.json` should be accessible for component mapping
 
+### angular-web-common Detection
+
+Check for `angular-web-common/registry.json` in this order:
+1. Current directory: `./angular-web-common/registry.json`
+2. Parent directory: `../angular-web-common/registry.json`
+3. Home: `~/Documents/GitHub/angular-web-common/registry.json`
+
+If NOT found:
+- **Skip Phase 2 (Common Component Mapping) entirely.**
+- Treat ALL components as CUSTOM_NEEDED.
+- Inform the user: "angular-web-common not found — skipping common component mapping. All components will be generated as custom. Run /figma-component-writer to set up the shared library."
+- Continue with Phase 1 → Phase 3 (skip mapping preview) → Phase 4 (all custom).
+
 ## Pipeline
 
 ### Phase 1: Analyze Figma Design
