@@ -134,6 +134,16 @@ Produce a plan using this template:
 ## Context
 [Why this needs to be done — 2-3 lines]
 
+## Skill Selection (from Tier 2 verification)
+
+| Skill | Selected | Reason |
+|-------|----------|--------|
+| project-analyzer | ✓ | New project — context needed for downstream skills |
+| figma-to-code | ✓ | Figma URL provided, Phase 1-6 pipeline matches task |
+| brainstorm | ✗ | Figma design already defines UI — no need to explore options |
+| verify-complete | ✓ | Final verification gate after code generation |
+| ... | ... | ... |
+
 ## Dependency
 Step1 → Step2 → Step3
 (use ∥ for parallel steps: Step2 ∥ Step3)
@@ -142,30 +152,35 @@ Step1 → Step2 → Step3
 
 ### Step 1: [Goal]
 - **Skills:** project-analyzer
+- **Why this skill:** [1-line reason from Tier 2 confirmation]
 - **Files:** (discovered during execution)
 - **Output:** project-context.md
 - **Checkpoint:** ⬜ Auto
 
 ### Step 2: [Goal]
 - **Skills:** brainstorm
+- **Why this skill:** [1-line reason from Tier 2 confirmation]
 - **Files:** docs/specs/
 - **Output:** Design spec with user approval
 - **Checkpoint:** ✅ User confirmation required
 
 ### Step 3: [Goal]
 - **Skills:** write-plan, tdd
+- **Why this skill:** [1-line reason from Tier 2 confirmation]
 - **Files:** src/features/login/
 - **Output:** Implementation + tests
 - **Checkpoint:** ✅ User confirmation required
 
 ### Step 4: [Goal]
 - **Skills:** review, cso
+- **Why this skill:** [1-line reason from Tier 2 confirmation]
 - **Files:** (all changed files)
 - **Output:** Review report
 - **Checkpoint:** ⬜ Auto
 
 ### Step 5: [Goal]
 - **Skills:** verify-complete
+- **Why this skill:** [1-line reason from Tier 2 confirmation]
 - **Files:** (all outputs)
 - **Output:** Verification report
 - **Checkpoint:** ⬜ Auto
