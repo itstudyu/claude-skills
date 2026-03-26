@@ -60,15 +60,24 @@ If `project-context.md` exists, read it for project-specific context.
 
 ### Phase 2: Skill Matching
 
-Scan the CLAUDE.md skill index (Tier 1). For each skill, check:
+#### Step 2a — Tier 1 Scan (CLAUDE.md Skill Index)
+
+Scan CLAUDE.md Skill Index. For each skill, check:
 1. Do the tags match the task domain?
 2. Does the description match the task intent?
 3. Is the skill relevant to the identified scope?
 
-Then read the SKILL.md (Tier 2) of matched candidates to confirm they're
-appropriate and understand their inputs/outputs.
+List all matched candidates with reasoning:
 
-**Matching heuristics:**
+```
+Tier 1 Matches:
+  ✓ project-analyzer — #analysis — new project needs context
+  ✓ figma-to-code — #figma #agent — Figma URL + page implementation
+  ✓ brainstorm — #design #planning — explore design options
+  ✗ tdd — #testing — matched but figma-to-code has built-in validation
+```
+
+**Matching heuristics (starting points only):**
 
 | Task Signal | Likely Skills |
 |---|---|
@@ -81,9 +90,41 @@ appropriate and understand their inputs/outputs.
 | New project | project-analyzer → brainstorm → write-plan |
 | Refactoring | brainstorm → write-plan → review → verify-complete |
 
-These are starting points — adjust based on the actual SKILL.md capabilities.
+Adjust based on the actual SKILL.md capabilities confirmed in Step 2b.
+
+#### Step 2b — Tier 2 Read (HARD GATE)
+
+**⛔ MANDATORY — DO NOT SKIP THIS STEP.**
+
+You MUST read the full SKILL.md of every Tier 1 matched candidate.
+This step cannot be skipped for ANY reason — not "simple task", not "obvious
+match", not "I already know what this skill does". No exceptions.
+
+For each Tier 1 match:
+1. **Read** the full SKILL.md file (use the Read tool)
+2. **Confirm** the skill's Pipeline/Phases match the task
+3. **Check** prerequisite skills (e.g., figma-to-code requires project-context.md)
+4. **Note** inputs/outputs for dependency chaining in Phase 3
+
+Report what you read:
+
+```
+Tier 2 Confirmed:
+  ✓ project-analyzer — SKILL.md read ✓ — Generates project-context.md
+  ✓ figma-to-code — SKILL.md read ✓ — Phase 1-6, requires project-context.md
+  ✗ brainstorm — SKILL.md read ✓ — Not needed: Figma design already defines the UI
+```
+
+**If this step is skipped, the entire plan is INVALID. Do not proceed to Phase 3.**
 
 ### Phase 3: Generate Plan
+
+**⛔ MANDATORY:** Call the `EnterPlanMode` tool before writing the plan.
+The plan MUST be written to the plan file, NOT as chat text.
+This ensures the user can structurally review, edit, and approve the plan.
+
+If EnterPlanMode is denied by the user, write the plan as structured markdown
+in the chat — but always attempt plan mode first.
 
 Produce a plan using this template:
 
@@ -138,6 +179,13 @@ Step1 → Step2 → Step3
 
 ### Phase 4: Present Plan & Get Approval
 
+**Pre-presentation checklist (self-verify before presenting):**
+- [ ] Phase 2b: Did I actually Read every matched candidate's SKILL.md?
+- [ ] Each Step's skills were confirmed in Tier 2 (not just Tier 1 guesses)?
+- [ ] Skill input/output dependencies are chained correctly?
+
+If any check fails → go back to Phase 2b. Do not present an unverified plan.
+
 Show the plan to the user in a clear format:
 
 ```
@@ -158,7 +206,10 @@ Checkpoints: 2 (user confirmation at Steps 2, 3)
 Proceed? [Y/n]
 ```
 
-**HARD GATE:** Do not start execution without explicit user approval.
+**⛔ HARD GATE:** Call `ExitPlanMode` to request user approval.
+Do NOT ask "Proceed? [Y/n]" in chat text — ExitPlanMode handles the approval
+workflow and lets the user review/edit the plan file before approving.
+Do not start execution without explicit user approval via ExitPlanMode.
 
 Allow the user to:
 - Remove steps
