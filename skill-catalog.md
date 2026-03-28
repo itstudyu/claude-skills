@@ -59,6 +59,7 @@
 | pipeline-onboard | workflow/pipeline-onboard/ | Project onboarding: scan → design-doc (all features) → catalog | #pipeline #onboarding |
 | pipeline-quality | workflow/pipeline-quality/ | Pre-commit quality: tests → japanese-comments → review → security | #pipeline #quality |
 | pipeline-retro | workflow/pipeline-retro/ | Weekly retro: retrospective → doc-update → release-docs | #pipeline #retro |
+| pipeline-smart | workflow/pipeline-smart/ | Adaptive: office-hours → plan-orchestrator (AI picks best skills) | #pipeline #smart |
 | plan-orchestrator | planning/plan-orchestrator/ | Auto-scan skills, match to task, build execution plan | #planning #orchestration |
 | project-scan | utility/project-scan/ | Scan codebase for structure, tech stack, features, generate project-overview.md | #analysis #onboarding |
 | skill-catalog | utility/skill-catalog/ | Scan and manage skills from multiple sources | #utility #catalog |

@@ -62,6 +62,7 @@ plan-orchestrator reads this file as Tier 1 for skill matching.
 | pipeline-onboard | Onboarding: project-scan → design-doc (all) → skill-catalog | #pipeline |
 | pipeline-full | Full lifecycle: idea → design → plan → build → ship | #pipeline |
 | pipeline-retro | Weekly: retro → design-doc-update → document-release | #pipeline |
+| pipeline-smart | Adaptive: office-hours → plan-orchestrator (AI picks skills) | #pipeline |
 
 ### review/
 | Skill | Description | Tags |
