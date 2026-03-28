@@ -45,9 +45,7 @@
 | design-doc | workflow/design-doc/ | Generate per-feature design document with fixed template | #docs #design |
 | design-doc-update | workflow/design-doc-update/ | Update design docs and project overview after code changes | #docs #maintenance |
 | devops-japanese-comments | review/devops-japanese-comments/ | Enforce Japanese language in code comments and log messages | #quality #i18n |
-| devops-safety-check | review/devops-safety-check/ | Lightweight security scan — secrets, SQL injection, XSS patterns | #security |
 | devops-test-gen | review/devops-test-gen/ | Auto-generate tests for new/changed code with regression protection | #testing |
-| execute-plan | workflow/execute-plan/ | Execute implementation plan with review checkpoints | #execution |
 | figma-common-crawler | figma/figma-common-crawler/ | Crawl Figma URL for component styles and properties | #figma #components |
 | figma-common-diff | figma/figma-common-diff/ | Compare crawled Figma components against existing registry | #figma #components |
 | figma-common-mapper | figma/figma-common-mapper/ | Preview mapping + user confirmation before code generation | #figma #components |
@@ -57,7 +55,6 @@
 | project-scan | utility/project-scan/ | Scan codebase for structure, tech stack, features, generate project-overview.md | #analysis #onboarding |
 | skill-catalog | utility/skill-catalog/ | Scan and manage skills from multiple sources | #utility #catalog |
 | subagent-dev | workflow/subagent-dev/ | Dispatch fresh subagents per task with two-stage review | #execution #parallel |
-| systematic-debug | workflow/systematic-debug/ | 4-phase root cause investigation before any fix | #debugging |
 | tdd | workflow/tdd/ | Test-Driven Development — RED-GREEN-REFACTOR cycle | #testing #quality |
 | verify-complete | workflow/verify-complete/ | Evidence-based verification gate — run commands, confirm output | #verification |
 | write-plan | workflow/write-plan/ | Create implementation plans from specs before touching code | #planning |

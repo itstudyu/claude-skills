@@ -27,7 +27,7 @@ CLAUDE.md (this file)
     │   → /brainstorm → /write-plan → /execute-plan [claude-skills]
     │
     ├→ Debug/error ("debug", "bug", "error", "broken")
-    │   → /systematic-debug [claude-skills]
+    │   → /investigate [gstack]
     │
     ├→ Skill catalog ("scan skills", "update catalog", "add skill pack")
     │   → /skill-catalog [claude-skills]
@@ -49,17 +49,16 @@ plan-orchestrator reads this file as Tier 1 for skill matching.
 |-------|-------------|------|
 | brainstorm | Socratic design, 3 options before implementation | #design #planning |
 | write-plan | Bite-sized 2-5min tasks, zero-context assumption | #planning #tasks |
-| execute-plan | Sequential execution with human checkpoints | #execution |
+| design-doc | Generate per-feature design document with fixed template | #docs #design |
+| design-doc-update | Update design docs after code changes | #docs #maintenance |
 | subagent-dev | Fresh subagent per task, two-stage review | #execution #parallel |
 | tdd | RED-GREEN-REFACTOR, no code without failing test | #testing #quality |
-| systematic-debug | 4-phase root cause investigation | #debugging |
 | verify-complete | Evidence-based verification gate | #verification |
 
 ### review/
 | Skill | Description | Tags |
 |-------|-------------|------|
 | devops-japanese-comments | Japanese comment enforcement | #quality #i18n |
-| devops-safety-check | Lightweight security scan | #security |
 | devops-test-gen | Auto-generate tests for changed code | #testing |
 
 ### planning/
@@ -79,6 +78,7 @@ plan-orchestrator reads this file as Tier 1 for skill matching.
 ### utility/
 | Skill | Description | Tags |
 |-------|-------------|------|
+| project-scan | Scan codebase — tech stack, features, data model, patterns | #analysis #onboarding |
 | skill-catalog | Scan and manage skills from multiple sources | #utility #catalog |
 
 ---
