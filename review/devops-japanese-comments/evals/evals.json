@@ -1,0 +1,23 @@
+{
+  "skill_name": "devops-japanese-comments",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I just finished writing a TypeScript service file with a bunch of English comments. Can you convert all the comments to Japanese? The file is src/services/user.service.ts.",
+      "expected_output": "All inline comments, JSDoc, and log messages in the file converted to natural Japanese. Variable names and API-facing strings left in English.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "日本語コメントお願い。さっき書いたコード、コメント全部英語のままだから変換して。",
+      "expected_output": "Scans recently changed files via git diff, finds English comments, converts them to Japanese. Adds missing comments to complex logic blocks.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "I wrote a Python Flask API handler but didn't add any comments. Can you add appropriate comments and make sure they're in Japanese?",
+      "expected_output": "Adds Japanese comments to the Flask handler — function docstring, complex logic, important constants. Does not over-comment obvious lines.",
+      "files": []
+    }
+  ]
+}

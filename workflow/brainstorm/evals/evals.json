@@ -1,0 +1,23 @@
+{
+  "skill_name": "brainstorm",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I want to add a notification system to our app. Users should get alerts for new messages, order updates, and system announcements. Can we brainstorm the design first?",
+      "expected_output": "Explores project context, asks clarifying questions one at a time (delivery method, persistence, priority levels), proposes 2-3 approaches, presents design sections for approval. Does NOT write any code.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "아이디어가 있는데, 우리 프로젝트에 다크모드를 추가하고 싶어. 어떻게 하면 좋을까?",
+      "expected_output": "Enters brainstorm mode. Asks about current design system, theme variables, component structure. Proposes approaches (CSS variables vs theme context vs media query). Presents design for approval.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Maybe we should refactor the authentication flow? It feels clunky but I'm not sure what exactly to change.",
+      "expected_output": "Detects vague language ('maybe', 'not sure'). Explores current auth implementation, asks targeted questions to identify pain points, proposes concrete improvement approaches before any implementation.",
+      "files": []
+    }
+  ]
+}

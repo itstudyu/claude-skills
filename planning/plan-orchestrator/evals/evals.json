@@ -1,0 +1,23 @@
+{
+  "skill_name": "plan-orchestrator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to build a user registration page with form validation and API integration. Plan this for me — figure out which skills to use and in what order.",
+      "expected_output": "Collects context (asks for table DDL, API spec, validation rules), loads standards, reads skill-catalog.md, matches skills from both gstack and claude-skills, generates plan with Collected Context + Applicable Standards + Known Pitfalls sections.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "어떤 스킬 쓰면 돼? Figma 디자인에서 새 화면을 만들고 싶어.",
+      "expected_output": "Asks for Figma URL and routing path (context collection), scans skill-catalog.md, identifies figma-to-code + review skills, generates plan with source attribution [gstack]/[claude-skills].",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "We need to refactor the payment module, add tests, and do a security review. Make a comprehensive plan.",
+      "expected_output": "Multi-skill plan: brainstorm [cs] → write-plan [cs] → tdd [cs] → review [g] → cso [g] → verify-complete [cs]. Collects context about payment module, loads standards, includes pitfalls.",
+      "files": []
+    }
+  ]
+}

@@ -1,41 +1,55 @@
 ---
 name: devops-japanese-comments
 description: |
-  Enforce Japanese language in code comments and log messages. Converts English comments
-  to Japanese and adds missing comments to complex logic. Use after writing or reviewing
-  code. Trigger on "日本語コメント", "japanese comments", "コメント変換", or as part of
-  code quality workflow.
+  Enforce Japanese language in all code comments, log messages, JSDoc/docstrings, and
+  TODO/FIXME annotations. Converts English comments to Japanese and adds missing comments
+  to complex logic blocks. Use this skill after writing or reviewing code in any language.
+  Trigger whenever the user says "日本語コメント", "japanese comments", "コメント変換",
+  "コメントを日本語に", "add japanese comments", "translate comments", "코멘트 일본어로",
+  "일본어 코멘트", or as part of any code quality workflow. Proactively suggest this skill
+  after any code writing session where comments are in English or missing — the team
+  convention requires all comments and logs to be in Japanese.
 ---
 
 # Japanese Comments Enforcement
 
-Enforce Japanese for all code comments and log messages.
+Convert all code comments and log messages to Japanese, and add missing comments
+to complex logic. This is a team convention — Japanese comments make the codebase
+more accessible to the entire team and ensure consistent documentation language.
 
-## Rules
+## What Gets Converted
 
-1. **ALL comments must be in Japanese** — no English comments in source code
-2. **Log messages** (console.log, logger.info, print, etc.) → Japanese
-3. **JSDoc / docstring** → Japanese
-4. **TODO / FIXME comments** → Japanese
-5. **Inline comments** → Japanese
-6. **Do NOT translate:** variable names, function names, string values returned to users/API
+| Target | Convert? | Example |
+|--------|----------|---------|
+| Inline comments (`//`, `#`) | Yes | `// Get user` → `// ユーザーを取得する` |
+| Block comments (`/* */`) | Yes | Same treatment |
+| JSDoc / docstrings | Yes | `@param userId` description → Japanese |
+| TODO / FIXME / HACK | Yes | `// TODO: refactor` → `// TODO: リファクタリングする` |
+| Log messages | Yes | `console.log('fetched')` → `console.log('取得しました')` |
+| Error messages for monitoring | Yes | Internal logs → Japanese |
 
-## What to Convert
+## What Stays in English
 
-### Before
+- Variable names, function names, class names
+- String values returned to users/API (user-facing text follows its own i18n rules)
+- Import statements and framework-specific annotations
+- Test assertion messages (these are developer-facing but often tied to framework output)
+- Commit messages (handled by separate git workflow)
+
+## Before / After
+
 ```typescript
 // Get user by ID
 const user = await db.user.findUnique({ where: { id } });
 
 // Check if user exists
 if (!user) {
-  throw new Error('User not found'); // This stays in English (API response)
+  throw new Error('User not found'); // API response stays English
 }
 
 console.log('User fetched successfully', user.id);
 ```
 
-### After
 ```typescript
 // IDでユーザーを取得する
 const user = await db.user.findUnique({ where: { id } });
@@ -48,16 +62,6 @@ if (!user) {
 console.log('ユーザーの取得に成功しました', user.id);
 ```
 
-## Adding Missing Comments
-
-Add Japanese comments to:
-- Functions/methods without any description comment
-- Complex logic blocks (conditions with 3+ conditions, non-obvious algorithms)
-- Class definitions
-- Important constants
-
-**Do NOT add comments to obvious one-liners** (e.g., `return true`, simple assignments).
-
 ## JSDoc Example
 
 ```typescript
@@ -69,24 +73,43 @@ Add Japanese comments to:
 async function getUserProfile(userId: string): Promise<UserProfile | null> {
 ```
 
+## Adding Missing Comments
+
+Add Japanese comments to code that lacks documentation:
+- Functions/methods without any description
+- Complex conditionals (3+ conditions, nested logic)
+- Class and interface definitions
+- Important constants and configuration values
+- Non-obvious algorithms or business logic
+
+Skip obvious one-liners — `return true`, simple assignments, and trivial getters
+don't need comments. Over-commenting is noise.
+
 ## Scan & Fix Process
 
-**Scope:** Only target files changed in this session, not a full-file scan.
+1. **Scope changed files only** — run `git diff HEAD --name-only` to get the list.
+   For new projects with no git history, use Glob to scan all source files.
+2. **Target file types:** `.ts`, `.tsx`, `.js`, `.jsx`, `.py`, `.java`, `.go`,
+   `.rb`, `.vue`, `.scss` (SCSS comments too)
+3. **Find English comments** — look for `//`, `#`, `/* */`, docstrings containing
+   English words. Convert each to natural Japanese.
+4. **Find missing comments** — identify functions, classes, and complex blocks
+   without any comments. Add concise Japanese descriptions.
+5. **Apply with Edit tool** — modify files in place. Don't create separate files.
 
-1. Get changed files with `git diff --name-only HEAD`
-2. Read only changed files
-3. Find English comments → convert to Japanese
-4. Find complex logic without comments → add Japanese comments
-5. Apply changes with Edit
+## Quality Guidelines
 
-For new projects (no git history), scan all source files with Glob.
+- Use natural Japanese, not machine-translation-style. Keep it concise.
+- Technical terms can stay in katakana (リファクタリング, コンポーネント, etc.)
+- Match the formality level of the existing codebase
+- Don't add unnecessary particles or overly polite forms in code comments
 
 ## Output
 
-```
+```markdown
 ## Japanese Comments
 
 - Comments converted: X
 - Comments added: Y
-- Target files: [list]
+- Files modified: [list]
 ```

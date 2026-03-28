@@ -1,0 +1,23 @@
+{
+  "skill_name": "subagent-dev",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I have an implementation plan at docs/plans/notification-system.md with 5 independent tasks. Can you execute it using subagents?",
+      "expected_output": "Reads the plan, identifies independent tasks, dispatches fresh subagents per task with precise instructions. Runs two-stage review (spec + quality) after each.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "서��에이전트로 플랜 실행해줘. 병렬로 돌릴 수 있는 태스크는 병렬로.",
+      "expected_output": "Analyzes task dependencies, dispatches independent tasks in parallel, sequential for dependent ones. Each subagent gets fresh context with only what it needs.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Execute tasks 3-7 from the plan. Tasks 3-5 are independent but 6 depends on 5 and 7 depends on 6.",
+      "expected_output": "Dispatches tasks 3, 4, 5 in parallel. After 5 completes and passes review, dispatches 6. After 6 completes, dispatches 7. Proper dependency handling.",
+      "files": []
+    }
+  ]
+}

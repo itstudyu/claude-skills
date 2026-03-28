@@ -1,0 +1,23 @@
+{
+  "skill_name": "tdd",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to add a discount calculation feature. The discount is 10% for orders over $100 and 20% for orders over $500. Use TDD.",
+      "expected_output": "Writes failing tests first (RED) for each discount tier + edge cases. Runs them to confirm failure. Then writes minimal implementation (GREEN). Refactors if needed.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "There's a bug where users can submit empty forms. Fix it with TDD approach.",
+      "expected_output": "Writes a test that reproduces the bug (empty form submission succeeds — should fail). Confirms test fails. Then adds validation. Confirms test passes. RED-GREEN cycle.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "テストファーストで新しいAPI エンドポイント POST /api/orders を作って。",
+      "expected_output": "Writes integration test for POST /api/orders first (expected behavior, validation, error cases). Runs to see RED. Implements endpoint. Runs to see GREEN. Refactors.",
+      "files": []
+    }
+  ]
+}

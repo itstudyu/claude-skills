@@ -1,0 +1,23 @@
+{
+  "skill_name": "write-plan",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I have a design spec at docs/specs/user-auth-design.md. Can you create an implementation plan from it?",
+      "expected_output": "Reads the spec, creates a plan with bite-sized TDD tasks, exact file paths, complete code blocks, verification commands, and no placeholders. Saves to docs/plans/.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "플랜 작성해줘. 방금 브레인스토밍한 API 리팩토링을 구현 계획으로 만들어.",
+      "expected_output": "Creates implementation plan from the brainstorm output, with task structure matching the template (checkbox steps, TDD cycle, commit points). Offers execution handoff.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "We need to add a notification system. Before coding, can you break it down into a step-by-step plan with all the files and tests?",
+      "expected_output": "Scope check first (single system or needs decomposition?), then file structure mapping, then bite-sized tasks with full code blocks. Self-review at end.",
+      "files": []
+    }
+  ]
+}

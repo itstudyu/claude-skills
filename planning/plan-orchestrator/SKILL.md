@@ -1,11 +1,13 @@
 ---
 name: plan-orchestrator
 description: |
-  Automatically scan all available skills, match the relevant ones to the user's task,
-  and generate a structured execution plan with dependency ordering and checkpoints.
-  Use when the user says "/plan-orchestrator", "plan this for me", "which skills should
-  I use", "make a plan", or when a complex task would benefit from coordinated multi-skill
-  execution. This skill is explicitly invoked — it does not auto-trigger.
+  Automatically scan all available skills from all sources, match the relevant ones to
+  the user's task, collect required context, apply coding standards, and generate a
+  structured execution plan with dependency ordering and checkpoints. Use when the user
+  says "plan-orchestrator", "plan this for me", "which skills should I use", "make a
+  plan", "プラン作って", "어떤 스킬 쓰면 돼", "플랜 세워줘", or when a complex task
+  would benefit from coordinated multi-skill execution. This skill is explicitly
+  invoked — it does not auto-trigger.
 allowed-tools:
   - Bash
   - Read

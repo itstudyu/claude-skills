@@ -1,0 +1,23 @@
+{
+  "skill_name": "verify-complete",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I think the feature is done. Can you verify everything passes before I create a PR?",
+      "expected_output": "Runs test suite, build command, and linter. Reports actual results with evidence (pass counts, exit codes). Does not claim success without fresh output.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "검증해줘. 방금 수정한 코드가 제대로 동작하는지 확인하고 싶어.",
+      "expected_output": "Identifies what needs verification, runs relevant commands, reads full output, reports with evidence. Stops if anything fails.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "The agent finished implementing the tasks. Is everything working?",
+      "expected_output": "Does NOT trust agent report. Independently verifies by checking VCS diff, running tests, and confirming build. Reports actual state with evidence.",
+      "files": []
+    }
+  ]
+}

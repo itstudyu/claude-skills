@@ -1,58 +1,64 @@
 ---
 name: write-plan
-description: "Create comprehensive implementation plans from specs or requirements, before touching code."
+description: |
+  Create comprehensive, step-by-step implementation plans from specs or requirements
+  before writing any code. Plans include exact file paths, complete code blocks, test
+  commands, and verification steps — no placeholders, no hand-waving. Use this skill
+  whenever the user says "write a plan", "make a plan", "create implementation plan",
+  "plan this out", "break this into tasks", "プラン作成", "計画を書いて", "플랜 작성해줘",
+  "구현 계획 세워줘", or before any implementation that involves more than a single file
+  change. Proactively suggest this skill after brainstorming completes — implementation
+  without a plan leads to rework.
 ---
 
 # Writing Plans
 
-## Overview
-
-Write comprehensive implementation plans assuming the engineer has zero context for the codebase and questionable taste. Document everything they need to know: which files to touch for each task, code, testing, docs they might need to check, how to test it. Give them the whole plan as bite-sized tasks. DRY. YAGNI. TDD. Frequent commits.
-
-Assume they are a skilled developer, but know almost nothing about the toolset or problem domain. Assume they don't know good test design very well.
-
-**Announce at start:** "I'm using the write-plan skill to create the implementation plan."
-
-**Save plans to:** a plans directory (e.g., `docs/plans/YYYY-MM-DD-<feature-name>.md`, or per project conventions)
+Write implementation plans that assume the executing engineer has zero codebase
+context and needs every detail spelled out. Document which files to touch, what code
+to write, how to test it, and when to commit. Plans use bite-sized tasks (2-5 minutes
+each) following TDD.
 
 ## Scope Check
 
-If the spec covers multiple independent subsystems, it should have been broken into sub-project specs during brainstorming. If it wasn't, suggest breaking this into separate plans — one per subsystem. Each plan should produce working, testable software on its own.
+If the spec covers multiple independent subsystems, it should have been decomposed
+during brainstorming. If not, suggest breaking it into separate plans — one per
+subsystem. Each plan should produce working, testable software on its own.
 
 ## File Structure
 
-Before defining tasks, map out which files will be created or modified and what each one is responsible for. This is where decomposition decisions get locked in.
+Before defining tasks, map out which files will be created or modified. This is where
+decomposition decisions get locked in.
 
-- Design units with clear boundaries and well-defined interfaces. Each file should have one clear responsibility.
-- You reason best about code you can hold in context at once, and your edits are more reliable when files are focused. Prefer smaller, focused files over large ones that do too much.
-- Files that change together should live together. Split by responsibility, not by technical layer.
-- In existing codebases, follow established patterns. If the codebase uses large files, don't unilaterally restructure - but if a file you're modifying has grown unwieldy, including a split in the plan is reasonable.
+- Each file has one clear responsibility
+- Prefer smaller, focused files over large ones doing too much
+- Files that change together should live together
+- In existing codebases, follow established patterns
+- If a file has grown unwieldy, including a split in the plan is reasonable
 
-This structure informs the task decomposition. Each task should produce self-contained changes that make sense independently.
+## Bite-Sized Tasks
 
-## Bite-Sized Task Granularity
+Each step is one action (2-5 minutes):
+- "Write the failing test" — step
+- "Run it to make sure it fails" — step
+- "Implement the minimal code to pass" — step
+- "Run tests and confirm they pass" — step
+- "Commit" — step
 
-**Each step is one action (2-5 minutes):**
-- "Write the failing test" - step
-- "Run it to make sure it fails" - step
-- "Implement the minimal code to make the test pass" - step
-- "Run the tests and make sure they pass" - step
-- "Commit" - step
+This granularity makes progress visible and failures easy to diagnose.
 
 ## Plan Document Header
 
-**Every plan MUST start with this header:**
+Every plan starts with:
 
 ```markdown
 # [Feature Name] Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use subagent-dev (recommended) or execute-plan to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** Use subagent-dev (recommended) or execute-plan
+> to implement this plan task-by-task. Steps use checkbox syntax for tracking.
 
-**Goal:** [One sentence describing what this builds]
-
+**Goal:** [One sentence]
 **Architecture:** [2-3 sentences about approach]
-
-**Tech Stack:** [Key technologies/libraries]
+**Tech Stack:** [Key technologies]
 
 ---
 ```
@@ -102,48 +108,46 @@ git commit -m "feat: add specific feature"
 
 ## No Placeholders
 
-Every step must contain the actual content an engineer needs. These are **plan failures** — never write them:
+Every step must contain the actual content an engineer needs. These are plan
+failures — never write them:
+
 - "TBD", "TODO", "implement later", "fill in details"
 - "Add appropriate error handling" / "add validation" / "handle edge cases"
 - "Write tests for the above" (without actual test code)
-- "Similar to Task N" (repeat the code — the engineer may be reading tasks out of order)
-- Steps that describe what to do without showing how (code blocks required for code steps)
+- "Similar to Task N" (repeat the code — tasks may be read out of order)
+- Steps that describe what to do without showing how
 - References to types, functions, or methods not defined in any task
-
-## Remember
-- Exact file paths always
-- Complete code in every step — if a step changes code, show the code
-- Exact commands with expected output
-- DRY, YAGNI, TDD, frequent commits
 
 ## Self-Review
 
-After writing the complete plan, look at the spec with fresh eyes and check the plan against it. This is a checklist you run yourself — not a subagent dispatch.
+After writing the complete plan, review it with fresh eyes:
 
-**1. Spec coverage:** Skim each section/requirement in the spec. Can you point to a task that implements it? List any gaps.
+1. **Spec coverage:** Skim each requirement in the spec. Can you point to a task
+   that implements it? List any gaps.
+2. **Placeholder scan:** Search for any red flags from the "No Placeholders" section.
+   Fix them.
+3. **Type consistency:** Do types, method signatures, and property names match across
+   tasks? `clearLayers()` in Task 3 but `clearFullLayers()` in Task 7 is a bug.
 
-**2. Placeholder scan:** Search your plan for red flags — any of the patterns from the "No Placeholders" section above. Fix them.
-
-**3. Type consistency:** Do the types, method signatures, and property names you used in later tasks match what you defined in earlier tasks? A function called `clearLayers()` in Task 3 but `clearFullLayers()` in Task 7 is a bug.
-
-If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
+Fix issues inline. If you find a spec requirement with no task, add the task.
 
 ## Execution Handoff
 
-After saving the plan, offer execution choice:
+After saving the plan, offer execution options:
 
-**"Plan complete and saved to `<path>`. Two execution options:**
+> **Plan complete and saved to `<path>`. Two execution options:**
+>
+> **1. Subagent-Driven (recommended)** — fresh subagent per task, review between
+> tasks, fast parallel iteration
+>
+> **2. Inline Execution** — execute tasks in this session with checkpoints
+>
+> **Which approach?**
 
-**1. Subagent-Driven (recommended)** - Dispatch a fresh subagent per task, review between tasks, fast iteration
+- Subagent-Driven → use the subagent-dev skill
+- Inline Execution → use the execute-plan skill
 
-**2. Inline Execution** - Execute tasks in this session, batch execution with checkpoints
+## Save Location
 
-**Which approach?"**
-
-**If Subagent-Driven chosen:**
-- Use the subagent-dev skill
-- Fresh subagent per task + two-stage review
-
-**If Inline Execution chosen:**
-- Use the execute-plan skill
-- Batch execution with checkpoints for review
+Save plans to a plans directory: `docs/plans/YYYY-MM-DD-<feature-name>.md`
+or per project conventions.

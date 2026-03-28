@@ -1,6 +1,15 @@
 ---
 name: systematic-debug
-description: "Find root cause before attempting fixes. Use when encountering any bug, test failure, or unexpected behavior."
+description: |
+  Find the root cause of bugs before attempting any fix. Uses a 4-phase investigation
+  process: investigate symptoms, analyze patterns, form hypotheses, then implement the
+  fix. Use this skill whenever the user encounters a bug, test failure, error message,
+  unexpected behavior, or performance issue. Trigger on "debug this", "fix this bug",
+  "why is this broken", "investigate this error", "root cause", "なぜ壊れた", "原因調査",
+  "디버그", "버그 수정", "원인 분석", or when any error is repeated 2+ times without
+  resolution. Proactively suggest this skill when the user is trying random fixes
+  without understanding the underlying cause — symptom fixes waste time and create
+  new bugs.
 ---
 
 # Systematic Debugging

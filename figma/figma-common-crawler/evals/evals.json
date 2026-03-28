@@ -1,0 +1,11 @@
+{
+  "skill_name": "figma-common-crawler",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Crawl the Figma component at this URL and extract all its styles and variants: https://figma.com/design/abc123/Components?node-id=1-2",
+      "expected_output": "Uses Figma MCP to resolve the URL, extract component styles (colors, typography, spacing), variants, and properties into a standardized spec format.",
+      "files": []
+    }
+  ]
+}

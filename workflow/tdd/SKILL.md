@@ -1,6 +1,13 @@
 ---
 name: tdd
-description: "Test-Driven Development - write the test first, watch it fail, write minimal code to pass. Use before writing any implementation code."
+description: |
+  Test-Driven Development — write the test first, watch it fail, then write minimal
+  code to make it pass. RED-GREEN-REFACTOR cycle for every feature, bug fix, and
+  behavior change. Use this skill whenever the user says "TDD", "test first",
+  "write tests", "テスト駆動", "テストファースト", "TDD로", "테스트 먼저", or when
+  implementing any new feature or fixing any bug. Proactively suggest this skill
+  whenever code is about to be written without a failing test — if you didn't watch
+  the test fail, you don't know if it tests the right thing.
 ---
 
 # Test-Driven Development (TDD)

@@ -1,0 +1,23 @@
+{
+  "skill_name": "devops-safety-check",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Run a security check on the current project before I commit. I just added some API integration code and want to make sure I didn't leave any keys in the source.",
+      "expected_output": "A structured safety check report table showing any hardcoded secrets, injection risks, or dependency issues found in the codebase, with file paths and line numbers.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I pushed some code that has database queries and user input handling. Can you do a quick security scan to see if there are any injection vulnerabilities?",
+      "expected_output": "A report focusing on SQL injection and XSS patterns, checking grep results in context and only flagging actual risks (not parameterized queries or static strings).",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "보안 검사 해줘. 새로 추가한 인증 코드에 문제 없는지 확인하고 싶어.",
+      "expected_output": "A safety check report in the user's language (Korean) covering all 4 scan areas, with particular attention to the authentication code for hardcoded credentials and injection patterns.",
+      "files": []
+    }
+  ]
+}

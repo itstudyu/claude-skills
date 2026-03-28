@@ -1,0 +1,23 @@
+{
+  "skill_name": "systematic-debug",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "The login API is returning 500 errors intermittently. I've tried restarting the server but it keeps happening. Can you debug this?",
+      "expected_output": "Starts Phase 1 investigation (reproduce, gather evidence, check logs) before proposing any fix. Does NOT jump to 'try restarting' or 'add error handling'.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "テストが失敗してる。TypeError: Cannot read properties of undefined が出てるんだけど原因わかる？",
+      "expected_output": "Investigates the TypeError systematically — reads the failing test, traces the undefined value, checks recent changes. Finds root cause before suggesting fix.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "This component renders fine locally but breaks in production. The styles are all messed up. I already tried clearing the cache.",
+      "expected_output": "Investigates environment differences (build config, CSS bundling, CDN caching). Does NOT suggest 'try clearing cache again'. Systematic 4-phase approach.",
+      "files": []
+    }
+  ]
+}

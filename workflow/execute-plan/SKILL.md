@@ -1,70 +1,91 @@
 ---
 name: execute-plan
-description: "Execute a written implementation plan in a separate session with review checkpoints."
+description: |
+  Execute a written implementation plan step by step with review checkpoints.
+  Loads a plan file, reviews it critically, executes each task in order, and
+  verifies results before marking complete. Use this skill whenever the user
+  says "execute the plan", "implement this plan", "run the plan", "follow the
+  plan", "プラン実行", "計画を実行して", "플랜 실행해줘", "이 계획 구현해",
+  or references a plan file they want implemented. Proactively suggest this
+  skill when a write-plan output exists and the user is ready to build.
+  Note: if subagents are available, consider subagent-dev for higher quality
+  parallel execution. This skill is best for sequential, single-session work.
 ---
 
 # Executing Plans
 
-## Overview
+Load a plan, review it critically, execute all tasks, and verify completion.
+Plans come from the write-plan skill and contain bite-sized tasks with exact
+file paths, code blocks, and verification commands.
 
-Load plan, review critically, execute all tasks, report when complete.
+## Step 1: Load and Review
 
-**Announce at start:** "I'm using the execute-plan skill to implement this plan."
+Before writing any code, understand what the plan asks for and whether it
+makes sense. Blind execution of a flawed plan wastes more time than catching
+issues upfront.
 
-**Note:** If subagents are available, consider using the subagent-dev skill instead of this skill for higher quality results. This skill is best for environments without subagent support.
+1. Read the plan file
+2. Review critically — identify questions, gaps, or concerns
+3. If concerns exist: raise them with the user before starting
+4. If no concerns: create a TodoWrite checklist from the plan's tasks and proceed
 
-## The Process
+## Step 2: Execute Tasks
 
-### Step 1: Load and Review Plan
-1. Read plan file
-2. Review critically - identify any questions or concerns about the plan
-3. If concerns: Raise them with your human partner before starting
-4. If no concerns: Create TodoWrite and proceed
+For each task in the plan:
 
-### Step 2: Execute Tasks
+1. **Mark as in_progress** in TodoWrite
+2. **Follow each step exactly** — the plan has bite-sized steps with code blocks
+3. **Run verifications** as specified in each step (test commands, build checks)
+4. **Mark as completed** only after verification passes
 
-For each task:
-1. Mark as in_progress
-2. Follow each step exactly (plan has bite-sized steps)
-3. Run verifications as specified
-4. Mark as completed
+Between tasks, briefly report what was done and what's next. This gives the
+user visibility into progress without requiring them to ask.
 
-### Step 3: Complete Development
+## Step 3: Complete Development
 
-After all tasks complete and verified:
-- Run full test suite
-- Verify all changes work together
-- Present summary of what was built
+After all tasks are done:
 
-## When to Stop and Ask for Help
+1. Run the full test suite — not just individual test files
+2. Verify all changes work together (integration check)
+3. Present a summary of what was built
 
-**STOP executing immediately when:**
-- Hit a blocker (missing dependency, test fails, instruction unclear)
-- Plan has critical gaps preventing starting
-- You don't understand an instruction
-- Verification fails repeatedly
+## When to Stop and Ask
 
-**Ask for clarification rather than guessing.**
+Stop executing immediately when:
+- A dependency is missing or a test fails unexpectedly
+- The plan has gaps that prevent starting a task
+- An instruction is unclear or ambiguous
+- Verification fails repeatedly (2+ attempts)
 
-## When to Revisit Earlier Steps
+Ask for clarification rather than guessing. Forcing through blockers creates
+more problems than pausing to ask.
 
-**Return to Review (Step 1) when:**
-- Partner updates the plan based on your feedback
-- Fundamental approach needs rethinking
+## When to Revisit Step 1
 
-**Don't force through blockers** - stop and ask.
+Return to the review phase when:
+- The user updates the plan based on your feedback
+- The fundamental approach needs rethinking after discovering issues
 
-## Remember
-- Review plan critically first
-- Follow plan steps exactly
-- Don't skip verifications
-- Reference skills when plan says to
-- Stop when blocked, don't guess
-- Never start implementation on main/master branch without explicit user consent
+## Output
+
+After completion, report:
+
+```markdown
+## Execution Complete
+
+**Plan:** [plan file path]
+**Tasks completed:** X/Y
+**Tests:** [pass count] / [total count]
+**Files created:** [list]
+**Files modified:** [list]
+
+### Summary
+[Brief description of what was built and any notable decisions made during execution]
+```
 
 ## Integration
 
-**Related skills:**
-- **write-plan** - Creates the plan this skill executes
-- **tdd** - Follow TDD for each task
-- **verify-complete** - Verify work before claiming success
+- **write-plan** — creates the plans this skill executes
+- **tdd** — follow TDD cycle within each task
+- **verify-complete** — verify work before claiming success
+- **subagent-dev** — alternative for parallel execution with subagents

@@ -1,0 +1,23 @@
+{
+  "skill_name": "skill-catalog",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Scan all installed skills and update the catalog. I just installed a new skill pack.",
+      "expected_output": "Scans ~/.claude/skills/ and project local skills, groups by source, parses SKILL.md frontmatter, generates/updates skill-catalog.md with counts per source.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "스킬 목록 보여줘. 지금 사용 가능한 스킬이 뭐가 있어?",
+      "expected_output": "Reads skill-catalog.md and presents a summary of all skills grouped by source with descriptions and tags.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Add a new skill pack from ~/my-custom-skills/ to the catalog.",
+      "expected_output": "Scans the specified path for SKILL.md files, adds a new source section to skill-catalog.md, reports what was added.",
+      "files": []
+    }
+  ]
+}

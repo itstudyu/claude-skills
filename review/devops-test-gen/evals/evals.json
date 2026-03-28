@@ -1,0 +1,23 @@
+{
+  "skill_name": "devops-test-gen",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I just wrote a new Angular service for user authentication. Can you generate tests for it? The file is src/app/services/auth.service.ts.",
+      "expected_output": "Detects Angular/Karma or Jest framework, generates a .spec.ts file with tests covering login, logout, token refresh, error handling. Follows existing test patterns in the project.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "테스트 생성해줘. 방금 수정한 Python API 핸들러에 대해서 regression test가 필요해.",
+      "expected_output": "Identifies changed functions via git diff, generates pytest regression tests verifying existing behavior still holds, plus new tests for any added functionality.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "I added a bunch of new utility functions but forgot to write tests. Can you add tests for everything in src/utils/?",
+      "expected_output": "Scans all files in src/utils/, detects the test framework, generates test files matching the project's naming convention with tests for each exported function.",
+      "files": []
+    }
+  ]
+}

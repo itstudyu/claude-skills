@@ -3,9 +3,11 @@ name: skill-catalog
 description: |
   Scan, register, and manage skills from multiple sources (gstack, claude-skills,
   custom packs). Generates skill-catalog.md — the single source of truth for
-  plan-orchestrator and all skill discovery. Use when asked to "scan skills",
-  "update catalog", "add skill pack", "list skills", or "skill-catalog".
-  Proactively suggest after installing a new skill pack.
+  plan-orchestrator and all skill discovery. Use whenever the user says "scan skills",
+  "update catalog", "add skill pack", "list skills", "skill-catalog", "what skills
+  are available", "スキル一覧", "スキルスキャン", "스킬 스캔", "스킬 목록", or after
+  installing any new skill pack. Proactively suggest when skill-catalog.md is missing
+  or when the user asks about available skills.
 allowed-tools:
   - Bash
   - Read

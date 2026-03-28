@@ -1,6 +1,13 @@
 ---
 name: subagent-dev
-description: "Execute implementation plans by dispatching fresh subagents per task with two-stage review. Includes parallel dispatch for independent problems."
+description: |
+  Execute implementation plans by dispatching a fresh subagent per task, with two-stage
+  review (spec compliance + code quality) after each. Supports parallel dispatch for
+  independent tasks. Use this skill whenever the user says "use subagents", "dispatch
+  agents", "parallel execution", "サブエージェント実行", "서브에이전트", or when an
+  implementation plan exists and tasks are mostly independent. Proactively suggest
+  this skill over execute-plan when subagents are available — fresh context per task
+  produces higher quality results than sequential execution in a long session.
 ---
 
 # Subagent-Driven Development
