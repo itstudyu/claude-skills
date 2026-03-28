@@ -1,21 +1,20 @@
 #!/usr/bin/env bash
-# claude-skills installer — symlink skills + register hooks
+# claude-skills installer — symlink project-specific skills + register hooks
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 CLAUDE_DIR="$HOME/.claude"
 SKILLS_DIR="$CLAUDE_DIR/skills"
-SETTINGS_FILE="$CLAUDE_DIR/settings.json"
 
 # Colors
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
+RED='\033[0;31m'
 NC='\033[0m'
 
 # ─── Uninstall mode ──────────────────────────────────────────
 if [ "$1" = "--uninstall" ]; then
   echo "Uninstalling claude-skills..."
-  # Remove skill symlinks
   find "$SKILLS_DIR" -maxdepth 1 -type l | while read link; do
     target="$(readlink "$link")"
     if echo "$target" | grep -q "claude-skills"; then
@@ -27,6 +26,15 @@ if [ "$1" = "--uninstall" ]; then
   exit 0
 fi
 
+# ─── Check gstack ────────────────────────────────────────────
+if [ ! -d "$SKILLS_DIR/gstack" ]; then
+  echo -e "${YELLOW}Warning: gstack is not installed.${NC}"
+  echo "  Many skills (browse, review, qa, ship, etc.) require gstack."
+  echo "  Install: git clone https://github.com/garrytan/gstack.git ~/.claude/skills/gstack"
+  echo "           cd ~/.claude/skills/gstack && ./setup"
+  echo ""
+fi
+
 # ─── Create directories ──────────────────────────────────────
 mkdir -p "$SKILLS_DIR"
 mkdir -p "$CLAUDE_DIR/hooks"
@@ -35,7 +43,7 @@ echo "Installing claude-skills from $SCRIPT_DIR"
 echo ""
 
 # ─── Symlink skills (category/skill-name/SKILL.md) ───────────
-CATEGORIES="workflow review planning figma design safety analysis utility"
+CATEGORIES="workflow review planning figma utility"
 COUNT=0
 
 for category in $CATEGORIES; do
@@ -55,14 +63,6 @@ for category in $CATEGORIES; do
     COUNT=$((COUNT + 1))
   done
 done
-
-# Also symlink browse/ if it exists
-if [ -d "$SCRIPT_DIR/browse" ] && [ -f "$SCRIPT_DIR/browse/SKILL.md" ]; then
-  target="$SKILLS_DIR/browse"
-  [ -L "$target" ] && rm "$target"
-  ln -s "$SCRIPT_DIR/browse" "$target"
-  COUNT=$((COUNT + 1))
-fi
 
 echo -e "${GREEN}Linked $COUNT skills to $SKILLS_DIR${NC}"
 
@@ -86,4 +86,4 @@ echo -e "${GREEN}Installation complete!${NC}"
 echo "  Skills: $COUNT"
 echo "  Hooks: $(ls "$CLAUDE_DIR/hooks/"*.sh 2>/dev/null | wc -l | tr -d ' ')"
 echo ""
-echo -e "${YELLOW}Note: Run ./setup to also build the browse binary (requires bun).${NC}"
+echo -e "${YELLOW}Tip: Run /skill-catalog scan to update the unified skill catalog.${NC}"

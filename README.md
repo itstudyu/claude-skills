@@ -1,6 +1,17 @@
 # claude-skills
 
-Claude Code skill collection for development workflow automation.
+Project-specific Claude Code skills for workflow, Figma automation, and DevOps review.
+
+General-purpose skills (browse, review, QA, ship, security, etc.) are provided by
+[gstack](https://github.com/garrytan/gstack) — installed separately.
+
+## Prerequisites
+
+```bash
+# Install gstack (general-purpose skills)
+git clone https://github.com/garrytan/gstack.git ~/.claude/skills/gstack
+cd ~/.claude/skills/gstack && ./setup
+```
 
 ## Install
 
@@ -10,7 +21,9 @@ cd claude-skills
 ./install.sh
 ```
 
-## Skills
+After install, run `/skill-catalog scan` to generate the unified skill catalog.
+
+## Skills (16 project-specific)
 
 ### workflow/ — Development Workflow
 | Skill | Description |
@@ -23,25 +36,17 @@ cd claude-skills
 | `/systematic-debug` | 4-phase root cause investigation |
 | `/verify-complete` | Evidence-based verification gate |
 
-### review/ — Code Quality
+### review/ — DevOps Quality
 | Skill | Description |
 |-------|-------------|
-| `/review` | PR code review (diff-based) |
-| `/qa` | Browser QA testing + auto-fix |
-| `/qa-only` | QA report only (no fixes) |
-| `/cso` | OWASP Top 10 + STRIDE security audit |
 | `/devops-japanese-comments` | Japanese comment enforcement |
 | `/devops-safety-check` | Lightweight security scan |
 | `/devops-test-gen` | Auto-generate tests |
 
-### planning/ — Plan & Review
+### planning/ — Orchestration
 | Skill | Description |
 |-------|-------------|
-| `/plan-orchestrator` | Auto-scan skills + build execution plan |
-| `/plan-ceo-review` | CEO perspective plan review |
-| `/plan-eng-review` | Engineering perspective plan review |
-| `/plan-design-review` | Design perspective plan review |
-| `/autoplan` | Auto-run all 3 plan reviews |
+| `/plan-orchestrator` | Auto-scan skills from all sources + build execution plan |
 
 ### figma/ — Figma Automation
 | Skill | Description |
@@ -49,32 +54,18 @@ cd claude-skills
 | `/figma-component-writer` | Figma → angular-web-common shared components |
 | `/figma-to-code` | Figma → Angular page code (with common mapping) |
 
-### design/ — Design System
+### utility/ — Catalog Management
 | Skill | Description |
 |-------|-------------|
-| `/design-consultation` | Build design system from scratch |
-| `/design-review` | Visual design audit + fixes |
+| `/skill-catalog` | Scan and manage skills from multiple sources |
 
-### safety/ — Safety Guards
-| Skill | Description |
-|-------|-------------|
-| `/careful` | Warn before destructive commands |
-| `/freeze` | Restrict edits to a directory |
-| `/guard` | careful + freeze combined |
-| `/unfreeze` | Remove freeze restriction |
+## Skill Catalog
 
-### analysis/ — Analysis & Monitoring
-| Skill | Description |
-|-------|-------------|
-| `/project-analyzer` | Analyze project structure/framework/conventions |
-| `/investigate` | Root cause debugging with browser |
-| `/benchmark` | Performance regression detection |
-| `/retro` | Weekly engineering retrospective |
+`skill-catalog.md` is the unified registry of ALL skills from ALL sources.
+`/plan-orchestrator` reads this file for skill matching.
 
-### utility/ — Utilities
-| Skill | Description |
-|-------|-------------|
-| `/ship` | Test → PR → push workflow |
-| `/document-release` | Post-ship documentation updates |
-| `/setup-browser-cookies` | Import cookies for auth testing |
-| `/claude-skills-upgrade` | Self-updater |
+```bash
+/skill-catalog scan      # Regenerate catalog from all sources
+/skill-catalog list      # Show summary
+/skill-catalog add       # Register a new skill pack
+```

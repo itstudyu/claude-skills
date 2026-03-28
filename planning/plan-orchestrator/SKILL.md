@@ -26,25 +26,36 @@ Use plan-orchestrator when:
 
 ## Two-Tier Skill Loading (Token Efficiency)
 
-### Tier 1: CLAUDE.md Skill Index (always loaded)
+### Tier 1: Skill Catalog (always loaded)
 
-CLAUDE.md contains a lightweight skill index — one line per skill:
+`skill-catalog.md` (project root) is the unified skill registry. It lists ALL
+skills from ALL sources (gstack, claude-skills, custom packs) with one line each:
 
 ```
-| Skill | Description | Tags |
-|-------|-------------|------|
-| brainstorm | Socratic design, 3 options before implementation | #design #planning |
-| write-plan | Bite-sized 2-5min tasks, zero-context assumption | #planning #tasks |
-| tdd | RED-GREEN-REFACTOR, no code without failing test | #testing #quality |
-| ...  | ... | ... |
+## gstack (source: ~/.claude/skills/gstack/)
+| Skill | Path | Description | Tags |
+|-------|------|-------------|------|
+| review | review/ | Pre-landing PR review | #review #quality |
+| qa | qa/ | QA test web app + fixes | #testing #browser |
+
+## claude-skills (source: ./)
+| Skill | Path | Description | Tags |
+|-------|------|-------------|------|
+| brainstorm | workflow/brainstorm/ | Socratic design process | #design #planning |
+| figma-to-code | figma/figma-to-code/ | Figma → Angular code | #figma #agent |
 ```
 
 This costs ~500 tokens for 30 skills. Even at 100 skills, ~1500 tokens.
+Each skill has a **source** (gstack, claude-skills, etc.) for clear attribution.
+
+If `skill-catalog.md` is missing, run `/skill-catalog scan` first.
 
 ### Tier 2: SKILL.md (loaded on demand)
 
 After filtering candidates from Tier 1, read only the matched SKILL.md files
-to understand their full capabilities. Typically 5-7 skills per plan.
+to understand their full capabilities. Use the **Path** column to locate each
+SKILL.md. For gstack skills: `~/.claude/skills/gstack/<path>/SKILL.md`.
+For project skills: `./<path>/SKILL.md`. Typically 5-7 skills per plan.
 
 ## Pipeline
 
@@ -60,35 +71,39 @@ If `project-context.md` exists, read it for project-specific context.
 
 ### Phase 2: Skill Matching
 
-#### Step 2a — Tier 1 Scan (CLAUDE.md Skill Index)
+#### Step 2a — Tier 1 Scan (Skill Catalog)
 
-Scan CLAUDE.md Skill Index. For each skill, check:
+Read `skill-catalog.md`. For each skill across ALL sources, check:
 1. Do the tags match the task domain?
 2. Does the description match the task intent?
 3. Is the skill relevant to the identified scope?
+4. Note the **source** for each candidate.
 
-List all matched candidates with reasoning:
+List all matched candidates WITH source:
 
 ```
 Tier 1 Matches:
-  ✓ project-analyzer — #analysis — new project needs context
-  ✓ figma-to-code — #figma #agent — Figma URL + page implementation
-  ✓ brainstorm — #design #planning — explore design options
-  ✗ tdd — #testing — matched but figma-to-code has built-in validation
+  ✓ [gstack] project-analyzer — #analysis — new project needs context
+  ✓ [gstack] review — #review — PR diff analysis needed
+  ✓ [claude-skills] figma-to-code — #figma #agent — Figma URL provided
+  ✓ [claude-skills] brainstorm — #design #planning — explore design options
+  ✗ [claude-skills] tdd — #testing — matched but figma-to-code has built-in validation
 ```
 
 **Matching heuristics (starting points only):**
 
-| Task Signal | Likely Skills |
+| Task Signal | Likely Skills (source) |
 |---|---|
-| New feature / page | project-analyzer → brainstorm → write-plan → tdd → verify-complete |
-| Figma URL + page | project-analyzer → figma-to-code → review |
-| Figma URL + common | figma-component-writer |
-| Bug / error | systematic-debug → tdd → verify-complete |
-| Code review | review → cso |
-| Performance issue | benchmark → investigate |
-| New project | project-analyzer → brainstorm → write-plan |
-| Refactoring | brainstorm → write-plan → review → verify-complete |
+| New feature / page | project-analyzer [g] → brainstorm [cs] → write-plan [cs] → tdd [cs] → verify-complete [cs] |
+| Figma URL + page | project-analyzer [g] → figma-to-code [cs] → review [g] |
+| Figma URL + common | figma-component-writer [cs] |
+| Bug / error | systematic-debug [cs] → tdd [cs] → verify-complete [cs] |
+| Code review | review [g] → cso [g] |
+| Performance issue | benchmark [g] → investigate [g] |
+| New project | project-analyzer [g] → brainstorm [cs] → write-plan [cs] |
+| Refactoring | brainstorm [cs] → write-plan [cs] → review [g] → verify-complete [cs] |
+
+Legend: [g] = gstack, [cs] = claude-skills
 
 Adjust based on the actual SKILL.md capabilities confirmed in Step 2b.
 
@@ -136,13 +151,13 @@ Produce a plan using this template:
 
 ## Skill Selection (from Tier 2 verification)
 
-| Skill | Selected | Reason |
-|-------|----------|--------|
-| project-analyzer | ✓ | New project — context needed for downstream skills |
-| figma-to-code | ✓ | Figma URL provided, Phase 1-6 pipeline matches task |
-| brainstorm | ✗ | Figma design already defines UI — no need to explore options |
-| verify-complete | ✓ | Final verification gate after code generation |
-| ... | ... | ... |
+| Source | Skill | Selected | Reason |
+|--------|-------|----------|--------|
+| gstack | project-analyzer | ✓ | New project — context needed for downstream skills |
+| claude-skills | figma-to-code | ✓ | Figma URL provided, Phase 1-6 pipeline matches task |
+| claude-skills | brainstorm | ✗ | Figma design already defines UI — no need to explore options |
+| claude-skills | verify-complete | ✓ | Final verification gate after code generation |
+| ... | ... | ... | ... |
 
 ## Dependency
 Step1 → Step2 → Step3
@@ -151,35 +166,35 @@ Step1 → Step2 → Step3
 ## Steps
 
 ### Step 1: [Goal]
-- **Skills:** project-analyzer
+- **Skills:** project-analyzer [gstack]
 - **Why this skill:** [1-line reason from Tier 2 confirmation]
 - **Files:** (discovered during execution)
 - **Output:** project-context.md
 - **Checkpoint:** ⬜ Auto
 
 ### Step 2: [Goal]
-- **Skills:** brainstorm
+- **Skills:** brainstorm [claude-skills]
 - **Why this skill:** [1-line reason from Tier 2 confirmation]
 - **Files:** docs/specs/
 - **Output:** Design spec with user approval
 - **Checkpoint:** ✅ User confirmation required
 
 ### Step 3: [Goal]
-- **Skills:** write-plan, tdd
+- **Skills:** write-plan [claude-skills], tdd [claude-skills]
 - **Why this skill:** [1-line reason from Tier 2 confirmation]
 - **Files:** src/features/login/
 - **Output:** Implementation + tests
 - **Checkpoint:** ✅ User confirmation required
 
 ### Step 4: [Goal]
-- **Skills:** review, cso
+- **Skills:** review [gstack], cso [gstack]
 - **Why this skill:** [1-line reason from Tier 2 confirmation]
 - **Files:** (all changed files)
 - **Output:** Review report
 - **Checkpoint:** ⬜ Auto
 
 ### Step 5: [Goal]
-- **Skills:** verify-complete
+- **Skills:** verify-complete [claude-skills]
 - **Why this skill:** [1-line reason from Tier 2 confirmation]
 - **Files:** (all outputs)
 - **Output:** Verification report
@@ -204,21 +219,21 @@ If any check fails → go back to Phase 2b. Do not present an unverified plan.
 Show the plan to the user in a clear format:
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│ Plan: 로그인 화면 구현                                    │
-├────────────────────────────────────────────────────────── │
-│ Step 1: project-analyzer      (프로젝트 파악)     ⬜ Auto │
-│ Step 2: brainstorm            (설계 옵션)         ✅ 확인 │
-│ Step 3: write-plan + tdd      (구현 + 테스트)     ✅ 확인 │
-│ Step 4: review + cso          (리뷰 + 보안)       ⬜ Auto │
-│ Step 5: verify-complete       (검증)              ⬜ Auto │
-└──────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────┐
+│ Plan: 로그인 화면 구현                                                │
+├────────────────────────────────────────────────────────────────────── │
+│ Step 1: project-analyzer [g]        (프로젝트 파악)          ⬜ Auto │
+│ Step 2: brainstorm [cs]             (설계 옵션)              ✅ 확인 │
+│ Step 3: write-plan + tdd [cs]       (구현 + 테스트)          ✅ 확인 │
+│ Step 4: review + cso [g]            (리뷰 + 보안)            ⬜ Auto │
+│ Step 5: verify-complete [cs]        (검증)                   ⬜ Auto │
+├──────────────────────────────────────────────────────────────────────│
+│ Sources: [g] gstack  [cs] claude-skills                              │
+└──────────────────────────────────────────────────────────────────────┘
 
 Dependency: Step1 → Step2 → Step3 → Step4 → Step5
-Estimated skills: 7
+Estimated skills: 7 (3 gstack + 4 claude-skills)
 Checkpoints: 2 (user confirmation at Steps 2, 3)
-
-Proceed? [Y/n]
 ```
 
 **⛔ HARD GATE:** Call `ExitPlanMode` to request user approval.

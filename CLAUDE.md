@@ -1,6 +1,12 @@
 # claude-skills
 
-> Claude Code skill collection. gstack base + superpowers workflow + Figma automation.
+> Project-specific Claude Code skills. Workflow, Figma automation, and DevOps review.
+> General-purpose skills (browse, review, QA, ship, etc.) are provided by **gstack** (installed separately).
+
+## Prerequisites
+
+- **gstack**: `git clone https://github.com/garrytan/gstack.git ~/.claude/skills/gstack && cd ~/.claude/skills/gstack && ./setup`
+- All gstack skills (browse, review, qa, ship, cso, etc.) are available via gstack global install.
 
 ## Routing
 
@@ -9,27 +15,34 @@ User Request
     ↓
 CLAUDE.md (this file)
     ├→ Figma component URL + "common/shared/공통"
-    │   → /figma-component-writer
+    │   → /figma-component-writer [claude-skills]
     │
     ├→ Figma URL + "page/screen/implement/구현"
-    │   → /figma-to-code
+    │   → /figma-to-code [claude-skills]
     │
     ├→ "/plan-orchestrator" or "plan this"
-    │   → /plan-orchestrator (scans all skills, builds plan)
+    │   → /plan-orchestrator [claude-skills] (reads skill-catalog.md for all sources)
     │
     ├→ Idea/brainstorm ("brainstorm", "maybe", "어떻게")
-    │   → /brainstorm → /write-plan → /execute-plan
+    │   → /brainstorm → /write-plan → /execute-plan [claude-skills]
     │
     ├→ Debug/error ("debug", "bug", "error", "broken")
-    │   → /systematic-debug
+    │   → /systematic-debug [claude-skills]
     │
-    ├→ Project analysis ("analyze project", "onboard")
-    │   → /project-analyzer
+    ├→ Skill catalog ("scan skills", "update catalog", "add skill pack")
+    │   → /skill-catalog [claude-skills]
     │
-    └→ Other → direct /skill-name invocation
+    └→ Other → direct /skill-name (check skill-catalog.md for available skills)
 ```
 
-## Skill Index (Tier 1)
+## Skill Discovery
+
+**`skill-catalog.md`** is the unified skill registry. It lists ALL skills from ALL sources
+(gstack, claude-skills, custom packs). Run `/skill-catalog scan` to regenerate.
+
+plan-orchestrator reads this file as Tier 1 for skill matching.
+
+## Project Skills (claude-skills)
 
 ### workflow/
 | Skill | Description | Tags |
@@ -45,10 +58,6 @@ CLAUDE.md (this file)
 ### review/
 | Skill | Description | Tags |
 |-------|-------------|------|
-| review | PR code review (diff-based) | #review #quality |
-| qa | Browser QA testing + fixes | #testing #browser |
-| qa-only | QA report only (no fixes) | #testing #browser |
-| cso | OWASP Top 10 + STRIDE security audit | #security |
 | devops-japanese-comments | Japanese comment enforcement | #quality #i18n |
 | devops-safety-check | Lightweight security scan | #security |
 | devops-test-gen | Auto-generate tests for changed code | #testing |
@@ -56,11 +65,7 @@ CLAUDE.md (this file)
 ### planning/
 | Skill | Description | Tags |
 |-------|-------------|------|
-| plan-orchestrator | Auto-scan skills, build execution plan | #planning #orchestration |
-| plan-ceo-review | CEO perspective plan review | #review #planning |
-| plan-eng-review | Engineering perspective plan review | #review #planning |
-| plan-design-review | Design perspective plan review | #review #design |
-| autoplan | Auto-run CEO + design + eng reviews | #review #planning |
+| plan-orchestrator | Auto-scan skills from all sources, build execution plan | #planning #orchestration |
 
 ### figma/
 | Skill | Description | Tags |
@@ -71,35 +76,10 @@ CLAUDE.md (this file)
 | figma-component-writer | Orchestrate: Figma → angular-web-common | #figma #agent |
 | figma-to-code | Figma URL → Angular code with common mapping | #figma #agent |
 
-### design/
-| Skill | Description | Tags |
-|-------|-------------|------|
-| design-consultation | Build design system from scratch | #design |
-| design-review | Visual design audit + fixes | #design #browser |
-
-### safety/
-| Skill | Description | Tags |
-|-------|-------------|------|
-| careful | Warn before destructive commands | #safety |
-| freeze | Restrict edits to a directory | #safety |
-| guard | careful + freeze combined | #safety |
-| unfreeze | Remove freeze restriction | #safety |
-
-### analysis/
-| Skill | Description | Tags |
-|-------|-------------|------|
-| project-analyzer | Analyze project structure/framework/conventions | #analysis |
-| investigate | Root cause debugging with browse | #debugging #browser |
-| benchmark | Performance regression detection | #performance |
-| retro | Weekly engineering retrospective | #analysis #team |
-
 ### utility/
 | Skill | Description | Tags |
 |-------|-------------|------|
-| ship | Test → PR → push workflow | #git #shipping |
-| document-release | Post-ship doc updates | #docs #git |
-| setup-browser-cookies | Import browser cookies for auth testing | #browser |
-| claude-skills-upgrade | Self-updater | #utility |
+| skill-catalog | Scan and manage skills from multiple sources | #utility #catalog |
 
 ---
 
@@ -156,9 +136,10 @@ Key rules:
 
 | Resource | Path |
 |----------|------|
-| Browse binary | `~/.claude/skills/browse/dist/browse` |
+| Browse binary | `~/.claude/skills/gstack/browse/dist/browse` |
 | Standards | `~/.claude/standards/common/CODING-STANDARDS.md` |
-| Instincts | `~/.claude/skills/claude-skills/instincts/` |
+| Skill catalog | `./skill-catalog.md` |
+| Instincts | `./instincts/` |
 
 ## Communication
 
