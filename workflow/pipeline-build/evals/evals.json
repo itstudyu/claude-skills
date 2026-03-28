@@ -1,0 +1,23 @@
+{
+  "skill_name": "pipeline-build",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "build feature: add user authentication with JWT tokens",
+      "expected_output": "Pipeline starts with project-scan stage, creates .claude/pipeline-state.json with pipeline type 'build' and all six stages (project-scan, design-doc, write-plan, subagent-dev, review, verify-complete) set to pending, then dispatches a project-scan subagent.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I already have a design doc at docs/specs/auth.md and a plan at docs/plans/auth-plan.md. Just implement, review, and verify.",
+      "expected_output": "Pipeline detects skip request, marks project-scan, design-doc, and write-plan as 'skipped' in state, asks user for existing output paths, then dispatches subagent-dev starting from Stage 4 with the provided design doc and plan paths as context.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "새 기능 구현: 대시보드에 실시간 알림 기능 추가해줘",
+      "expected_output": "Pipeline triggers on Korean trigger phrase, creates state file with the feature description, runs full six-stage pipeline starting from project-scan, presents gates after design-doc (user approves specs), after write-plan (user approves plan), and after review (user approves findings) before proceeding.",
+      "files": []
+    }
+  ]
+}

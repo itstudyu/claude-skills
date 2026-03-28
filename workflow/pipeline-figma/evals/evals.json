@@ -1,0 +1,23 @@
+{
+  "skill_name": "pipeline-figma",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Build from figma and test. Here's the design: https://figma.com/design/abc123/Dashboard?node-id=1-2. It's a user dashboard with profile card, activity feed, and stats widgets.",
+      "expected_output": "Creates state file with Figma URL, runs figma-to-code to generate Angular components (profile card, activity feed, stats widgets), gates for user review, then devops-test-gen for tests, then qa for bug detection and fixes, then design-review for visual polish. User gates after code generation and QA.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Figmaから実装して全部やって。URLは https://figma.com/design/xyz789/Settings?node-id=3-4 です。設定画面のフォームです。",
+      "expected_output": "Full pipeline in Japanese context. figma-to-code generates Angular settings form components, devops-test-gen adds tests, qa runs Standard tier testing and fixes bugs, design-review checks visual fidelity against the Figma design. State file tracks progress through all four stages.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "I already generated the code from Figma for the login page. The components are in src/app/pages/login/. Can you pick up the pipeline from test generation?",
+      "expected_output": "Detects that figma-to-code can be skipped. Marks it as skipped in state. Starts at devops-test-gen stage targeting src/app/pages/login/, generates tests, then proceeds to qa and design-review stages.",
+      "files": []
+    }
+  ]
+}

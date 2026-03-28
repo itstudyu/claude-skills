@@ -1,0 +1,23 @@
+{
+  "skill_name": "pipeline-idea",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I have an idea for a farm tour booking system where visitors can browse available tours, book slots, and pay online. Take this from idea to implementation plan.",
+      "expected_output": "Creates state file, runs office-hours for idea validation, then brainstorm for design, then design-doc for each feature (booking, payment, tour listing), then write-plan for implementation. User gates between each stage.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "아이디어 파이프라인 실행해줘. 사내 QnA 게시판을 만들고 싶어. 질문/답변/추천 기능이 필요해.",
+      "expected_output": "Full pipeline in Korean context. office-hours → brainstorm → design-doc (question, answer, recommendation features) → write-plan. State file tracks progress.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "I already brainstormed and have a design spec at docs/specs/notification-system.md. Can you pick up the pipeline from the design-doc stage?",
+      "expected_output": "Detects that office-hours and brainstorm can be skipped. Starts at design-doc stage, reads existing spec, generates per-feature docs, then proceeds to write-plan.",
+      "files": []
+    }
+  ]
+}

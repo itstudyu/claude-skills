@@ -54,6 +54,14 @@ plan-orchestrator reads this file as Tier 1 for skill matching.
 | subagent-dev | Fresh subagent per task, two-stage review | #execution #parallel |
 | tdd | RED-GREEN-REFACTOR, no code without failing test | #testing #quality |
 | verify-complete | Evidence-based verification gate | #verification |
+| pipeline-idea | Idea → Plan: office-hours → brainstorm → design-doc → write-plan | #pipeline |
+| pipeline-build | Feature build: scan → design → plan → subagent-dev → review → verify | #pipeline |
+| pipeline-figma | Figma → Code: figma-to-code → tests → qa → design-review | #pipeline |
+| pipeline-debug | Bug fix: investigate → tdd → review → verify | #pipeline |
+| pipeline-quality | Pre-commit: tests → japanese-comments → review → cso | #pipeline |
+| pipeline-onboard | Onboarding: project-scan → design-doc (all) → skill-catalog | #pipeline |
+| pipeline-full | Full lifecycle: idea → design → plan → build → ship | #pipeline |
+| pipeline-retro | Weekly: retro → design-doc-update → document-release | #pipeline |
 
 ### review/
 | Skill | Description | Tags |

@@ -51,6 +51,14 @@
 | figma-common-mapper | figma/figma-common-mapper/ | Preview mapping + user confirmation before code generation | #figma #components |
 | figma-component-writer | figma/figma-component-writer/ | Orchestrate Figma → angular-web-common component sync pipeline | #figma #agent |
 | figma-to-code | figma/figma-to-code/ | Figma URL → Angular production code with common component mapping | #figma #agent |
+| pipeline-build | workflow/pipeline-build/ | Feature implementation pipeline: scan → design → plan → build → review → verify | #pipeline #build |
+| pipeline-debug | workflow/pipeline-debug/ | Bug fix pipeline: investigate → tdd → review → verify | #pipeline #debug |
+| pipeline-figma | workflow/pipeline-figma/ | Figma to production: figma-to-code → tests → qa → design-review | #pipeline #figma |
+| pipeline-full | workflow/pipeline-full/ | Full lifecycle: idea → design → plan → build → ship | #pipeline #full |
+| pipeline-idea | workflow/pipeline-idea/ | Idea to plan: office-hours → brainstorm → design-doc → write-plan | #pipeline #idea |
+| pipeline-onboard | workflow/pipeline-onboard/ | Project onboarding: scan → design-doc (all features) → catalog | #pipeline #onboarding |
+| pipeline-quality | workflow/pipeline-quality/ | Pre-commit quality: tests → japanese-comments → review → security | #pipeline #quality |
+| pipeline-retro | workflow/pipeline-retro/ | Weekly retro: retrospective → doc-update → release-docs | #pipeline #retro |
 | plan-orchestrator | planning/plan-orchestrator/ | Auto-scan skills, match to task, build execution plan | #planning #orchestration |
 | project-scan | utility/project-scan/ | Scan codebase for structure, tech stack, features, generate project-overview.md | #analysis #onboarding |
 | skill-catalog | utility/skill-catalog/ | Scan and manage skills from multiple sources | #utility #catalog |

@@ -1,0 +1,23 @@
+{
+  "skill_name": "pipeline-retro",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Run the weekly retro pipeline. We finished the authentication feature and fixed several bugs this week.",
+      "expected_output": "Creates state file, runs retro skill for the past week's commits and work patterns, presents retrospective findings at the gate for user review, then auto-proceeds through design-doc-update (updates auth feature docs) and document-release (refreshes README, CHANGELOG). Reports all updated docs at the end.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "주간 회고 실행해줘. 이번 주에 결제 모듈 리팩토링하고 API 문서 정리했어.",
+      "expected_output": "Full pipeline in Korean context. Runs retro for payment module refactoring and API doc work, presents findings at gate, then auto-proceeds to design-doc-update (syncs payment module specs) and document-release (updates project docs and CHANGELOG).",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "We already did the retro in our standup. Skip it and just update all the docs to match the current code.",
+      "expected_output": "Skips Stage 1 (retro), marks it as skipped in state file. Runs design-doc-update to sync docs/specs/ with recent code changes, then auto-proceeds to document-release to refresh README, CHANGELOG, and other project docs.",
+      "files": []
+    }
+  ]
+}
