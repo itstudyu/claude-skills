@@ -1,0 +1,23 @@
+{
+  "skill_name": "project-scan",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I just cloned a new repo and have no idea what it does. Can you scan the project and tell me what's going on? I need to understand the tech stack, features, and how everything is organized before I start making changes.",
+      "expected_output": "Scans the codebase, detects tech stack and framework, maps directory structure, identifies features from routes/modules, checks for database schemas, samples code patterns, and generates docs/project-overview.md with all findings. Suggests /design-doc at the end.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "프로젝트 파악 좀 해줘. 이 코드베이스가 어떤 구조로 되어 있고, 어떤 기능들이 있는지, DB 테이블은 뭐가 있는지 전체적으로 정리해줘.",
+      "expected_output": "Full project scan in Korean context. Generates docs/project-overview.md with Project Summary, Directory Structure, Features table, Data Model table, Code Patterns, and Key Dependencies.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "We ran project-scan a month ago but we've added 3 new features since then. Can you update the project overview?",
+      "expected_output": "Checks freshness of existing docs/project-overview.md via git log. Detects changes since last scan. Offers incremental update or full rescan. Updates the document with new features while preserving existing content.",
+      "files": []
+    }
+  ]
+}

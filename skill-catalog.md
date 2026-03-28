@@ -42,6 +42,8 @@
 | Skill | Path | Description | Tags |
 |-------|------|-------------|------|
 | brainstorm | workflow/brainstorm/ | Socratic design process — explore intent before implementation | #design #planning |
+| design-doc | workflow/design-doc/ | Generate per-feature design document with fixed template | #docs #design |
+| design-doc-update | workflow/design-doc-update/ | Update design docs and project overview after code changes | #docs #maintenance |
 | devops-japanese-comments | review/devops-japanese-comments/ | Enforce Japanese language in code comments and log messages | #quality #i18n |
 | devops-safety-check | review/devops-safety-check/ | Lightweight security scan — secrets, SQL injection, XSS patterns | #security |
 | devops-test-gen | review/devops-test-gen/ | Auto-generate tests for new/changed code with regression protection | #testing |
@@ -52,6 +54,7 @@
 | figma-component-writer | figma/figma-component-writer/ | Orchestrate Figma → angular-web-common component sync pipeline | #figma #agent |
 | figma-to-code | figma/figma-to-code/ | Figma URL → Angular production code with common component mapping | #figma #agent |
 | plan-orchestrator | planning/plan-orchestrator/ | Auto-scan skills, match to task, build execution plan | #planning #orchestration |
+| project-scan | utility/project-scan/ | Scan codebase for structure, tech stack, features, generate project-overview.md | #analysis #onboarding |
 | skill-catalog | utility/skill-catalog/ | Scan and manage skills from multiple sources | #utility #catalog |
 | subagent-dev | workflow/subagent-dev/ | Dispatch fresh subagents per task with two-stage review | #execution #parallel |
 | systematic-debug | workflow/systematic-debug/ | 4-phase root cause investigation before any fix | #debugging |

@@ -1,0 +1,23 @@
+{
+  "skill_name": "design-doc",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Create a design doc for the user authentication feature. It uses JWT tokens, stores users in a PostgreSQL database, and has login/register/forgot-password screens.",
+      "expected_output": "Analyzes auth-related code files, generates docs/specs/user-authentication.md with fixed template (Overview, Data Model with users table, API Endpoints for login/register/forgot-password, Business Logic with JWT rules, UI/Screen with routes, Files list).",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "설계서 만들어줘. 투어 신청 기능에 대해서. DB 테이블은 tour_applications랑 tours가 있고, API로 신청/취소/조회가 있어.",
+      "expected_output": "Generates docs/specs/tour-application.md in the fixed template. Data Model section shows tour_applications and tours tables with relationships. API section shows POST/DELETE/GET endpoints. Asks for any missing details (validation rules, UI).",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "I ran /project-scan and it found 5 features. Can you create a design doc for the QnA feature? The project-overview says it's in src/features/qna/.",
+      "expected_output": "Reads docs/project-overview.md for context, then scans src/features/qna/ for models, controllers, components. Generates docs/specs/qna.md with all sections filled from code analysis. Asks about gaps not found in code.",
+      "files": []
+    }
+  ]
+}
