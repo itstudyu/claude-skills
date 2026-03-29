@@ -69,6 +69,7 @@ plan-orchestrator reads this file as Tier 1 for skill matching.
 |-------|-------------|------|
 | devops-japanese-comments | Japanese comment enforcement | #quality #i18n |
 | devops-test-gen | Auto-generate tests for changed code | #testing |
+| devops-e2e-test-gen | Generate Playwright/Cypress E2E test code for CI | #testing #e2e |
 
 ### planning/
 | Skill | Description | Tags |
