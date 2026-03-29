@@ -306,11 +306,22 @@ npx cypress run
 
 | Result | Action |
 |--------|--------|
-| All pass | Report success with counts |
+| All pass | Report success with counts, then ask user about devops-e2e-fix (see below) |
 | Tests fail — selector not found | Update locator in page object to match actual UI |
 | Tests fail — timing issue | Add appropriate waits (networkidle, specific element) |
 | Tests fail — auth issue | Verify test user credentials and auth setup |
 | Flaky (passes sometimes) | Investigate race condition, add explicit waits |
+
+### After Run — Ask About devops-e2e-fix
+
+After reporting results (whether all pass or some fail), always ask:
+
+> "테스트 실행이 완료됐습니다. 실패한 테스트를 자동으로 분석하고 수정할까요?
+> `/devops-e2e-fix`를 실행하면 원인을 4가지로 분류(셀렉터 오류/누락 단계/Dirty state/앱 버그)하고,
+> 테스트 파일만 수정합니다. 프로덕션 코드는 반드시 확인 후에만 건드립니다."
+
+If the user says yes → invoke `devops-e2e-fix` skill.
+If all tests passed → still ask, as the user may want to run it as a health check for future CI runs.
 
 ## Completeness Checklist
 
