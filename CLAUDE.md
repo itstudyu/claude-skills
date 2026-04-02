@@ -50,27 +50,17 @@ plan-orchestrator reads this file as Tier 1 for skill matching.
 | brainstorm | Socratic design, 3 options before implementation | #design #planning |
 | write-plan | Bite-sized 2-5min tasks, zero-context assumption | #planning #tasks |
 | design-doc | Generate per-feature design document with fixed template | #docs #design |
-| design-doc-update | Update design docs after code changes | #docs #maintenance |
 | subagent-dev | Fresh subagent per task, two-stage review | #execution #parallel |
 | tdd | RED-GREEN-REFACTOR, no code without failing test | #testing #quality |
 | verify-complete | Evidence-based verification gate | #verification |
-| pipeline-idea | Idea → Plan: office-hours → brainstorm → design-doc → write-plan | #pipeline |
 | pipeline-build | Feature build: scan → design → plan → subagent-dev → review → verify | #pipeline |
 | pipeline-figma | Figma → Code: figma-to-code → tests → qa → design-review | #pipeline |
-| pipeline-debug | Bug fix: investigate → tdd → review → verify | #pipeline |
-| pipeline-quality | Pre-commit: tests → japanese-comments → review → cso | #pipeline |
-| pipeline-onboard | Onboarding: project-scan → design-doc (all) → skill-catalog | #pipeline |
-| pipeline-full | Full lifecycle: idea → design → plan → build → ship | #pipeline |
-| pipeline-retro | Weekly: retro → design-doc-update → document-release | #pipeline |
-| pipeline-smart | Adaptive: office-hours → plan-orchestrator (AI picks skills) | #pipeline |
 
 ### review/
 | Skill | Description | Tags |
 |-------|-------------|------|
 | devops-japanese-comments | Japanese comment enforcement | #quality #i18n |
 | devops-test-gen | Auto-generate tests for changed code | #testing |
-| devops-e2e-test-gen | Generate Playwright/Cypress E2E test code for CI | #testing #e2e |
-| devops-e2e-fix | Analyze and fix failing E2E tests — classifies root cause, fixes test files only, asks before touching production code | #testing #e2e #fix |
 
 ### planning/
 | Skill | Description | Tags |

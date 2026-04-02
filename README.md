@@ -23,24 +23,21 @@ cd claude-skills
 
 After install, run `/skill-catalog scan` to generate the unified skill catalog.
 
-## Skills (16 project-specific)
+## Skills
 
 ### workflow/ — Development Workflow
 | Skill | Description |
 |-------|-------------|
 | `/brainstorm` | Socratic design exploration, 3 options before implementation |
 | `/write-plan` | Bite-sized 2-5min task planning |
-| `/execute-plan` | Sequential execution with human checkpoints |
 | `/subagent-dev` | Fresh subagent per task + two-stage review |
 | `/tdd` | Test-driven development (RED-GREEN-REFACTOR) |
-| `/systematic-debug` | 4-phase root cause investigation |
 | `/verify-complete` | Evidence-based verification gate |
 
 ### review/ — DevOps Quality
 | Skill | Description |
 |-------|-------------|
 | `/devops-japanese-comments` | Japanese comment enforcement |
-| `/devops-safety-check` | Lightweight security scan |
 | `/devops-test-gen` | Auto-generate tests |
 
 ### planning/ — Orchestration
