@@ -1,0 +1,31 @@
+{
+  "eval_id": 3,
+  "eval_name": "ambiguous-input-clarification",
+  "expectations": [
+    {
+      "text": "Does NOT proceed with analysis — asks clarifying questions first",
+      "passed": false,
+      "evidence": "The response explicitly admits: 'I did not immediately ask clarifying questions. Instead, I spent several tool calls exploring directory structures and reading configuration files trying to figure out what \"the backend\" referred to.'"
+    },
+    {
+      "text": "Uses Flipped Interaction pattern: proposes interpretation and asks for confirmation",
+      "passed": false,
+      "evidence": "The response admits: 'I never formulated a clear interpretation like \"I think you mean X -- correct?\" I was more likely to just pick the most obvious candidate and start analyzing it, or to ask an open-ended \"what do you mean?\" without proposing a concrete interpretation.'"
+    },
+    {
+      "text": "Asks which project path to analyze",
+      "passed": false,
+      "evidence": "The response confirms this was not done: under 'No structured clarification' it lists 'Which project path to analyze' as something it did NOT ask about."
+    },
+    {
+      "text": "Asks about scope (what 'backend' means in this context)",
+      "passed": false,
+      "evidence": "The response confirms: 'I did not ask about... Whether \"backend\" means server-side code, API layer, database layer, or all of the above'"
+    },
+    {
+      "text": "Does NOT write analysis files without user confirmation",
+      "passed": false,
+      "evidence": "The response states: 'I would have started writing files without asking where the user wants them saved.' and 'No output location confirmation.'"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "eval_id": 3,
+  "eval_name": "ambiguous-input-clarification",
+  "expectations": [
+    {
+      "text": "Does NOT proceed with analysis — asks clarifying questions first",
+      "passed": true,
+      "evidence": "The response immediately enters 'Phase 0: Clarification Required' and states 'I will not proceed until these questions are answered.' No analysis was performed."
+    },
+    {
+      "text": "Uses Flipped Interaction pattern: proposes interpretation and asks for confirmation",
+      "passed": true,
+      "evidence": "Under 'Phase 0-3: Clarifying Ambiguity (Flipped Interaction)', the response proposes a concrete interpretation: 'Scope: Server-side code only... Depth: Function-level analysis with call chains... Focus: All 6 axes' and asks 'Does this match your intent?'"
+    },
+    {
+      "text": "Asks which project path to analyze",
+      "passed": true,
+      "evidence": "Under 'Phase 0-1: Project Path -- MISSING': 'I need a project path to analyze. You said \"the backend\" but I don't know which project you're referring to.' Also asks 'Which project? Please provide the full path to the codebase.'"
+    },
+    {
+      "text": "Asks about scope (what 'backend' means in this context)",
+      "passed": true,
+      "evidence": "Explicitly asks: 'What counts as \"backend\"? Is it a standalone backend repo, or part of a monorepo? If monorepo, which directory contains the backend code?'"
+    },
+    {
+      "text": "Does NOT write analysis files without user confirmation",
+      "passed": true,
+      "evidence": "No files were written. The response ends with 'I will not proceed until these questions are answered. Maximum 3 rounds of clarification, then analysis begins.'"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "eval_id": 1,
+  "eval_name": "single-project-deep-analysis",
+  "prompt": "Analyze the project at /Users/yu_s/Documents/GitHub/claude-skills — I want to understand exactly how the skill loading system works, what each directory does, and how skills chain together. Deep dive please.",
+  "assertions": [
+    {
+      "id": "a1",
+      "text": "Generates all 6 category files: tech-stack.md, features.md, data-model.md, code-patterns.md, dependencies.md, architecture.md",
+      "type": "file_existence"
+    },
+    {
+      "id": "a2",
+      "text": "Every factual claim includes file:line citation (at least 80% of statements)",
+      "type": "content_check"
+    },
+    {
+      "id": "a3",
+      "text": "architecture.md references and links to the other 5 category files",
+      "type": "content_check"
+    },
+    {
+      "id": "a4",
+      "text": "No speculative language ('typically', 'usually', 'probably', 'likely') in analysis files",
+      "type": "content_check"
+    },
+    {
+      "id": "a5",
+      "text": "Features section traces actual code paths (entry point → handler → service → data)",
+      "type": "content_check"
+    },
+    {
+      "id": "a6",
+      "text": "Analysis date header present in each file",
+      "type": "content_check"
+    }
+  ]
+}

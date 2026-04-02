@@ -1,0 +1,36 @@
+{
+  "eval_id": 2,
+  "eval_name": "multi-project-comparison",
+  "expectations": [
+    {
+      "text": "Generates analysis files for BOTH projects (not just one)",
+      "passed": true,
+      "evidence": "All three output files (comparative-analysis.md, summary.md, skill-overlap-matrix.md) analyze both claude-skills and superpowers projects. comparative-analysis.md has detailed directory layouts, skill comparisons, and behavioral system analysis for both. summary.md provides quantitative comparison tables for both. skill-overlap-matrix.md maps skills from both projects. However, there are no separate per-project analysis files -- all analysis is combined into cross-project documents."
+    },
+    {
+      "text": "Generates comparison.md with cross-project comparison",
+      "passed": false,
+      "evidence": "No file named 'comparison.md' exists. The output contains 'comparative-analysis.md', 'summary.md', and 'skill-overlap-matrix.md'. While comparative-analysis.md serves a similar purpose, the specific file 'comparison.md' was not generated."
+    },
+    {
+      "text": "comparison.md includes stack comparison table with both projects side by side",
+      "passed": false,
+      "evidence": "No comparison.md file exists. The comparative-analysis.md contains a 'Project Overview' table (Section 1) with dimensions like Version, Total files, Skills count, Primary target -- but this is a general overview, not a tech stack comparison. summary.md has a 'Quantitative comparison' table but it focuses on counts (files, skills, hooks) rather than stack technologies. Neither file has a dedicated stack comparison table showing technologies side by side."
+    },
+    {
+      "text": "comparison.md includes shared patterns and divergent patterns sections",
+      "passed": false,
+      "evidence": "No comparison.md file exists. The comparative-analysis.md has '## 5. Key Commonalities' (8 items) and '## 2. Structural Differences' (with subsections 2.1-2.5) which cover similar ground, but they are not in a file named comparison.md and are not titled 'shared patterns' and 'divergent patterns'."
+    },
+    {
+      "text": "File:line citations reference files from BOTH projects",
+      "passed": false,
+      "evidence": "The output files reference file paths (e.g., '.claude/hooks/', 'skills/', 'tests/') but do not use file:line citation format. comparative-analysis.md mentions files descriptively (e.g., '8 shell scripts (inject-instructions, secret-scanner, etc.)') but never provides line-number references like 'file.md:42' or 'SKILL.md:20-24'. skill-overlap-matrix.md and summary.md similarly lack file:line citations."
+    },
+    {
+      "text": "No speculation about why differences exist (facts only)",
+      "passed": false,
+      "evidence": "comparative-analysis.md contains speculative statements: 'claude-skills appears to have forked/adapted these from superpowers and customized them' (line 147), 'claude-skills serves as a project-specific customization layer that extends general-purpose skill ecosystems (gstack + superpowers)' (line 198), and 'The two projects are complementary rather than competing: superpowers provides the foundation, and claude-skills extends it for a specific use case' (line 207). These are interpretive claims about project relationships and intent, not strictly verifiable facts from the codebase."
+    }
+  ]
+}

@@ -1,0 +1,136 @@
+{
+  "metadata": {
+    "skill_name": "project-analyzer",
+    "skill_path": "/Users/yu_s/Documents/GitHub/claude-skills/utility/project-analyzer/",
+    "executor_model": "claude-opus-4-6",
+    "analyzer_model": "claude-opus-4-6",
+    "timestamp": "2026-04-02T14:33:05Z",
+    "evals_run": ["eval-1-single-project", "eval-2-multi-project", "eval-3-ambiguous-input"],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_name": "single-project-deep-analysis",
+      "config": "with_skill",
+      "pass_rate": 1.0,
+      "passed": 6,
+      "total": 6,
+      "time_seconds": 390.5,
+      "tokens": 85829,
+      "expectations": [
+        {"text": "Generates all 6 category files", "passed": true, "evidence": "All 6 files found: tech-stack.md, features.md, data-model.md, code-patterns.md, dependencies.md, architecture.md"},
+        {"text": "File:line citations >= 80%", "passed": true, "evidence": "185 file:line citations found across outputs"},
+        {"text": "architecture.md references other 5 files", "passed": true, "evidence": "Links to tech-stack.md, features.md, data-model.md, code-patterns.md, dependencies.md"},
+        {"text": "No speculative language", "passed": true, "evidence": "Zero instances of typically/usually/probably/likely found"},
+        {"text": "Features traces code paths", "passed": true, "evidence": "Traces entry point -> handler -> logic -> data with line numbers"},
+        {"text": "Analysis date header present", "passed": true, "evidence": "All 6 files have 'Analyzed on 2026-04-02'"}
+      ]
+    },
+    {
+      "eval_name": "single-project-deep-analysis",
+      "config": "without_skill",
+      "pass_rate": 0.0,
+      "passed": 0,
+      "total": 6,
+      "time_seconds": 332.5,
+      "tokens": 96187,
+      "expectations": [
+        {"text": "Generates all 6 category files", "passed": false, "evidence": "Files use ad-hoc names: architecture-summary.md, skill-inventory.md, etc."},
+        {"text": "File:line citations >= 80%", "passed": false, "evidence": "Zero file:line citations found"},
+        {"text": "architecture.md references other 5 files", "passed": false, "evidence": "No cross-references between output files"},
+        {"text": "No speculative language", "passed": false, "evidence": "Two instances of 'typically' found"},
+        {"text": "Features traces code paths", "passed": false, "evidence": "Conceptual flow diagrams lack code path tracing with source locations"},
+        {"text": "Analysis date header present", "passed": false, "evidence": "Only 1 of 6 files has a date header"}
+      ]
+    },
+    {
+      "eval_name": "multi-project-comparison",
+      "config": "with_skill",
+      "pass_rate": 1.0,
+      "passed": 6,
+      "total": 6,
+      "time_seconds": 606.8,
+      "tokens": 119774,
+      "expectations": [
+        {"text": "Analysis files for BOTH projects", "passed": true, "evidence": "Separate subdirectories with 6 files each for claude-skills/ and superpowers/"},
+        {"text": "comparison.md exists", "passed": true, "evidence": "comparison.md found at root of output directory"},
+        {"text": "Stack comparison table", "passed": true, "evidence": "Side-by-side stack comparison table present"},
+        {"text": "Shared/divergent patterns sections", "passed": true, "evidence": "Shared Patterns (10 items) and Divergent Patterns (15 items) sections present"},
+        {"text": "File:line citations from both projects", "passed": true, "evidence": "Citations reference files from both claude-skills and superpowers"},
+        {"text": "No speculation", "passed": true, "evidence": "Factual tone throughout, no speculative claims"}
+      ]
+    },
+    {
+      "eval_name": "multi-project-comparison",
+      "config": "without_skill",
+      "pass_rate": 0.17,
+      "passed": 1,
+      "total": 6,
+      "time_seconds": 196.7,
+      "tokens": 49593,
+      "expectations": [
+        {"text": "Analysis files for BOTH projects", "passed": true, "evidence": "Both projects analyzed in combined files"},
+        {"text": "comparison.md exists", "passed": false, "evidence": "Generated comparative-analysis.md instead of comparison.md"},
+        {"text": "Stack comparison table", "passed": false, "evidence": "No dedicated stack comparison table"},
+        {"text": "Shared/divergent patterns sections", "passed": false, "evidence": "Has 'commonalities' and 'structural differences' instead"},
+        {"text": "File:line citations from both projects", "passed": false, "evidence": "No file:line citations anywhere"},
+        {"text": "No speculation", "passed": false, "evidence": "Contains 'claude-skills appears to have forked/adapted these from superpowers'"}
+      ]
+    },
+    {
+      "eval_name": "ambiguous-input-clarification",
+      "config": "with_skill",
+      "pass_rate": 1.0,
+      "passed": 5,
+      "total": 5,
+      "time_seconds": 49.0,
+      "tokens": 24319,
+      "expectations": [
+        {"text": "Asks clarifying questions first", "passed": true, "evidence": "Phase 0 triggered — asks questions before any analysis"},
+        {"text": "Uses Flipped Interaction pattern", "passed": true, "evidence": "Proposes concrete interpretation and asks 'Does this match?'"},
+        {"text": "Asks which project path", "passed": true, "evidence": "Explicitly asks user to provide project path"},
+        {"text": "Asks about scope", "passed": true, "evidence": "Asks what 'backend' means in user's context"},
+        {"text": "Does not write files without confirmation", "passed": true, "evidence": "No analysis files written — waits for user response"}
+      ]
+    },
+    {
+      "eval_name": "ambiguous-input-clarification",
+      "config": "without_skill",
+      "pass_rate": 0.0,
+      "passed": 0,
+      "total": 5,
+      "time_seconds": 54.6,
+      "tokens": 25755,
+      "expectations": [
+        {"text": "Asks clarifying questions first", "passed": false, "evidence": "Explored filesystem silently instead of asking"},
+        {"text": "Uses Flipped Interaction pattern", "passed": false, "evidence": "No concrete interpretation proposed"},
+        {"text": "Asks which project path", "passed": false, "evidence": "Started scanning directories without asking"},
+        {"text": "Asks about scope", "passed": false, "evidence": "No scope clarification attempted"},
+        {"text": "Does not write files without confirmation", "passed": false, "evidence": "Would have written files without asking"}
+      ]
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "mean_pass_rate": 1.0,
+      "mean_time_seconds": 348.8,
+      "mean_tokens": 76641
+    },
+    "without_skill": {
+      "mean_pass_rate": 0.06,
+      "mean_time_seconds": 194.6,
+      "mean_tokens": 57178
+    },
+    "delta": {
+      "pass_rate": "+0.94",
+      "time_seconds": "+154.2",
+      "tokens": "+19463"
+    }
+  },
+  "notes": [
+    "With-skill runs take longer (+154s avg) and use more tokens (+19K avg) due to deeper analysis with file:line citations",
+    "The quality gap is massive: 100% vs 6% pass rate across all assertions",
+    "Eval 3 shows the clearest behavioral difference: skill enforces clarification-first, baseline acts-first",
+    "Without-skill baseline actually used MORE tokens on Eval 1 (96K vs 86K) while producing lower quality output"
+  ]
+}

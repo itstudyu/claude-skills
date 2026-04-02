@@ -32,6 +32,9 @@ CLAUDE.md (this file)
     ├→ Skill catalog ("scan skills", "update catalog", "add skill pack")
     │   → /skill-catalog [claude-skills]
     │
+    ├→ Workflow analysis ("trace flow", "sequence diagram", "워크플로우 분석")
+    │   → /workflow-blueprint (initial) or /workflow-blueprint-update (refresh)
+    │
     └→ Other → direct /skill-name (check skill-catalog.md for available skills)
 ```
 
@@ -55,6 +58,8 @@ plan-orchestrator reads this file as Tier 1 for skill matching.
 | verify-complete | Evidence-based verification gate | #verification |
 | pipeline-build | Feature build: scan → design → plan → subagent-dev → review → verify | #pipeline |
 | pipeline-figma | Figma → Code: figma-to-code → tests → qa → design-review | #pipeline |
+| workflow-blueprint | Deep workflow trace with Mermaid sequence diagrams (entry → service → DB) | #analysis #workflow #diagrams |
+| workflow-blueprint-update | Incremental workflow doc update via git diff | #analysis #workflow #update |
 
 ### review/
 | Skill | Description | Tags |

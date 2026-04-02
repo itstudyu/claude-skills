@@ -1,0 +1,36 @@
+{
+  "eval_id": 1,
+  "eval_name": "single-project-deep-analysis",
+  "expectations": [
+    {
+      "text": "Generates all 6 category files: tech-stack.md, features.md, data-model.md, code-patterns.md, dependencies.md, architecture.md",
+      "passed": true,
+      "evidence": "All 6 files exist in outputs/: tech-stack.md, features.md, data-model.md, code-patterns.md, dependencies.md, architecture.md."
+    },
+    {
+      "text": "Every factual claim includes file:line citation (at least 80% of statements)",
+      "passed": true,
+      "evidence": "185 file:line citations found across 6 output files. Sampled 10 claims: (1) tech-stack.md 'Python3...load-instincts.sh:16, learn-from-errors.sh:13' - cited. (2) features.md 'install.sh:45-65' for installation - cited. (3) features.md '.claude/settings.json:5-10' for inject-instructions hook - cited. (4) features.md 'secret-scanner.sh:51-62' for pattern list - cited. (5) data-model.md '.claude/settings.json:1-50' for settings structure - cited. (6) code-patterns.md 'run-with-profile.sh:7-8' for env vars - cited. (7) dependencies.md 'CLAUDE.md:7, install.sh:30-36' for gstack - cited. (8) architecture.md 'install.sh:45-65' for skill loading - cited. (9) features.md 'learn-from-errors.sh:145' for confidence formula - cited. (10) code-patterns.md 'workflow/brainstorm/SKILL.md:20-24' for HARD-GATE - cited. All 10/10 sampled claims had citations. Well above 80% threshold."
+    },
+    {
+      "text": "architecture.md references and links to the other 5 category files",
+      "passed": true,
+      "evidence": "architecture.md contains 5 cross-references: '-> Details: [features.md](features.md)' (line 66), '-> Details: [data-model.md](data-model.md)' (line 134), '-> Stack details: [tech-stack.md](tech-stack.md)' (line 148), '-> Patterns: [code-patterns.md](code-patterns.md)' (line 149), '-> Dependencies: [dependencies.md](dependencies.md)' (line 150). All 5 sibling files are referenced with Markdown links."
+    },
+    {
+      "text": "No speculative language ('typically', 'usually', 'probably', 'likely') in analysis files",
+      "passed": true,
+      "evidence": "Grep for 'typically|usually|probably|likely' (case-insensitive) across all 6 output files returned zero matches."
+    },
+    {
+      "text": "Features section traces actual code paths (entry point → handler → service → data)",
+      "passed": true,
+      "evidence": "features.md traces multiple code paths with file:line references. Example: Skill Loading traces install.sh:45-65 (entry) -> install.sh:46 (category list) -> install.sh:53-64 (symlink loop) -> SKILL.md frontmatter (runtime discovery). Hook System traces .claude/settings.json:5-10 (entry) -> run-with-profile.sh:10-12 (profile gate) -> individual hook scripts. Secret Scanner traces settings.json:22-25 (entry) -> secret-scanner.sh:27-29 (guard) -> secret-scanner.sh:32-33 (scan) -> secret-scanner.sh:51-62 (patterns) -> secret-scanner.sh:72 (exit code). Error Learning traces learn-from-errors.sh:29-30 (trigger) -> :86-98 (storage) -> :136-138 (pattern detection) -> :145 (confidence formula) -> load-instincts.sh:48-49 (auto-loading)."
+    },
+    {
+      "text": "Analysis date header present in each file",
+      "passed": true,
+      "evidence": "All 6 files contain '> Analyzed on 2026-04-02' in their header section: tech-stack.md (line 3), features.md (line 3), data-model.md (line 3), code-patterns.md (line 3), dependencies.md (line 3), architecture.md (line 3)."
+    }
+  ]
+}

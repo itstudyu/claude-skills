@@ -1,0 +1,37 @@
+{
+  "eval_id": 2,
+  "eval_name": "multi-project-comparison",
+  "prompt": "/Users/yu_s/Documents/GitHub/claude-skills 이랑 /Users/yu_s/Documents/GitHub/superpowers 두 프로젝트 비교 분석해줘. 어떤 구조적 차이가 있고 공통점이 뭔지 알고 싶어.",
+  "assertions": [
+    {
+      "id": "b1",
+      "text": "Generates analysis files for BOTH projects (not just one)",
+      "type": "file_existence"
+    },
+    {
+      "id": "b2",
+      "text": "Generates comparison.md with cross-project comparison",
+      "type": "file_existence"
+    },
+    {
+      "id": "b3",
+      "text": "comparison.md includes stack comparison table with both projects side by side",
+      "type": "content_check"
+    },
+    {
+      "id": "b4",
+      "text": "comparison.md includes shared patterns and divergent patterns sections",
+      "type": "content_check"
+    },
+    {
+      "id": "b5",
+      "text": "File:line citations reference files from BOTH projects",
+      "type": "content_check"
+    },
+    {
+      "id": "b6",
+      "text": "No speculation about why differences exist (facts only)",
+      "type": "content_check"
+    }
+  ]
+}

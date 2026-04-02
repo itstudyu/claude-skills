@@ -1,0 +1,23 @@
+{
+  "skill_name": "project-analyzer",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Analyze the project at /Users/yu_s/Documents/GitHub/claude-skills — I want to understand exactly how the skill loading system works, what each directory does, and how skills chain together. Deep dive please.",
+      "expected_output": "Category-split analysis files (tech-stack.md, features.md, data-model.md, code-patterns.md, dependencies.md, architecture.md) saved to a user-confirmed location. Each file contains fact-based findings with file:line citations. architecture.md compresses all categories into a navigable design overview.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "/Users/yu_s/Documents/GitHub/claude-skills 이랑 /Users/yu_s/Documents/GitHub/superpowers 두 프로젝트 비교 분석해줘. 어떤 구조적 차이가 있고 공통점이 뭔지 알고 싶어.",
+      "expected_output": "Per-project analysis files for both projects plus comparison.md. The comparison document shows stack, structural, pattern, and dependency differences with specific file:line citations from both codebases. No speculation about why differences exist.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "analyze the backend",
+      "expected_output": "Before any analysis, the skill asks clarifying questions using Flipped Interaction pattern: 'My interpretation: Scope = server-side code only, Depth = function-level, Focus = all 6 axes within backend scope. Does this match?' Also asks which project path to analyze and where to save output. Does NOT proceed until user confirms.",
+      "files": []
+    }
+  ]
+}

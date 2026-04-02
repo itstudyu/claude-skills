@@ -1,0 +1,36 @@
+{
+  "eval_id": 2,
+  "eval_name": "multi-project-comparison",
+  "expectations": [
+    {
+      "text": "Generates analysis files for BOTH projects (not just one)",
+      "passed": true,
+      "evidence": "Two subdirectories exist: claude-skills/ (with architecture.md, code-patterns.md, data-model.md, dependencies.md, features.md, tech-stack.md) and superpowers/ (with the same 6 files). Both projects have full, independent analysis outputs."
+    },
+    {
+      "text": "Generates comparison.md with cross-project comparison",
+      "passed": true,
+      "evidence": "comparison.md exists at the outputs root level. It opens with 'Cross-Project Comparison' header and analyzes both projects across Stack Comparison, Structural Comparison, Shared Patterns, Divergent Patterns, Shared Dependencies, Data Model Overlap, and Summary sections."
+    },
+    {
+      "text": "comparison.md includes stack comparison table with both projects side by side",
+      "passed": true,
+      "evidence": "comparison.md contains '## Stack Comparison' with a table having columns '| Aspect | claude-skills | superpowers | Notes |' covering 11 aspects including Primary Language, Content Format, Package Manager, Version, Production Deps, Test Deps, Target Platform, External Deps, CI/CD, Test Framework, and Linting."
+    },
+    {
+      "text": "comparison.md includes shared patterns and divergent patterns sections",
+      "passed": true,
+      "evidence": "comparison.md contains '## Shared Patterns' (10 items with file:line citations for both projects, e.g., SKILL.md with YAML Frontmatter, HARD-GATE tags, Graphviz diagrams, TDD cycle, etc.) and '## Divergent Patterns' (15 items covering Platform Scope, Skill Organization, Hook Complexity, Self-Learning System, etc.)."
+    },
+    {
+      "text": "File:line citations reference files from BOTH projects",
+      "passed": true,
+      "evidence": "Citations reference claude-skills files (e.g., 'workflow/brainstorm/SKILL.md:20-24', '.claude/hooks/learn-from-errors.sh:100-195', 'standards/common/CODING-STANDARDS.md:22-27') and superpowers files (e.g., 'skills/brainstorming/SKILL.md:12-14', 'hooks/session-start:18', 'skills/test-driven-development/SKILL.md:256-270'). Both projects are cited throughout all sections."
+    },
+    {
+      "text": "No speculation about why differences exist (facts only)",
+      "passed": true,
+      "evidence": "comparison.md states only observable facts with file:line citations. For example, divergent patterns say 'claude-skills: Enforced via PostToolUse hook (code-quality-check.sh)' and 'superpowers: No automated code quality enforcement hooks; quality ensured via skill instructions alone.' The Summary table uses factual dimensions like 'Philosophy: Infrastructure-heavy: hooks enforce standards' vs 'Skill-heavy: skills teach discipline'. No speculative language like 'appears to', 'probably', 'likely because', or causal claims about why choices were made."
+    }
+  ]
+}

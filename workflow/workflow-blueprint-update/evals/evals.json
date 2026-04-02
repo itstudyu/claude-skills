@@ -1,0 +1,53 @@
+{
+  "skill_name": "workflow-blueprint-update",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I made some changes to the auth service and the user controller last week. Can you update the workflow docs to reflect what changed?",
+      "expected_output": "Reads existing docs/workflow/INDEX.md. Builds reverse file map from Participants tables in existing workflow docs. Runs git diff to detect changed files. Maps auth.service and user.controller to affected workflows. Re-analyzes only those workflows with full trace. Updates workflow files with new sequence diagrams. Adds CHANGELOG entries with date and specific change description. Updates INDEX.md. Reports summary of what was updated.",
+      "files": [],
+      "expectations": [
+        "Reads docs/workflow/INDEX.md to find existing workflow list",
+        "Builds reverse file map from Participants tables in workflow docs",
+        "Uses git diff to detect changed files (not manual file listing)",
+        "Only re-analyzes workflows that reference the changed files",
+        "Does not re-analyze unaffected workflows",
+        "Updated workflow files have new Last analyzed date",
+        "Changelog section has new entry with date and change description",
+        "Previous changelog entries are preserved",
+        "INDEX.md is updated with new analysis date"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We added a new endpoint POST /api/v2/bookings in a new file booking.controller.ts and deleted the old GET /api/tours/search by removing tours.controller.ts. Update the workflow docs.",
+      "expected_output": "Detects new booking.controller.ts as a new entry point. Creates full workflow document for POST /api/v2/bookings with complete trace and Mermaid diagram. Detects deleted tours.controller.ts. Finds which workflow referenced it and marks that workflow as DEPRECATED (does NOT delete the file). Adds deprecation header to the deprecated workflow file. Updates INDEX.md with new workflow and deprecated mark. Reports change summary.",
+      "files": [],
+      "expectations": [
+        "New workflow file created for POST /api/v2/bookings with full trace",
+        "New workflow file has Mermaid sequenceDiagram with all participants",
+        "Deprecated workflow file is NOT deleted",
+        "Deprecated workflow file has deprecation notice at the top with reason",
+        "Deprecated workflow has changelog entry noting the deprecation",
+        "INDEX.md adds new workflow to HTTP table",
+        "INDEX.md marks deprecated workflow with strikethrough or deprecated label",
+        "Change summary report lists all three categories: updated, new, deprecated"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "변경된 파일들 기반으로 워크플로우 문서 업데이트해줘. 최근 커밋에서 뭐가 바뀌었는지 확인하고 영향받는 플로우만 다시 분석해줘.",
+      "expected_output": "Korean trigger. Uses git diff to find recent changes since last analysis date from INDEX.md. Categorizes changed files into routes/controllers/services/repositories. Maps to affected workflows via reverse file map. Re-traces only affected flows with full depth. Updates docs with CHANGELOG. Outputs change summary report in Korean.",
+      "files": [],
+      "expectations": [
+        "Skill triggers correctly from Korean language input",
+        "User-facing responses and change summary are in Korean",
+        "Generated/updated files remain in English",
+        "Uses Last analyzed date from INDEX.md as the diff baseline",
+        "Only touches workflow files that reference changed source files",
+        "Changelog entries are in English inside the document files",
+        "Quick exit if no workflow-relevant files changed"
+      ]
+    }
+  ]
+}

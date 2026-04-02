@@ -1,0 +1,49 @@
+{
+  "skill_name": "workflow-blueprint",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to understand all the API workflows in this project. Can you trace every endpoint from the route handler all the way down to the database and generate sequence diagrams? I want to see the full picture of how data flows through the system.",
+      "expected_output": "Discovers all entry points (routes, event handlers, cron jobs). For each, traces the full path: route definition -> middleware/guards -> controller -> service -> repository -> DB query. Generates docs/workflow/ directory with per-workflow markdown files. Each file contains a Mermaid sequenceDiagram, Participants table with file:line references, Data Touched table, External Calls section, and Error Paths. Generates INDEX.md listing all workflows with quick stats.",
+      "files": [],
+      "expectations": [
+        "docs/workflow/INDEX.md is created with a table listing all discovered workflows",
+        "Each workflow file contains a valid Mermaid sequenceDiagram code block",
+        "Every participant in the sequence diagram references an actual file:line from the codebase",
+        "The Participants table has columns: Layer, File, Function, Line",
+        "The Data Touched table lists actual database tables with operation types (SELECT/INSERT/UPDATE/DELETE)",
+        "Error Paths section lists HTTP status codes with handler file:line references",
+        "No guessed or assumed code paths — every claim traces to source"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "워크플로우 분석해줘. 이 프로젝트의 API 흐름을 전부 추적해서 시퀀스 다이어그램으로 정리해줘. 미들웨어부터 DB까지 전부 포함해야 해.",
+      "expected_output": "Same depth of analysis as eval 1 but triggered via Korean language. Responds in Korean. Full workflow trace with Mermaid sequenceDiagrams. All file:line citations present. docs/workflow/ directory created with per-workflow files and INDEX.md. Generated files are in English, user-facing responses in Korean.",
+      "files": [],
+      "expectations": [
+        "Skill triggers correctly from Korean language input",
+        "User-facing responses are in Korean",
+        "Generated workflow files (docs/workflow/*.md) are in English",
+        "Sequence diagrams include middleware/guard layer between route and controller",
+        "INDEX.md contains workflow count and tech stack summary",
+        "At least one workflow traces all the way to a database query"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I just ran /project-scan and I see there are several features listed. Can you do a workflow blueprint? I especially want to see the auth flow and the payment flow in detail, but trace everything you find. Also this project uses NestJS with TypeORM and PostgreSQL.",
+      "expected_output": "Checks docs/project-overview.md for context from prior project-scan. Detects NestJS framework (decorators, modules). Discovers entry points independently from route decorators. Generates workflow docs for all discovered flows with auth and payment workflows having full depth including middleware guards, service calls, TypeORM repository queries, and PostgreSQL table operations. HARD-GATE enforced: no guessed participants.",
+      "files": [],
+      "expectations": [
+        "Reads docs/project-overview.md if it exists for prior context",
+        "Detects NestJS-specific patterns: @Controller, @Get/@Post decorators, @Injectable services",
+        "Auth workflow traces through AuthGuard or similar guard middleware",
+        "Payment workflow includes transaction handling if present in code",
+        "TypeORM repository calls are traced to actual entity definitions",
+        "PostgreSQL table names appear in Data Touched section",
+        "If a flow cannot be fully traced, explicitly states what was not resolved"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "eval_id": 3,
+  "eval_name": "ambiguous-input-clarification",
+  "prompt": "analyze the backend",
+  "assertions": [
+    {
+      "id": "c1",
+      "text": "Does NOT proceed with analysis — asks clarifying questions first",
+      "type": "behavior_check"
+    },
+    {
+      "id": "c2",
+      "text": "Uses Flipped Interaction pattern: proposes interpretation and asks for confirmation",
+      "type": "content_check"
+    },
+    {
+      "id": "c3",
+      "text": "Asks which project path to analyze",
+      "type": "content_check"
+    },
+    {
+      "id": "c4",
+      "text": "Asks about scope (what 'backend' means in this context)",
+      "type": "content_check"
+    },
+    {
+      "id": "c5",
+      "text": "Does NOT write analysis files without user confirmation",
+      "type": "behavior_check"
+    }
+  ]
+}

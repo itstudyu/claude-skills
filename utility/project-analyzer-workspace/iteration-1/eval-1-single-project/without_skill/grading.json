@@ -1,0 +1,36 @@
+{
+  "eval_id": 1,
+  "eval_name": "single-project-deep-analysis",
+  "expectations": [
+    {
+      "text": "Generates all 6 category files: tech-stack.md, features.md, data-model.md, code-patterns.md, dependencies.md, architecture.md",
+      "passed": false,
+      "evidence": "Output files are: architecture-summary.md, directory-structure.md, hooks-and-automation.md, skill-chaining.md, skill-inventory.md, skill-loading-system.md. None of the 6 required file names (tech-stack.md, features.md, data-model.md, code-patterns.md, dependencies.md, architecture.md) are present."
+    },
+    {
+      "text": "Every factual claim includes file:line citation (at least 80% of statements)",
+      "passed": false,
+      "evidence": "Grep for file:line citation patterns (e.g., 'filename.ext:NN') returned 0 matches across all 6 output files. Sampled 10 claims: (1) architecture-summary.md 'gstack (a separate open-source project by Garry Tan)' - no citation. (2) skill-loading-system.md 'install.sh script (lines 49-65)' - uses prose reference not file:line format. (3) hooks-and-automation.md 'Scans instincts/ directory for patterns with confidence >= 0.8' - no citation. (4) skill-inventory.md 'State persists in .claude/pipeline-state.json' - no citation. (5) directory-structure.md 'CODING-STANDARDS.md (10 rules)' - no citation. (6) skill-chaining.md 'File-Based Communication Pattern' table - no citations. (7) hooks-and-automation.md '11 secret patterns' - no citation. (8) architecture-summary.md '~500 tokens for 30 skills' - no citation. (9) hooks-and-automation.md 'min(0.9, 0.3 + (occurrences - 1) * 0.2)' - no citation. (10) skill-loading-system.md 'five category directories: workflow, review, planning, figma, utility' - no citation. 0/10 claims had file:line citations. Far below 80% threshold."
+    },
+    {
+      "text": "architecture.md references and links to the other 5 category files",
+      "passed": false,
+      "evidence": "No file named architecture.md exists. The closest file is architecture-summary.md, which does not contain any Markdown links to the other output files (directory-structure.md, hooks-and-automation.md, skill-chaining.md, skill-inventory.md, skill-loading-system.md). No cross-references found."
+    },
+    {
+      "text": "No speculative language ('typically', 'usually', 'probably', 'likely') in analysis files",
+      "passed": false,
+      "evidence": "Two instances of speculative language found: (1) skill-loading-system.md line 76: 'Typically 5-7 skills per plan.' (2) hooks-and-automation.md line 110: 'If confidence >= 0.8 (typically 4+ occurrences):'"
+    },
+    {
+      "text": "Features section traces actual code paths (entry point → handler → service → data)",
+      "passed": false,
+      "evidence": "No features.md file exists. The closest equivalent content is spread across skill-chaining.md and hooks-and-automation.md. These files describe conceptual flows (e.g., pipeline-build chain, error learning loop) using ASCII diagrams, but do not trace actual code paths with file:line references. For example, skill-chaining.md shows 'pipeline-build -> project-scan -> design-doc -> ...' but without citing specific source locations. hooks-and-automation.md describes the learning loop but without tracing entry_point:line -> handler:line -> data:line."
+    },
+    {
+      "text": "Analysis date header present in each file",
+      "passed": false,
+      "evidence": "Only 1 of 6 files has a date header: skill-loading-system.md has '> Analyzed: 2026-04-02'. The other 5 files lack any date: architecture-summary.md header is '> Comprehensive summary of the claude-skills project architecture.' directory-structure.md header is '> Analysis of claude-skills project at /Users/yu_s/Documents/GitHub/claude-skills'. hooks-and-automation.md header is '> Analysis of the hook system in claude-skills.' skill-chaining.md header is '> How skills chain together in the claude-skills project.' skill-inventory.md header is '> Complete inventory of all skills in the claude-skills project.'"
+    }
+  ]
+}
