@@ -26,6 +26,9 @@ CLAUDE.md (this file)
     ├→ Idea/brainstorm ("brainstorm", "maybe", "어떻게")
     │   → /brainstorm → /write-plan → /execute-plan [claude-skills]
     │
+    ├→ Rough prompt + "refine and plan" / "정리해서 플랜" / "整理してプラン"
+    │   → /prompt-to-plan [claude-skills]
+    │
     ├→ Debug/error ("debug", "bug", "error", "broken")
     │   → /investigate [gstack]
     │
@@ -52,6 +55,7 @@ plan-orchestrator reads this file as Tier 1 for skill matching.
 |-------|-------------|------|
 | brainstorm | Socratic design, 3 options before implementation | #design #planning |
 | write-plan | Bite-sized 2-5min tasks, zero-context assumption | #planning #tasks |
+| prompt-to-plan | Refine rough prompts, enter Plan Mode, build implementation plan | #prompt #planning |
 | design-doc | Generate per-feature design document with fixed template | #docs #design |
 | subagent-dev | Fresh subagent per task, two-stage review | #execution #parallel |
 | tdd | RED-GREEN-REFACTOR, no code without failing test | #testing #quality |

@@ -1,0 +1,49 @@
+{
+  "skill_name": "prompt-to-plan",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "다크모드 추가하고 싶어. 정리해서 플랜 만들어줘.",
+      "expected_output": "Classifies as Standard tier. Uses Flipped Interaction to clarify (CSS vars vs theme context, component scope). Presents refined spec in Korean with What Changed summary. After approval, enters Plan Mode and creates bite-sized TDD tasks with file paths.",
+      "files": [],
+      "expectations": [
+        "Classified as Standard tier",
+        "Flipped Interaction pattern used for clarification",
+        "Refined spec contains <role>, <context>, <task>, <constraints>, <deliverables>",
+        "All content in Korean (matching input language)",
+        "Waits for approval before planning",
+        "Calls EnterPlanMode after approval",
+        "Plan follows write-plan conventions (checkbox steps, TDD, no placeholders)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Fix the login button color. It should be blue not gray.",
+      "expected_output": "Classifies as Lite tier. Minimal refinement with task + deliverables only. No Flipped Interaction. Enters Plan Mode with 1-3 simple tasks.",
+      "files": [],
+      "expectations": [
+        "Classified as Lite tier",
+        "No Flipped Interaction (clear intent)",
+        "Refined spec uses only <task> and <deliverables>",
+        "Plan has 1-3 bite-sized tasks",
+        "Calls EnterPlanMode"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "マイクロサービスアーキテクチャへの移行戦略を設計して、実装プランまで作って",
+      "expected_output": "Classifies as Deep tier. Performs WebSearch research. Full template with all sections including acceptance criteria. After approval, enters Plan Mode with phased multi-task plan.",
+      "files": [],
+      "expectations": [
+        "Classified as Deep tier",
+        "2-3 WebSearch queries executed",
+        "Research findings in <context>",
+        "All sections present including <acceptance_criteria>",
+        "Content in Japanese",
+        "What Changed summary in Japanese",
+        "Plan is phased with 10+ tasks",
+        "Calls EnterPlanMode"
+      ]
+    }
+  ]
+}
