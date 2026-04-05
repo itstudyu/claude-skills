@@ -5,10 +5,16 @@ description: |
   TODO/FIXME annotations. Converts English comments to Japanese and adds missing comments
   to complex logic blocks. Use this skill after writing or reviewing code in any language.
   Trigger whenever the user says "日本語コメント", "japanese comments", "コメント変換",
-  "コメントを日本語に", "add japanese comments", "translate comments", "코멘트 일본어로",
-  "일본어 코멘트", or as part of any code quality workflow. Proactively suggest this skill
-  after any code writing session where comments are in English or missing — the team
-  convention requires all comments and logs to be in Japanese.
+  "コメントを日本語に", "add japanese comments", "translate comments to japanese",
+  "코멘트 일본어로", "코멘트 일본어로 변환", "일본어 코멘트", or as part of any code
+  quality workflow. Proactively suggest this skill after any code writing session
+  where comments are in English or missing — the team convention requires all comments
+  and logs to be in Japanese.
+allowed-tools:
+  - Read
+  - Edit
+  - Grep
+  - Glob
 ---
 
 # Japanese Comments Enforcement

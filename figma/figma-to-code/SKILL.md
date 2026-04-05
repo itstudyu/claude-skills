@@ -8,6 +8,13 @@ description: |
   screen. Trigger on "Figma URL + implement", "build this page from Figma", "피그마 구현",
   "Figmaから実装". This is for PAGE/SCREEN code, not shared components — use
   figma-component-writer for the shared library.
+allowed-tools:
+  - Read
+  - Grep
+  - Glob
+  - Write
+  - Edit
+  - Bash
 ---
 
 # Figma to Code

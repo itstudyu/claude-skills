@@ -8,6 +8,13 @@ description: |
   "create shared components from this Figma URL", or provides a Figma URL with intent
   to update the shared component library. This is for the SHARED LIBRARY (angular-web-common),
   not for page-specific code — use figma-to-code for that.
+allowed-tools:
+  - Read
+  - Grep
+  - Glob
+  - Write
+  - Edit
+  - Bash
 ---
 
 # Figma Component Writer
@@ -40,19 +47,19 @@ If NOT found anywhere:
 
 ## Pipeline
 
-### Phase 1: Crawl (figma-common-crawler)
+### Phase 1: Crawl (internal — resources/crawler/)
 
-Invoke figma-common-crawler with the provided Figma URL.
+Follow the crawl logic in `resources/crawler/SKILL.md` with the provided Figma URL.
 Output: `crawled-components.json`, `crawled-components.md`
 
-### Phase 2: Diff (figma-common-diff)
+### Phase 2: Diff (internal — resources/diff/)
 
-Invoke figma-common-diff with crawled data + registry.
+Follow the diff logic in `resources/diff/SKILL.md` with crawled data + registry.
 Output: `diff-report.json`
 
-### Phase 3: Preview & Approval (figma-common-mapper)
+### Phase 3: Preview & Approval (internal — resources/mapper/)
 
-Invoke figma-common-mapper to present the sync preview.
+Follow the mapper logic in `resources/mapper/SKILL.md` to present the sync preview.
 Output: confirmed execution plan (or user cancels)
 
 **HARD GATE:** Do not proceed to Phase 4 without explicit user approval.

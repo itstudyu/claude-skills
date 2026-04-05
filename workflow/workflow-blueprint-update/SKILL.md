@@ -25,6 +25,13 @@ description: |
   - User is preparing a PR and workflow docs may be stale
   - User asks "did my changes break anything" and workflow docs exist
   - User ran /workflow-blueprint previously and has since modified code
+allowed-tools:
+  - Read
+  - Grep
+  - Glob
+  - Bash
+  - Write
+  - Edit
 ---
 
 # Workflow Blueprint Update

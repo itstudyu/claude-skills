@@ -26,6 +26,12 @@ description: |
   - User is onboarding and asking about how features work
   - User is planning a refactor of request handling or service layer
   - User asks "what happens when I call this API"
+allowed-tools:
+  - Read
+  - Grep
+  - Glob
+  - Bash
+  - Write
 ---
 
 # Workflow Blueprint

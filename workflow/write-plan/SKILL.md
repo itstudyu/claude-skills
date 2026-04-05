@@ -9,6 +9,12 @@ description: |
   "구현 계획 세워줘", or before any implementation that involves more than a single file
   change. Proactively suggest this skill after brainstorming completes — implementation
   without a plan leads to rework.
+allowed-tools:
+  - Read
+  - Grep
+  - Glob
+  - Write
+  - Edit
 ---
 
 # Writing Plans

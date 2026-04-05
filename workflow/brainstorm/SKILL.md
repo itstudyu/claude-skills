@@ -3,15 +3,24 @@ name: brainstorm
 description: |
   Explore user intent, requirements, and design through collaborative Socratic dialogue
   before any implementation begins. Produces a design spec document with user approval.
-  Use this skill whenever the user says "brainstorm", "let's think about this", "I have
-  an idea", "explore options", "design this", "help me think through", "what approach
-  should we take", "ブレスト", "アイデア出し", "설계 먼저", "아이디어", "브레인스토밍",
-  "어떻게 하면 좋을까", or uses vague language like "maybe", "아마", "뭔가", "어떻게".
-  Proactively suggest this skill when the user describes something to build but hasn't
-  thought through the design — implementation without design leads to rework.
+  Use this skill ONLY when the user explicitly asks for brainstorming via phrases like
+  "brainstorm", "let's think about this", "I have an idea", "explore options",
+  "design this", "help me think through", "what approach should we take",
+  "ブレスト", "アイデア出し", "設計を考えよう", "설계 먼저", "아이디어 정리",
+  "브레인스토밍", "같이 생각해보자".
+  Do NOT auto-trigger on vague words like "maybe", "아마", "뭔가", "어떻게" alone —
+  these are too generic and cause false positives.
+allowed-tools:
+  - Read
+  - Grep
+  - Glob
+  - Write
+  - WebSearch
 ---
 
 # Brainstorming Ideas Into Designs
+
+> **Scope**: Idea exploration via Socratic dialogue. For a structured per-feature design document use `/design-doc`. For refining a rough prompt into a plan use `/prompt-to-plan`.
 
 Turn ideas into fully formed designs through natural collaborative dialogue.
 Understand the project context, ask questions one at a time, present the design,

@@ -1,21 +1,26 @@
 ---
 name: project-analyzer
 description: |
-  Deep fact-based analysis of one or multiple project codebases. Reads every relevant
-  file to produce precise, evidence-backed reports split by category — tech stack,
-  features, data model, code patterns, dependencies, and an architecture design doc
-  that ties everything together. Supports cross-project comparison when multiple
-  projects are given. Use this skill whenever the user says "analyze project",
-  "analyze projects", "project analysis", "compare projects", "deep dive into this
-  codebase", "tell me exactly what this project does", "프로젝트 분석", "프로젝트 비교",
-  "프로젝트 분석해줘", "코드베이스 분석", "이 프로젝트 깊이 분석", "プロジェクト分析",
-  "コードベース分析", "プロジェクト比較", or when the user asks detailed questions about
-  project internals that require reading actual source code. Proactively suggest this
-  skill when the user asks questions about how a project works and you detect that a
-  shallow answer would be insufficient.
+  Deep fact-based 6-axis analysis of one or more codebases — tech stack, features,
+  data model, code patterns, dependencies, and architecture. Every claim traces back
+  to a file/line. Supports cross-project comparison. Use this skill whenever the user
+  says "deep project analysis", "project analysis", "analyze projects", "compare
+  projects", "deep dive into this codebase", "tell me exactly what this project does",
+  "프로젝트 깊이 분석", "코드베이스 깊이 분석", "프로젝트 비교", "프로젝트 상세 분석",
+  "プロジェクト詳細分析", "コードベース詳細分析", "プロジェクト比較". Proactively suggest
+  when the user asks questions about project internals that require reading actual
+  source code. For a fast onboarding overview use /project-scan instead.
+allowed-tools:
+  - Read
+  - Grep
+  - Glob
+  - Bash
+  - Write
 ---
 
 # Project Analyzer
+
+> **vs /project-scan**: project-analyzer performs DEEP 6-axis analysis with file/line evidence. Use `/project-scan` for a fast overview or onboarding document.
 
 Deep, fact-based analysis of one or multiple codebases. Every claim must trace back
 to a file you actually read. If you cannot verify something from source, say

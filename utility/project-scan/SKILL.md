@@ -1,19 +1,26 @@
 ---
 name: project-scan
 description: |
-  Scan an entire codebase to understand its structure, tech stack, features, database
-  tables, and code patterns — then generate a comprehensive docs/project-overview.md
-  that both humans and AI can use to quickly get up to speed. This is the first thing
-  to run on any new or unfamiliar project. Use this skill whenever the user says "scan
-  project", "analyze project", "understand this codebase", "what does this project do",
-  "project overview", "onboard me", "プロジェクト分析", "プロジェクト把握",
-  "프로젝트 파악", "프로젝트 분석", "이 프로젝트 뭐야", or when the user opens a new
-  repo and needs to understand it before making changes. Proactively suggest this skill
-  when you detect there's no docs/project-overview.md and the user is about to start
-  working on an unfamiliar codebase.
+  Fast codebase overview for onboarding. Produces docs/project-overview.md covering
+  structure, tech stack, features, database tables, and code patterns so humans and
+  AI can get productive quickly. Use this skill whenever the user says "scan project",
+  "project overview", "quick overview", "onboard me", "onboarding scan",
+  "understand this codebase", "what does this project do", "プロジェクト把握",
+  "プロジェクト概要", "프로젝트 파악", "프로젝트 빠른 파악", "신규 프로젝트 온보딩",
+  "이 프로젝트 뭐야". Proactively suggest when docs/project-overview.md is missing
+  and the user is about to start working on an unfamiliar codebase.
+  For deep multi-axis analysis use /project-analyzer instead.
+allowed-tools:
+  - Read
+  - Grep
+  - Glob
+  - Bash
+  - Write
 ---
 
 # Project Scan
+
+> **vs /project-analyzer**: project-scan is for a FAST overview + onboarding document. Use `/project-analyzer` for deep 6-axis analysis (tech/features/data/patterns/deps/architecture).
 
 Analyze a codebase and produce a structured project overview document. The goal is
 to give both humans and AI enough context to work productively in the project without

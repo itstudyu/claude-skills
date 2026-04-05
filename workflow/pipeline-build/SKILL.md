@@ -22,6 +22,8 @@ allowed-tools:
 
 # Pipeline: Build Feature
 
+> **vs /plan-orchestrator**: pipeline-build runs a FIXED 6-step sequence (scan → design-doc → write-plan → subagent-dev → review → verify-complete). Use `/plan-orchestrator` instead when the task needs dynamic skill selection based on the request.
+
 Take a feature from understanding to verified implementation. Scan the project, write specs,
 plan, execute via subagents, review, and verify. One command, six stages.
 

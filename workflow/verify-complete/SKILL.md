@@ -7,6 +7,11 @@ description: |
   "検証して", "테스트 확인", "검증해줘", or before any commit, PR, or task completion.
   Proactively suggest this skill whenever you're about to claim work is complete —
   no completion claim is valid without fresh verification evidence.
+allowed-tools:
+  - Read
+  - Grep
+  - Glob
+  - Bash
 ---
 
 # Verification Before Completion

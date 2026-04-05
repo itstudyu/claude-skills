@@ -8,6 +8,14 @@ description: |
   implementation plan exists and tasks are mostly independent. Proactively suggest
   this skill over execute-plan when subagents are available — fresh context per task
   produces higher quality results than sequential execution in a long session.
+allowed-tools:
+  - Read
+  - Grep
+  - Glob
+  - Write
+  - Edit
+  - Bash
+  - Agent
 ---
 
 # Subagent-Driven Development

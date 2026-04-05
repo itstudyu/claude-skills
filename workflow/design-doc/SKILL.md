@@ -11,6 +11,12 @@ description: |
   "設計書作成", "機能ドキュメント", or when /project-scan suggests creating design docs
   for detected features. Proactively suggest this skill when the user is about to modify
   a feature that has no design doc yet.
+allowed-tools:
+  - Read
+  - Grep
+  - Glob
+  - Write
+  - Edit
 ---
 
 # Design Doc Generator

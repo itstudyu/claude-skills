@@ -2,11 +2,20 @@
 name: devops-test-gen
 description: |
   Auto-generate unit tests and regression tests for new or changed code. Detects the
-  project's test framework automatically and follows existing test patterns. Use this
-  skill whenever the user says "generate tests", "add tests", "write tests", "テスト生成",
-  "テスト追加", "테스트 생성", "테스트 추가", or when code has been written without
-  accompanying test files. Proactively suggest this skill after any implementation task
-  that doesn't include tests — untested code is incomplete code.
+  project's test framework automatically and follows existing test patterns. Uses
+  `git diff` to scope regression tests to files that actually changed. Use this
+  skill whenever the user says "generate tests", "add tests", "write tests",
+  "regression tests", "テスト生成", "テスト追加", "回帰テスト", "테스트 생성",
+  "테스트 추가", "회귀 테스트", or when code has been written without accompanying
+  test files. Proactively suggest this skill after any implementation task that
+  doesn't include tests — untested code is incomplete code.
+allowed-tools:
+  - Read
+  - Edit
+  - Grep
+  - Glob
+  - Bash
+  - Write
 ---
 
 # Test Generation

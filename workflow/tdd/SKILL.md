@@ -8,6 +8,13 @@ description: |
   implementing any new feature or fixing any bug. Proactively suggest this skill
   whenever code is about to be written without a failing test — if you didn't watch
   the test fail, you don't know if it tests the right thing.
+allowed-tools:
+  - Read
+  - Grep
+  - Glob
+  - Write
+  - Edit
+  - Bash
 ---
 
 # Test-Driven Development (TDD)
