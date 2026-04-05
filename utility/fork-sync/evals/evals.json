@@ -1,0 +1,29 @@
+{
+  "skill_name": "fork-sync",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "이 fork를 upstream과 동기화해줘",
+      "expected_output": "Verifies git repo + clean working tree, auto-detects upstream via gh api, fetches upstream, shows behind/ahead counts, fast-forwards or merges into default branch, pushes to origin, prints summary.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "/fork-sync",
+      "expected_output": "When already up to date (BEHIND=0), detects it after fetch and exits early without merge or push. When behind, runs full sync flow.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "sync my fork with upstream",
+      "expected_output": "If upstream remote is missing and gh CLI is unavailable, uses AskUserQuestion to get upstream URL from user, then proceeds with sync.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "upstream 동기화 해줘",
+      "expected_output": "Detects uncommitted changes via git diff, stops with clear stash/commit instructions, does NOT proceed with fetch or merge.",
+      "files": []
+    }
+  ]
+}

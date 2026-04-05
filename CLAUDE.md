@@ -90,6 +90,7 @@ plan-orchestrator reads this file as Tier 1 for skill matching.
 |-------|-------------|------|
 | project-scan | Scan codebase — tech stack, features, data model, patterns | #analysis #onboarding |
 | skill-catalog | Scan and manage skills from multiple sources | #utility #catalog |
+| fork-sync | Sync forked GitHub repo with upstream (fetch → merge → push) | #git #fork |
 
 ---
 

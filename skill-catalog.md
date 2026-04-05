@@ -67,4 +67,5 @@
 | tdd | workflow/tdd/ | Test-Driven Development — RED-GREEN-REFACTOR cycle | #testing #quality |
 | verify-complete | workflow/verify-complete/ | Evidence-based verification gate — run commands, confirm output | #verification |
 | prompt-to-plan | workflow/prompt-to-plan/ | Refine rough prompts into structured specs, enter Plan Mode, create implementation plans | #prompt #planning #refinement |
+| fork-sync | utility/fork-sync/ | Sync a forked GitHub repo with upstream — fetch, fast-forward/merge, push | #git #fork #utility |
 | write-plan | workflow/write-plan/ | Create implementation plans from specs before touching code | #planning |
