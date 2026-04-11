@@ -7,7 +7,7 @@ description: |
   whenever the user says "write a plan", "make a plan", "create implementation plan",
   "plan this out", "break this into tasks", "プラン作成", "計画を書いて", "플랜 작성해줘",
   "구현 계획 세워줘", or before any implementation that involves more than a single file
-  change. Proactively suggest this skill after brainstorming completes — implementation
+  change. Proactively suggest this skill when a spec is ready — implementation
   without a plan leads to rework.
 allowed-tools:
   - Read
@@ -27,7 +27,7 @@ each) following TDD.
 ## Scope Check
 
 If the spec covers multiple independent subsystems, it should have been decomposed
-during brainstorming. If not, suggest breaking it into separate plans — one per
+during spec definition. If not, suggest breaking it into separate plans — one per
 subsystem. Each plan should produce working, testable software on its own.
 
 ## File Structure

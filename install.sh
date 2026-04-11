@@ -26,15 +26,6 @@ if [ "$1" = "--uninstall" ]; then
   exit 0
 fi
 
-# ─── Check gstack ────────────────────────────────────────────
-if [ ! -d "$SKILLS_DIR/gstack" ]; then
-  echo -e "${YELLOW}Warning: gstack is not installed.${NC}"
-  echo "  Many skills (browse, review, qa, ship, etc.) require gstack."
-  echo "  Install: git clone https://github.com/garrytan/gstack.git ~/.claude/skills/gstack"
-  echo "           cd ~/.claude/skills/gstack && ./setup"
-  echo ""
-fi
-
 # ─── Create directories ──────────────────────────────────────
 mkdir -p "$SKILLS_DIR"
 mkdir -p "$CLAUDE_DIR/hooks"
@@ -43,7 +34,7 @@ echo "Installing claude-skills from $SCRIPT_DIR"
 echo ""
 
 # ─── Symlink skills (category/skill-name/SKILL.md) ───────────
-CATEGORIES="workflow review planning figma utility"
+CATEGORIES="workflow review figma utility"
 COUNT=0
 
 for category in $CATEGORIES; do
@@ -85,5 +76,3 @@ echo ""
 echo -e "${GREEN}Installation complete!${NC}"
 echo "  Skills: $COUNT"
 echo "  Hooks: $(ls "$CLAUDE_DIR/hooks/"*.sh 2>/dev/null | wc -l | tr -d ' ')"
-echo ""
-echo -e "${YELLOW}Tip: Run /skill-catalog scan to update the unified skill catalog.${NC}"

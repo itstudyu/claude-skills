@@ -9,8 +9,8 @@
     },
     {
       "id": 2,
-      "prompt": "플랜 작성해줘. 방금 브레인스토밍한 API 리팩토링을 구현 계획으로 만들어.",
-      "expected_output": "Creates implementation plan from the brainstorm output, with task structure matching the template (checkbox steps, TDD cycle, commit points). Offers execution handoff.",
+      "prompt": "플랜 작성해줘. 방금 논의한 API 리팩토링을 구현 계획으로 만들어.",
+      "expected_output": "Creates implementation plan from the spec input, with task structure matching the template (checkbox steps, TDD cycle, commit points). Offers execution handoff.",
       "files": []
     },
     {

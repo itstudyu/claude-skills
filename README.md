@@ -2,17 +2,6 @@
 
 Project-specific Claude Code skills for workflow, Figma automation, and DevOps review.
 
-General-purpose skills (browse, review, QA, ship, security, etc.) are provided by
-[gstack](https://github.com/garrytan/gstack) — installed separately.
-
-## Prerequisites
-
-```bash
-# Install gstack (general-purpose skills)
-git clone https://github.com/garrytan/gstack.git ~/.claude/skills/gstack
-cd ~/.claude/skills/gstack && ./setup
-```
-
 ## Install
 
 ```bash
@@ -21,18 +10,19 @@ cd claude-skills
 ./install.sh
 ```
 
-After install, run `/skill-catalog scan` to generate the unified skill catalog.
-
 ## Skills
 
 ### workflow/ — Development Workflow
 | Skill | Description |
 |-------|-------------|
-| `/brainstorm` | Socratic design exploration, 3 options before implementation |
+| `/prompt-to-plan` | Refine rough prompts, then build an implementation plan |
 | `/write-plan` | Bite-sized 2-5min task planning |
+| `/design-doc` | Generate per-feature design document with fixed template |
 | `/subagent-dev` | Fresh subagent per task + two-stage review |
 | `/tdd` | Test-driven development (RED-GREEN-REFACTOR) |
 | `/verify-complete` | Evidence-based verification gate |
+| `/workflow-blueprint` | Deep workflow trace with Mermaid sequence diagrams |
+| `/workflow-blueprint-update` | Incremental workflow doc update via git diff |
 
 ### review/ — DevOps Quality
 | Skill | Description |
@@ -40,29 +30,15 @@ After install, run `/skill-catalog scan` to generate the unified skill catalog.
 | `/devops-japanese-comments` | Japanese comment enforcement |
 | `/devops-test-gen` | Auto-generate tests |
 
-### planning/ — Orchestration
-| Skill | Description |
-|-------|-------------|
-| `/plan-orchestrator` | Auto-scan skills from all sources + build execution plan |
-
 ### figma/ — Figma Automation
 | Skill | Description |
 |-------|-------------|
-| `/figma-component-writer` | Figma → angular-web-common shared components |
-| `/figma-to-code` | Figma → Angular page code (with common mapping) |
+| `/figma-component-writer` | Orchestrate Figma → angular-web-common |
+| `/figma-to-code` | Figma URL → Angular code |
 
-### utility/ — Catalog Management
+### utility/
 | Skill | Description |
 |-------|-------------|
-| `/skill-catalog` | Scan and manage skills from multiple sources |
-
-## Skill Catalog
-
-`skill-catalog.md` is the unified registry of ALL skills from ALL sources.
-`/plan-orchestrator` reads this file for skill matching.
-
-```bash
-/skill-catalog scan      # Regenerate catalog from all sources
-/skill-catalog list      # Show summary
-/skill-catalog add       # Register a new skill pack
-```
+| `/project-analyzer` | Deep 6-axis codebase analysis |
+| `/project-scan` | Fast codebase overview for onboarding |
+| `/fork-sync` | Sync forked GitHub repo with upstream |
