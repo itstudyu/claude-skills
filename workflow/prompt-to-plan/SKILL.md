@@ -32,6 +32,12 @@ This skill has two non-negotiable gates. Skipping either defeats its purpose.
 The transformation step is the core value. The raw prompt goes in, a structured
 spec comes out. Executing the raw prompt directly would bypass the entire skill.
 
+Even when the input is already well-structured (explicit steps, clear scope,
+specified tools), the refinement gate still applies. In this case, refinement
+may be brief — acknowledge the structure, note any assumptions or substitutions
+you would make (e.g. subagent instead of tmux), and confirm before executing.
+The gate exists to catch misalignment early, not to add ceremony.
+
 ## Workflow Checklist
 
 The skill has exactly two user-visible phases: **REFINE** and **PLAN**. Everything
