@@ -65,3 +65,24 @@ git commit -m "feat: description"
 2. Search for placeholders (TBD, TODO, "implement later", "add appropriate")
 3. Check type/method name consistency across tasks
 4. Fix issues inline
+
+## Execution Handoff
+
+After the plan is complete:
+
+> **Plan complete.** Saved to `docs/plans/<feature>.md`.
+>
+> **Two execution options:**
+>
+> **1. Subagent-Driven (recommended)** — fresh subagent per task, review between tasks.
+>    Run: `/subagent-dev docs/plans/<feature>.md`
+>
+> **2. Inline Execution** — execute tasks in this session with checkpoints.
+>
+> **Which approach?**
+
+- Subagent-Driven → User runs `/subagent-dev <plan-path>` (ensures clean context)
+- Inline Execution → Execute tasks sequentially in current session
+
+> **Note**: For parallel implementation tasks, subagents can use `isolation: worktree`
+> to get isolated repo copies, avoiding file conflicts.

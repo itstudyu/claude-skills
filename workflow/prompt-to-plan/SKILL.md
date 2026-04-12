@@ -234,6 +234,12 @@ If the user says "more detail" — add sections, expand constraints, upgrade tie
 After the user approves the refined spec:
 
 1. **Enter Plan Mode** — Call `EnterPlanMode`
+
+> **Note**: Plan Mode is a read-only prompt mode — it does not change thinking
+> depth. Extended thinking is always active with adaptive depth regardless of mode.
+> For Deep tier, add reasoning guidance in your first instruction after entering
+> Plan Mode.
+
 2. **Write the implementation plan** following write-plan conventions:
 
 ## 플랜 규칙
