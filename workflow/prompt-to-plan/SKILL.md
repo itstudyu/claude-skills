@@ -260,6 +260,11 @@ Do NOT:
 - Generate a plan without refining the prompt first
 - Create vague tasks ("implement the feature") — every task needs exact files and code
 - Add scope beyond what the refined spec defines
+- Include "think step by step" or "think hard" in refined specs — these are
+  regular prompt text on Claude 4.6, not thinking budget controls. Prefer
+  outcome-oriented guidance ("evaluate tradeoffs", "identify edge cases")
+- Over-prescribe implementation steps in `<task>` — general instructions produce
+  better reasoning than hand-written step-by-step plans with adaptive thinking
 
 ## Target Model Adaptation
 
@@ -268,6 +273,25 @@ Do NOT:
 - **Other models**: Use Markdown headers as universal fallback
 
 Detect if the user mentions a target model and adjust delimiter style accordingly.
+
+### Claude 4.6 Notes
+
+When the refined spec will be executed by Claude 4.6 (the default):
+
+- **No prefilling**: Prefilled assistant responses are no longer supported.
+  Use explicit instructions instead.
+- **Overengineering tendency**: Opus 4.6 tends to create extra files, add
+  unnecessary abstractions, and build in flexibility that wasn't requested.
+  Include clear scope boundaries in `<task>`: "implement only what is specified,
+  no additional features or abstractions."
+- **Overthinking tendency**: Opus 4.6 does significantly more upfront exploration
+  than previous models. If the raw prompt contains "be thorough" or "think about
+  everything", soften or remove — it causes over-exploration.
+- **General > prescriptive**: "Think thoroughly about the tradeoffs" produces
+  better reasoning than a hand-written step-by-step analysis plan.
+  In `<task>`, state goals and constraints; let the model determine the approach.
+- **Scope control**: Refined specs should explicitly state what is OUT of scope,
+  not just what is in scope. This counteracts the overengineering tendency.
 
 ## Multi-Language Support
 
