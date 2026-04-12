@@ -38,6 +38,33 @@ may be brief — acknowledge the structure, note any assumptions or substitution
 you would make (e.g. subagent instead of tmux), and confirm before executing.
 The gate exists to catch misalignment early, not to add ceremony.
 
+### Pre-research approval
+
+When the input requires research before a meaningful spec can be written
+(e.g. "analyze this codebase", "read these articles", URLs provided),
+present a brief research plan first:
+
+> "This request needs upfront research to write a meaningful spec.
+> I plan to: [what you'll research, how, estimated scope].
+> Proceed?"
+
+Get approval before launching any research agents, searches, or fetches.
+Do not announce research as already completed — that removes the user's
+ability to adjust scope or method.
+
+### Respect user-specified execution methods
+
+When the user specifies how something should be done (e.g. tmux sessions,
+specific tools, particular file structure, execution order), treat it as a
+requirement, not a suggestion. If you believe an alternative is better:
+
+1. Present the spec with the user's method as specified
+2. Add a note: "Alternative: [your suggestion] because [reason]. Switch?"
+3. Wait for approval before using the alternative
+
+Do not silently substitute and report it after the fact in "What Changed".
+The user chose that method for a reason you may not know.
+
 ## Workflow Checklist
 
 The skill has exactly two user-visible phases: **REFINE** and **PLAN**. Everything
