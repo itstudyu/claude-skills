@@ -1,24 +1,12 @@
 ---
 name: prompt-to-plan
 description: |
-  Transform rough, informal user input into optimally structured prompts, then enter
-  Plan Mode to create actionable implementation plans from the refined output.
-  Use this skill whenever the user says "refine and plan", "clean up this prompt
-  and make a plan", "turn this into a plan", "prompt to plan", "/prompt-to-plan",
-  "refine this into a plan", "help me structure this and plan it",
-  "프롬프트 정리하고 플랜 만들어줘", "이거 정리해서 계획 세워줘",
-  "정리해서 플랜", "프롬프트 정리해줘",
-  "プロンプト整理してプラン作って", "このアイデアを整理して実装計画を",
-  "整理してプラン作って".
-  Do NOT auto-trigger on every user message — only when prompt refinement + planning
-  is explicitly requested.
+  Transforms rough user input into structured implementation specs, then enters
+  Plan Mode to build actionable plans. Only when explicitly requested.
 allowed-tools:
-  - Bash
   - Read
   - Grep
   - Glob
-  - Write
-  - Edit
   - WebSearch
   - WebFetch
   - AskUserQuestion
