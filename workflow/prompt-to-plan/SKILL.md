@@ -76,11 +76,15 @@ do NOT announce these as separate steps or make the user wait through a visible
 Triage happens in your head while you draft the spec — it is NOT a user-visible
 step. Pick the tier that matches the input and fill the matching template sections.
 
-| Tier | Signal | Sections Used | Research? | Plan Depth |
-|------|--------|---------------|-----------|------------|
-| **Lite** | Single file change, clear intent | `task` + `deliverables` | No | 1-3 tasks |
-| **Standard** | Multi-file, some ambiguity | `role` + `context` + `task` + `constraints` + `deliverables` | No (unless asked) | 4-10 tasks |
-| **Deep** | Complex architecture, high stakes, ambiguous scope | All sections + `acceptance_criteria` | Yes (if warranted) | 10+ tasks, phased |
+| Tier | Signal | Sections Used | Research? | Plan Depth | Reasoning Guidance |
+|------|--------|---------------|-----------|------------|--------------------|
+| **Lite** | Single file change, clear intent | `task` + `deliverables` | No | 1-3 tasks | None needed |
+| **Standard** | Multi-file, some ambiguity | `role` + `context` + `task` + `constraints` + `deliverables` | No (unless asked) | 4-10 tasks | Default adaptive |
+| **Deep** | Complex architecture, high stakes, ambiguous scope | All sections + `acceptance_criteria` + optional `examples` | Yes (if warranted) | 10+ tasks, phased | Outcome-oriented guidance in Plan Mode (e.g. "evaluate architecture tradeoffs and edge cases") |
+
+> **Tip**: For Deep tier plans, consider running `/effort high` or `/effort max`
+> before entering Plan Mode to maximize reasoning depth. For Lite tier,
+> `/effort medium` keeps responses fast.
 
 If the user pushes back on the depth after seeing the spec ("simpler" / "more detail"),
 shift tiers then — don't pre-negotiate depth before they've seen anything.
