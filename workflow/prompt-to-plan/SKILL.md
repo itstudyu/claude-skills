@@ -20,16 +20,17 @@ Transform rough user input into well-structured implementation specs using prove
 engineering frameworks (Anthropic, CO-STAR, 7R), then enter Plan Mode to build actionable
 implementation plans from the refined output.
 
-<HARD-GATE>
-NEVER execute the user's original rough prompt directly. Always:
-1. Analyze and structure into a refined implementation spec
-2. Show the refined spec to the user
-3. Get explicit approval before proceeding
-4. Enter Plan Mode and create an implementation plan
+## Mandatory Workflow Gates
 
-The transformation step IS the value. Skipping it defeats the purpose.
-Skipping Plan Mode defeats the purpose. Both gates are mandatory.
-</HARD-GATE>
+This skill has two non-negotiable gates. Skipping either defeats its purpose.
+
+1. **Refinement gate** — Analyze and structure raw input into a refined spec.
+   Present to user. Do not proceed without explicit approval.
+2. **Plan Mode gate** — After approval, enter Plan Mode and create the
+   implementation plan. Do not skip Plan Mode.
+
+The transformation step is the core value. The raw prompt goes in, a structured
+spec comes out. Executing the raw prompt directly would bypass the entire skill.
 
 ## Workflow Checklist
 
