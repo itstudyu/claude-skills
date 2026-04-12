@@ -106,6 +106,98 @@ Rules:
 - Each structured as "I think you mean X — correct?"
 - Skip entirely for Lite tier (intent is already clear)
 
+## Transformation Examples
+
+<examples>
+
+<example>
+**Tier: Lite**
+
+Raw input:
+> Fix the login button color. It should be blue not gray.
+
+Refined spec:
+<task>Change the login button background color from gray to blue (#2563EB)
+in the login form component.</task>
+<deliverables>
+- Modify: `src/components/LoginForm.tsx` (button style)
+- Verify: login page renders with blue button
+</deliverables>
+</example>
+
+<example>
+**Tier: Standard**
+
+Raw input:
+> 다크모드 추가하고 싶어
+
+Refined spec:
+<context>
+프로젝트는 React + Tailwind CSS 기반. 현재 라이트 모드만 지원.
+CSS custom properties를 사용하면 테마 전환이 용이함.
+</context>
+<task>CSS custom properties 기반 다크모드 토글 기능을 구현한다.
+사용자의 OS 설정을 기본값으로 감지하고, 수동 토글도 지원한다.</task>
+<constraints>
+- Tailwind dark: variant 활용 — 기존 클래스 시스템과 일관성 유지
+- localStorage에 선호 테마 저장 — 페이지 새로고침 후에도 유지
+- 전환 시 깜빡임(FOUC) 방지 — 초기 로드 시 `<script>`로 클래스 적용
+</constraints>
+<deliverables>
+- Create: `src/hooks/useTheme.ts` (테마 상태 관리 훅)
+- Modify: `src/App.tsx` (테마 provider 래핑)
+- Modify: `tailwind.config.js` (darkMode: 'class')
+- Create: `src/components/ThemeToggle.tsx`
+- Test: `tests/useTheme.test.ts`
+</deliverables>
+</example>
+
+<example>
+**Tier: Deep**
+
+Raw input:
+> マイクロサービスアーキテクチャへの移行戦略を設計して
+
+Refined spec:
+<role>
+分散システムアーキテクトとして、モノリスからマイクロサービスへの段階的移行を設計する。
+大規模トラフィック環境での実務経験を持つ視点で助言する。
+</role>
+<context>
+現行システムはDjango monolith (Python 3.11)、PostgreSQL 15、Redis。
+月間アクティブユーザー約50万人。デプロイ頻度は週1回。
+チームは5名のバックエンドエンジニア。Kubernetes環境あり。
+</context>
+<task>
+Strangler Fig パターンを用いた段階的マイクロサービス移行計画を策定する。
+Phase 1で認証サービスを分離、Phase 2でユーザー管理、Phase 3で通知サービスを対象とする。
+</task>
+<constraints>
+- 移行中もサービス無停止を維持 — SLA 99.9%要件
+- サービス間通信はgRPCを基本、非同期処理はKafka — チーム既存スキルとの整合
+- 各Phaseは独立デプロイ可能 — ロールバック容易性の確保
+- データベースは段階的分離(shared DB → schema分離 → 独立DB) — データ整合性リスク最小化
+</constraints>
+<deliverables>
+- Architecture Decision Record (ADR) for each phase
+- Service boundary diagrams (Mermaid)
+- API contract definitions (protobuf)
+- Migration runbook per phase
+- Rollback procedures
+- Monitoring/alerting setup (Prometheus + Grafana dashboards)
+</deliverables>
+<acceptance_criteria>
+- Phase 1完了後、認証レイテンシがp99 < 200msを維持
+- 移行中のエラー率が0.1%未満
+- 各サービスが独立してCI/CDパイプラインを持つ
+- カナリアデプロイで段階的リリース可能
+</acceptance_criteria>
+
+上記の移行計画を、各Phaseの実装タスクレベルまで詳細化してください。
+</example>
+
+</examples>
+
 ## 구현 중심 템플릿
 
 티어별 XML 템플릿은 [templates.md](templates.md) 참조.
