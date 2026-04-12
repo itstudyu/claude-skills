@@ -53,6 +53,11 @@ do NOT announce these as separate steps or make the user wait through a visible
 4. **Research only if Deep + warranted** — Skip by default. Only run WebSearch
    (max 3 queries) when the tier is Deep AND the domain is unfamiliar AND the user
    did not say "just plan it". Research findings feed into `<context>` / `<constraints>`.
+4b. **Self-check before presenting** — Before showing the spec, verify:
+   - Every intent from the raw input maps to a section in the spec
+   - No requirements were dropped or altered beyond clarification
+   - Assumptions stated in `<context>` are reasonable defaults
+   This check is silent — do not announce it to the user.
 5. **Present the refined spec** — Code block + a short "What Changed" summary
    (3-5 bullets) + a one-line plan preview. End with: "Ready to enter Plan Mode?"
 6. **Iterate on request** — If the user asks for changes, revise the spec in place
