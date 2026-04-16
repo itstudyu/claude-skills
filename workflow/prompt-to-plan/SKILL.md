@@ -75,8 +75,20 @@ do NOT announce these as separate steps or make the user wait through a visible
 ### Phase 1: REFINE (produce the refined spec)
 
 1. **Read the raw input** — Accept verbatim, detect language silently, respond in that language.
+1b. **Scan project context (Standard + Deep only)** — Before drafting, run a
+    lightweight codebase scan to ground the spec in reality. Keep it fast:
+    - Glob for project config files (package.json, pyproject.toml, Cargo.toml,
+      go.mod, build.gradle, etc.) to detect tech stack
+    - Glob for directory structure (src/*/, tests/*/, app/*/) to understand layout
+    - Grep for patterns relevant to the user's request (existing implementations,
+      naming conventions, test patterns)
+    Store findings as compact identifiers (file paths, version strings, pattern
+    names) — not full file contents. These feed into the spec's `<context>` tag.
+    Skip this step if the user provides explicit tech stack info or says
+    "just plan it". Skip entirely for Lite tier.
 2. **Draft the refined spec directly** — While drafting, internally decide complexity tier
    (Lite / Standard / Deep) based on scope signals and pick the matching template.
+   Incorporate codebase scan findings into `<context>` where available.
    Do not announce the tier as a separate step; it shows up implicitly in which
    sections you fill.
 3. **Clarify only if blocking** — If a critical ambiguity would make the spec wrong,
@@ -86,11 +98,27 @@ do NOT announce these as separate steps or make the user wait through a visible
 4. **Research only if Deep + warranted** — Skip by default. Only run WebSearch
    (max 3 queries) when the tier is Deep AND the domain is unfamiliar AND the user
    did not say "just plan it". Research findings feed into `<context>` / `<constraints>`.
-4b. **Self-check before presenting** — Before showing the spec, verify:
-   - Every intent from the raw input maps to a section in the spec
-   - No requirements were dropped or altered beyond clarification
-   - Assumptions stated in `<context>` are reasonable defaults
-   This check is silent — do not announce it to the user.
+4b. **Self-correct before presenting (Generate → Review → Refine)** — This is
+    still silent (no user-visible output), but it is a structured 3-pass check:
+
+    Pass 1 — Coverage: Every intent from the raw input maps to a section in the
+    spec. No requirements dropped or altered beyond clarification.
+
+    Pass 2 — Cross-validation: Re-read the original input and compare against the
+    spec. Flag any drift between what the user said and what the spec says.
+    Check that assumptions in `<context>` are reasonable defaults, not inventions.
+    Apply a quick health check to the spec text:
+    - No undefined jargon (terms the executing agent might not know)
+    - No ambiguous scope words ("appropriate", "relevant", "as needed") without
+      specific definitions
+    - No subjective modifiers without measurable criteria ("fast" → "p99 < 200ms")
+
+    Pass 3 — Completeness: Ask yourself "what did I miss?" Check for: implicit
+    requirements the user likely expects but didn't state, error handling needs,
+    edge cases visible from the codebase scan. If anything surfaces, fold it into
+    the spec as an explicit assumption in `<context>` or a constraint.
+
+    If any pass reveals a problem, fix the spec before presenting.
 5. **Present the refined spec** — Code block + a short "What Changed" summary
    (3-5 bullets) + a one-line plan preview. End with: "Ready to enter Plan Mode?"
 6. **Iterate on request** — If the user asks for changes, revise the spec in place
@@ -279,35 +307,44 @@ After the user approves the refined spec:
 
 플랜 문서 구조는 [plan-conventions.md](plan-conventions.md) 참조.
 
-## Anti-Patterns
+## Best Practices
 
-Do NOT:
-- **Announce an "analyzing" phase before the refined spec.** The user asked for
-  `prompt → plan`, not `prompt → analysis → triage → clarification → plan`. Do the
-  thinking silently and jump straight to presenting the refined spec.
-- Announce the complexity tier as a separate step ("I classified this as Standard...").
-  Just pick the tier and draft accordingly; the user will see the result.
-- Ask clarifying questions unless a blocking ambiguity would make the spec wrong.
-  State assumptions in `<context>` instead.
-- Run WebSearch for Standard or Lite tiers. Research is Deep-tier only, and only
-  when the domain is genuinely unfamiliar.
-- Use CAPS LOCK emphasis in constraints (calm phrasing works better for Claude)
-- Over-specify simple tasks (Lite tier exists for a reason)
-- Add constraints the user never implied
-- Assume English — always match the user's language
-- Make specs longer just to fill sections — omit empty sections
-- Add a role for Lite tier (unnecessary overhead)
-- Execute without explicit approval
-- Skip Plan Mode after approval
-- Add "IMPORTANT:", "CRITICAL:", "YOU MUST" phrasing (counterproductive for Claude)
-- Generate a plan without refining the prompt first
-- Create vague tasks ("implement the feature") — every task needs exact files and code
-- Add scope beyond what the refined spec defines
-- Include "think step by step" or "think hard" in refined specs — these are
-  regular prompt text on Claude 4.6, not thinking budget controls. Prefer
-  outcome-oriented guidance ("evaluate tradeoffs", "identify edge cases")
-- Over-prescribe implementation steps in `<task>` — general instructions produce
-  better reasoning than hand-written step-by-step plans with adaptive thinking
+**Presentation flow**: Jump straight to the refined spec. Triage and analysis
+happen silently — the user sees input → spec, not input → analysis → triage → spec.
+
+**Clarification**: State assumptions in `<context>` rather than asking. Reserve
+questions for blocking ambiguities only (never for Lite tier).
+
+**Research**: Deep tier only, domain-unfamiliar only. Standard and Lite use
+codebase scan results instead.
+
+**Constraint phrasing**: Use calm, positive phrasing ("Use CSS modules for
+styling" not "Do NOT use inline styles"). Avoid CAPS LOCK emphasis,
+"IMPORTANT:", "CRITICAL:", "YOU MUST" — these are counterproductive for Claude.
+
+**Scope discipline**: State what is in scope AND what is out of scope. Omit
+empty template sections rather than filling them for completeness.
+
+**Task specificity**: Every plan task names exact files and contains actual code.
+"Implement the feature" is not a task.
+
+**Reasoning guidance**: Use outcome-oriented phrasing ("evaluate tradeoffs",
+"identify edge cases") rather than "think step by step" or "think hard" — these
+are regular text on Claude 4.6, not thinking budget controls.
+
+**Instruction style**: General goals with constraints produce better reasoning
+than hand-written step-by-step procedures in `<task>`.
+
+### Common Pitfalls
+
+- Announcing complexity tier as a separate visible step
+- Adding constraints the user never implied
+- Running WebSearch for Standard/Lite tiers
+- Over-specifying Lite-tier tasks or adding role for Lite tier
+- Assuming English when input is in another language
+- Executing without explicit approval or skipping Plan Mode
+- Generating a plan without refining the prompt first
+- Adding scope beyond what the refined spec defines
 
 ## Target Model Adaptation
 
@@ -321,20 +358,14 @@ Detect if the user mentions a target model and adjust delimiter style accordingl
 
 When the refined spec will be executed by Claude 4.6 (the default):
 
-- **No prefilling**: Prefilled assistant responses are no longer supported.
+- **No prefilling**: Prefilled assistant responses are not supported.
   Use explicit instructions instead.
-- **Overengineering tendency**: Opus 4.6 tends to create extra files, add
-  unnecessary abstractions, and build in flexibility that wasn't requested.
-  Include clear scope boundaries in `<task>`: "implement only what is specified,
-  no additional features or abstractions."
-- **Overthinking tendency**: Opus 4.6 does significantly more upfront exploration
-  than previous models. If the raw prompt contains "be thorough" or "think about
-  everything", soften or remove — it causes over-exploration.
-- **General > prescriptive**: "Think thoroughly about the tradeoffs" produces
-  better reasoning than a hand-written step-by-step analysis plan.
-  In `<task>`, state goals and constraints; let the model determine the approach.
-- **Scope control**: Refined specs should explicitly state what is OUT of scope,
-  not just what is in scope. This counteracts the overengineering tendency.
+- **Scope boundaries required**: Opus 4.6 tends to create extra files and
+  unnecessary abstractions. Include in `<task>`: "implement only what is
+  specified, no additional features or abstractions." Explicitly state what
+  is OUT of scope.
+- **Soften thoroughness cues**: If raw input contains "be thorough" or "think
+  about everything", soften or remove — it causes over-exploration.
 
 ## Multi-Language Support
 
@@ -356,5 +387,6 @@ When the refined spec will be executed by Claude 4.6 (the default):
 | User wants the plan but not refinement | Suggest refinement benefits, respect override if insisted |
 | Single word or phrase input | Treat as Lite, expand into minimal task + deliverables |
 | Extremely long rambling input | Extract core intent, summarize into context, confirm interpretation |
+| Large feature with many unknowns | Offer interview mode: "This is broad enough that an interview would produce a better spec. I'll ask 5-8 structured questions, then write a spec from your answers. Or I can draft a spec now with assumptions marked. Preference?" If interview chosen, use Flipped Interaction Pattern for questions, compile answers into spec, present for approval. |
 | User provides URL or file reference | Incorporate as context material |
 | EnterPlanMode denied by user | Write plan as structured markdown in chat instead |

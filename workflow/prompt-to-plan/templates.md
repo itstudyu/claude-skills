@@ -20,7 +20,9 @@ code implementation, not generic AI prompts.
  - Project state, tech stack, existing patterns
  - Codebase conventions and architecture
  - Target users or systems
- - Research findings from domain research step (if applicable)]
+ - Research findings from domain research step (if applicable)
+ - Codebase scan findings: detected tech stack, relevant existing files,
+   naming conventions, test patterns (auto-populated from project scan)]
 </context>
 
 <task>
@@ -28,7 +30,10 @@ code implementation, not generic AI prompts.
  - Why this task matters (1 sentence of motivation/background)
  - One primary action verb (build, create, refactor, migrate)
  - What to achieve (goals, not step-by-step procedure)
- - Explicit scope: what to include AND what to exclude]
+ - Explicit scope: what to include AND what to exclude
+ - Reasoning guidance (Deep tier only): what tradeoffs to evaluate,
+   what edge cases to consider, what architectural decisions to justify.
+   Frame as outcomes ("evaluate X", "justify Y") not process ("think about X")]
 </task>
 
 <constraints>
@@ -68,6 +73,12 @@ classification, or format conversion that benefits from concrete demonstrations)
 </examples>
 
 [Final query restating the core implementation ask]
+
+<recap>
+[Re-emphasize the 2-3 most critical constraints and the expected output format.
+ Instructions closer to the end of a prompt are followed more strictly.
+ Keep to 2-4 lines maximum.]
+</recap>
 ```
 
 ## Standard Tier
@@ -78,7 +89,8 @@ Omit `<acceptance_criteria>`. Use `<role>` only if domain expertise needed.
 <role>[Only if domain expertise needed]</role>
 
 <context>
-[Condensed background — 2-4 sentences covering project state and tech stack]
+[Condensed background — 2-4 sentences covering project state and tech stack.
+ Include codebase scan findings when available (tech stack, file layout, patterns).]
 </context>
 
 <task>
@@ -92,6 +104,10 @@ Omit `<acceptance_criteria>`. Use `<role>` only if domain expertise needed.
 <deliverables>
 [Files to create/modify, tests, definition of done]
 </deliverables>
+
+<recap>
+[One-line restatement of the single most important constraint and expected outcome.]
+</recap>
 ```
 
 ## Lite Tier
