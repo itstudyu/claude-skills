@@ -12,6 +12,7 @@ the rubric rationale.
 - [Axis B Entries](#axis-b-entries) (B1–B4)
 - [Axis C Entries](#axis-c-entries) (C1–C5)
 - [Axis D Entries](#axis-d-entries) (D1–D4)
+- [Axis E Entries (online-only)](#axis-e-entries-online-only) (E1–E3)
 
 ## How to Read This Playbook
 
@@ -711,3 +712,99 @@ the session.
 - Not every skill needs a HARD-GATE. The rule triggers only when the
   body uses evidence vocabulary ≥2 times.
 - Keep the block terse — 3-5 lines. Long HARD-GATEs get ignored.
+
+---
+
+## Axis E Entries (online-only)
+
+### E1 — Rubric quote freshness
+
+**Rubric source:** `rubric.md` Appendix A — manual refresh procedure
+**Risk:** medium (affects `rubric.md`, which shapes every future audit)
+
+#### BEFORE
+
+Stored quote in `rubric.md`:
+
+```
+Source: platform.claude.com/.../overview — "description: Must be non-empty ... Maximum 1024 characters."
+```
+
+Live page now reads: "description: non-empty string, max 1024 characters."
+
+#### AFTER
+
+Update `rubric.md` A2 Source field to the new live quote **and** bump the
+rubric version comment at the top (e.g. `1.1.0 → 1.1.1`). Keep the URL.
+
+#### Rationale
+
+When Anthropic's docs evolve, the stored quote must follow or the rule
+claim loses provenance. This is the whole reason E1 exists.
+
+#### Edge cases
+
+- If the underlying rule changed (not just the wording), update `Check` +
+  `Pass` too — not just the quote. Flag as risk=high and ask the user.
+- If a URL 404s, replace with the closest live equivalent rather than
+  removing the check.
+
+---
+
+### E2 — External skill comparison
+
+**Rubric source:** `github.com/anthropics/skills/skill-creator` — reference pattern
+**Risk:** low (advisory)
+
+#### BEFORE
+
+Audited skill has no `## When to Use` section while 4/5 reference skills
+in `anthropics/skills/skills/*/SKILL.md` do.
+
+#### AFTER
+
+Add a `## When to Use` section to the audited SKILL.md body, listing
+concrete triggering scenarios (not a restatement of the description).
+
+#### Rationale
+
+Reference skills represent Anthropic's own opinion on skill structure.
+Deviating is allowed but should be intentional.
+
+#### Edge cases
+
+- If the audited skill is a specialized one-off (e.g. a code-transformer
+  with a single clear trigger), a "When to Use" section may be redundant.
+  Justify inline rather than adding cargo-cult sections.
+
+---
+
+### E3 — Similar-skill consolidation
+
+**Rubric source:** `find-skills` discovery
+**Risk:** medium (may suggest deprecation or rename)
+
+#### BEFORE
+
+`find-skills` returns `gstack/qa` with ≥80% trigger overlap against the
+audited `myrepo/test-runner` skill — `gstack/qa` has more downloads and a
+wider fix loop.
+
+#### AFTER
+
+Either (a) deprecate `test-runner` and document the migration path in the
+repo README, or (b) differentiate by trimming triggers to a narrower niche
+(e.g. "TDD red-green loop") and updating the description to emphasize the
+distinction.
+
+#### Rationale
+
+Two skills with 80% trigger overlap fight each other in discovery. The
+user's intent won't resolve cleanly. Consolidate or specialize.
+
+#### Edge cases
+
+- If the overlapping skill is in a private registry the user doesn't use,
+  downgrade the finding to Warn and keep both.
+- Never auto-delete an existing skill to resolve E3 — always propose
+  migration first.

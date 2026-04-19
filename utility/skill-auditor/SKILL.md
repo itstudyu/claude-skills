@@ -18,6 +18,9 @@ allowed-tools:
   - Glob
   - Write
   - Edit
+  - WebFetch
+  - WebSearch
+  - Skill
 ---
 
 # Skill Auditor
@@ -32,13 +35,26 @@ No claim without evidence. If a check cannot be verified from file contents,
 mark it SKIP and explain why. Do NOT infer author intent. Do NOT speculate.
 </HARD-GATE>
 
-## Two Modes
+## Two Modes + Online Flag
 
-- **AUDIT** (default, read-only) — Score skills against the 17-item rubric,
-  emit per-skill reports + INDEX.md. Never modifies source files.
+- **AUDIT** (default, read-only, offline) — Score skills against the 17
+  offline items (A1–D4), emit per-skill reports + INDEX.md. Never modifies
+  source files. Deterministic — no network.
+- **AUDIT --online** — Adds Axis E (E1 rubric-quote freshness via WebFetch,
+  E2 external-skill comparison against `github.com/anthropics/skills`,
+  E3 similar-skill discovery via the `find-skills` Skill). Findings are
+  appended to the same report as "(online)" entries. Non-deterministic —
+  results depend on live source state.
 - **UPGRADE** (approval-gated) — Requires a recent AUDIT report. Proposes
   before/after diffs per finding, waits for per-item `y/n/skip` approval,
   then applies Edit operations. No commits.
+
+### When to use --online
+
+- Rubric is older than 30 days (E1 catches Anthropic-docs drift)
+- Introducing a brand-new skill (E2 checks structural gaps vs references,
+  E3 detects duplicate/superseded functionality in the broader ecosystem)
+- Skipped otherwise to keep default runs reproducible and fast.
 
 ## When to Use
 
@@ -103,6 +119,9 @@ filled in per-skill during Phase 3 of AUDIT mode.
 - Does not auto-split SKILL.md bodies over 500 lines — flags only (C1).
 - Does not commit or push — user reviews `git diff` and commits manually.
 - Does not dynamically execute skills — static analysis only.
+- Default mode does not touch the network. Network-backed checks (rubric
+  freshness, external comparison, similar-skill discovery) run only with
+  `--online` and are advisory unless explicitly marked Fail (E3 ≥80% overlap).
 
 ## Appendix A: Rubric Source Refresh (Manual)
 
@@ -152,9 +171,52 @@ For each target skill:
    - Record `{id, verdict: Pass|Warn|Fail|Skip, evidence: "file:line — snippet"}`
    - Every verdict **must** cite file:line evidence or be marked Skip with
      an explicit reason (HARD-GATE above).
-5. Compute the score: `Σ(item_score) / count(non-skip items)` where Pass=1,
+5. If `--online` was specified, also run E1–E3 (Phase 2.5 below). Otherwise
+   mark E1/E2/E3 as SKIP with reason `"offline mode"`.
+6. Compute the score: `Σ(item_score) / count(non-skip items)` where Pass=1,
    Warn=0.5, Fail=0.
-6. Classify: green ≥0.90, yellow 0.70–0.89, red <0.70.
+7. Classify: green ≥0.90, yellow 0.70–0.89, red <0.70.
+
+#### Phase 2.5 — Online Corroboration (only when `--online`)
+
+Run once per audit session (not per skill) for E1 — rubric quotes are
+global. Run per-skill for E2 and E3.
+
+**E1 — Rubric quote freshness**
+
+1. For each URL in `rubric.md` → `Canonical Sources` list, `WebFetch` the
+   page body.
+2. For each rubric item A1–D4 that stores a `Source:` quote, substring-match
+   the quote in the fetched body.
+3. Emit one finding per drift:
+   - Pass: exact match found
+   - Warn: ≥90% token overlap but not exact (wording tweak)
+   - Fail: quote absent → append a **rubric-drift advisory** to INDEX.md.
+     Do NOT silently edit rubric.md during audit; that is an UPGRADE action.
+
+**E2 — External skill comparison**
+
+1. `WebFetch https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/SKILL.md`
+   (and optionally one more reference skill from the same category as the
+   audited skill). Use `WebSearch` to locate relevant reference skills when
+   the category isn't covered by the skill-creator repo directly.
+2. Extract section headings + frontmatter fields.
+3. Diff against the audited skill. Emit advisory findings only — never Fail
+   solely on structural difference, because the audited skill may legitimately
+   specialize.
+
+**E3 — Similar-skill discovery**
+
+1. Call `Skill(skill: "find-skills", args: "<top 3 trigger phrases>")`.
+2. If `find-skills` is not available in this environment (Skill tool call
+   errors with "Unknown skill"), emit E3 as SKIP with reason
+   `"find-skills not installed"`.
+3. Otherwise parse the returned skill list; report any overlap ≥60% of the
+   audited skill's trigger set. Flag ≥80% overlap as Fail (recommend
+   consolidation).
+
+All E-findings go into the same audit report under a new
+`### Axis E — Online Corroboration` section, each tagged `(online)`.
 
 #### Phase 3 — Report Generation
 

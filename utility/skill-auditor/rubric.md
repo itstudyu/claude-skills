@@ -1,10 +1,12 @@
 # Skill Auditor Rubric
 
-Scored checklist used by the `skill-auditor` skill. 17 items across 4 axes.
-Every item is self-contained: source URL + verbatim quote + deterministic
-pass criterion.
+Scored checklist used by the `skill-auditor` skill. 17 offline items across
+4 axes (A–D) + 3 optional online items (E1–E3). Every item is self-contained:
+source URL + verbatim quote + deterministic pass criterion.
 
-> **Rubric version:** 1.0.0 (2026-04-19)
+> **Rubric version:** 1.1.0 (2026-04-19)
+> Changelog: added Axis E (E1 source freshness, E2 external comparison,
+> E3 similar-skill discovery) — gated on `--online` flag.
 > When official sources change, refresh quotes per Appendix A.
 
 ## Contents
@@ -15,6 +17,7 @@ pass criterion.
 - [Axis B — Description Quality](#axis-b--description-quality) (B1–B4)
 - [Axis C — Body Structure](#axis-c--body-structure) (C1–C5)
 - [Axis D — Project Conventions](#axis-d--project-conventions) (D1–D4)
+- [Axis E — Online Corroboration](#axis-e--online-corroboration---online-mode-only) (E1–E3, optional)
 - [Appendix A: Source Refresh Procedure](#appendix-a-source-refresh-procedure)
 
 ## How to Read This Rubric
@@ -255,6 +258,69 @@ These are **project-specific rules** (not Anthropic-canonical) derived from
 
 ---
 
+## Axis E — Online Corroboration (--online mode only)
+
+Items E1–E3 run **only when the auditor is invoked with `--online`**. They use
+network tools (WebFetch, WebSearch, Skill tool for `find-skills`) to cross-check
+against live sources. Off by default to keep default runs deterministic.
+
+### E1. Rubric source freshness (quote drift detection)
+
+- **Check:** For each canonical URL in Appendix A, the verbatim quote stored in
+  this `rubric.md` still appears in the live document. Drift means Anthropic's
+  guidance moved on and the rubric item may now check the wrong rule.
+- **Method:** WebFetch each URL in [Canonical Sources](#canonical-sources-maintained-set).
+  For each rubric item A1–D4, substring-search the quote in the fetched body.
+- **Source:** This skill's own design — freshness matters because the rubric
+  is a frozen snapshot (Appendix A refresh procedure).
+- **Pass:** Every stored quote found in its live URL.
+- **Warn:** Quote found with minor wording diff (≥90% token overlap).
+- **Fail:** Quote absent — the rule may no longer be sourced. Append a
+  **rubric-drift finding** to the audit report; do not silently change scoring.
+- **Risk:** medium (touches rubric.md, which affects all future audits).
+- **Tool-assist:** WebFetch
+
+### E2. External skill comparison (reference patterns)
+
+- **Check:** The audited skill's structure is compared against Anthropic's
+  reference skills (`github.com/anthropics/skills`). Flag obvious deviations:
+  missing section types that reference skills use, frontmatter-field usage
+  patterns, progressive-disclosure depth.
+- **Method:** WebFetch `https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/SKILL.md`
+  and (optionally) one or two other reference skills relevant to the audited
+  category. Extract section headings + frontmatter field set. Compare with the
+  audited skill; report structural gaps as advisory findings.
+- **Source:** https://github.com/anthropics/skills — canonical reference
+  collection maintained by Anthropic.
+- **Pass:** No structural gap, OR the gap is justified by the skill's
+  specialization.
+- **Warn:** Structural gap with no in-body justification (e.g. no "When to
+  Use" section while 4/5 reference skills carry one).
+- **Risk:** low — findings are advisory, not mandatory.
+- **Tool-assist:** WebFetch
+
+### E3. Similar-skill discovery (duplicate / overlap detection)
+
+- **Check:** No widely-used public skill covers the same trigger space with a
+  significantly better-known name or richer feature set. This protects against
+  reinventing an existing skill under a different name.
+- **Method:** Use the `find-skills` Skill (via the Skill tool) with the
+  audited skill's top 3 trigger phrases as queries. Report any public skill
+  whose description overlaps ≥60% of the audited skill's trigger set.
+- **Source:** `find-skills` is maintained as a discovery utility by gstack
+  and similar toolchains.
+- **Pass:** No overlap, OR overlap is with a sibling skill in the same repo
+  (intentional).
+- **Warn:** External skill overlaps ≥60% of triggers AND has ≥3× the
+  community usage signal (star count, MCP registry presence).
+- **Fail:** External skill fully supersedes the audited skill (≥80% overlap
+  + better maintenance signal). Recommend consolidation in the report — do
+  NOT auto-delete.
+- **Risk:** medium (suggests renames or deprecations).
+- **Tool-assist:** Skill (`find-skills`)
+
+---
+
 ## Appendix A: Source Refresh Procedure
 
 When Anthropic's official skill docs are updated, refresh this rubric's
@@ -273,8 +339,9 @@ embedded quotes manually:
 - https://code.claude.com/docs/en/skills
 - https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md
 
-### Why Manual
+### Why Default-Offline (and When to Use --online)
 
-Runtime network fetches would make AUDIT non-deterministic across runs and
-bind skill behavior to Anthropic's docs site uptime. Storing verbatim
-quotes in this file gives every AUDIT run the same input.
+Default runs never fetch the network, so scores are reproducible across runs
+and Anthropic-docs outages. Use `--online` when (a) the rubric version is
+more than 30 days old and you want drift detection (E1), or (b) you're
+introducing a brand-new skill and want reference/duplicate checks (E2, E3).
