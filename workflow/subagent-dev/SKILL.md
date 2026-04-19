@@ -10,11 +10,7 @@ description: |
   produces higher quality results than sequential execution in a long session.
 allowed-tools:
   - Read
-  - Grep
-  - Glob
-  - Write
-  - Edit
-  - Bash
+  - TodoWrite
   - Agent
 ---
 
@@ -369,5 +365,3 @@ After agents return:
 
 **Related skills:**
 - **write-plan** - Creates the plan this skill executes
-- **tdd** - Subagents should follow TDD for each task
-- **verify-complete** - Verify work before claiming success

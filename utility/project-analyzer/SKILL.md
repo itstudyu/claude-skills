@@ -9,7 +9,7 @@ description: |
   "프로젝트 깊이 분석", "코드베이스 깊이 분석", "프로젝트 비교", "프로젝트 상세 분석",
   "プロジェクト詳細分析", "コードベース詳細分析", "プロジェクト比較". Proactively suggest
   when the user asks questions about project internals that require reading actual
-  source code. For a fast onboarding overview use /project-scan instead.
+  source code.
 allowed-tools:
   - Read
   - Grep
@@ -19,8 +19,6 @@ allowed-tools:
 ---
 
 # Project Analyzer
-
-> **vs /project-scan**: project-analyzer performs DEEP 6-axis analysis with file/line evidence. Use `/project-scan` for a fast overview or onboarding document.
 
 Deep, fact-based analysis of one or multiple codebases. Every claim must trace back
 to a file you actually read. If you cannot verify something from source, say
@@ -107,290 +105,41 @@ Wait for explicit confirmation before writing.
 For each project, analyze these 6 axes. Read files directly — do not rely on
 file names alone or make assumptions based on framework conventions.
 
-### Axis 1: Tech Stack (`tech-stack.md`)
-
-Read config files and package manifests to identify exact versions and tools:
-
-| What to detect | Where to look |
-|----------------|---------------|
-| Language + version | package.json engines, .python-version, go.mod, Cargo.toml |
-| Framework + version | package.json dependencies, requirements.txt, go.mod |
-| Database | docker-compose.yml, .env, ORM config, connection strings |
-| ORM/ODM | prisma/schema.prisma, typeorm config, sequelize config |
-| CSS framework | tailwind.config, package.json, imported stylesheets |
-| Test framework | jest.config, vitest.config, pytest.ini, test files |
-| Build tools | webpack.config, vite.config, tsconfig.json, Makefile |
-| CI/CD | .github/workflows/, .gitlab-ci.yml, Jenkinsfile |
-| Container | Dockerfile, docker-compose.yml, k8s manifests |
-| Linting | .eslintrc, .prettierrc, ruff.toml, .golangci.yml |
-
-Output format for `tech-stack.md`:
-
-```markdown
-# Tech Stack — [Project Name]
-
-> Analyzed on YYYY-MM-DD
-> Source: [project path]
-
-## Core
-| Category | Technology | Version | Config File |
-|----------|-----------|---------|-------------|
-| Language | TypeScript | 5.3.3 | tsconfig.json:3 |
-| Framework | Angular | 17.2.0 | package.json:15 |
-| ...      | ...       | ...     | ...         |
-
-## Infrastructure
-| Category | Technology | Version | Config File |
-|----------|-----------|---------|-------------|
-| Database | PostgreSQL | 16 | docker-compose.yml:8 |
-| ...      | ...       | ...     | ...         |
-
-## Dev Tools
-| Category | Technology | Version | Config File |
-|----------|-----------|---------|-------------|
-| Linter | ESLint | 8.56.0 | .eslintrc.json:1 |
-| ...      | ...       | ...     | ...         |
-```
-
-### Axis 2: Features (`features.md`)
-
-Identify features by reading route definitions, API endpoints, service files,
-and module structures. For each feature, trace the code path:
-
-- Entry point (route/endpoint)
-- Handler/controller
-- Service/business logic
-- Data access layer
-
-```markdown
-# Features — [Project Name]
-
-> Analyzed on YYYY-MM-DD
-
-## Feature: [Name]
-- **Entry point:** `src/routes/auth.ts:12` — POST /api/auth/login
-- **Controller:** `src/controllers/auth.controller.ts:25` — `login()`
-- **Service:** `src/services/auth.service.ts:18` — `authenticate()`
-- **Data access:** `src/repositories/user.repository.ts:10` — `findByEmail()`
-- **Dependencies:** bcrypt (password hashing), jsonwebtoken (JWT generation)
-- **Key logic:**
-  - Validates email format (line 20-22)
-  - Hashes password comparison (line 28)
-  - Generates JWT with 24h expiry (line 35)
-  - Stores refresh token in DB (line 42)
-
-## Feature: [Name]
-...
-```
-
-Read the actual function bodies. Report what the code does, not what you think
-it should do.
-
-### Axis 3: Data Model (`data-model.md`)
-
-Read schema files, migration files, and ORM model definitions:
-
-```markdown
-# Data Model — [Project Name]
-
-> Analyzed on YYYY-MM-DD
-
-## Tables / Collections
-
-### users
-- **Source:** `prisma/schema.prisma:15-28`
-- **Columns:**
-  | Column | Type | Constraints | Notes |
-  |--------|------|-------------|-------|
-  | id | UUID | PK, auto-generated | |
-  | email | String | unique, not null | indexed (line 20) |
-  | password | String | not null | bcrypt hash |
-  | role_id | UUID | FK → roles.id | cascade delete |
-  | created_at | DateTime | default: now() | |
-
-- **Relationships:**
-  - belongs_to: `roles` via `role_id` (line 25)
-  - has_many: `posts` (line 27)
-
-- **Indexes:**
-  - `@@index([email])` (line 28)
-
-### [next table]
-...
-
-## ER Summary
-[Describe relationships between tables as detected from FK constraints and
-ORM relation decorators. Only include relationships you found in code.]
-```
-
-If no schema files exist, check for:
-- Raw SQL in migration files
-- ORM model decorators/annotations
-- NoSQL collection usage in code
-
-If nothing is found, write: "No database schema detected in source files."
-
-### Axis 4: Code Patterns (`code-patterns.md`)
-
-Read 5-10 representative files across different layers and document actual patterns:
-
-```markdown
-# Code Patterns — [Project Name]
-
-> Analyzed on YYYY-MM-DD
-
-## Naming Conventions
-| Context | Pattern | Example | Source |
-|---------|---------|---------|--------|
-| Variables | camelCase | `userName` | src/services/user.ts:15 |
-| Classes | PascalCase | `UserService` | src/services/user.ts:3 |
-| Files | kebab-case | `user-service.ts` | src/services/ |
-| DB columns | snake_case | `created_at` | prisma/schema.prisma:20 |
-
-## Import Patterns
-- Path aliases: `@/` maps to `src/` (tsconfig.json:8)
-- Style: named imports preferred (`import { X } from '...'`)
-- Example: `src/controllers/auth.controller.ts:1-5`
-
-## Error Handling
-- Pattern: [describe what you found]
-- Example: `src/middleware/error.ts:10-25`
-  ```typescript
-  [actual code snippet from the file]
-  ```
-
-## File Organization
-- [describe the actual structure you observed]
-- Components: [colocated/separated] — evidence: [path]
-- Tests: [colocated/separated] — evidence: [path]
-
-## State Management (if frontend)
-- Pattern: [what you found]
-- Source: [file:line]
-
-## Logging
-- Library: [detected from imports]
-- Pattern: [describe]
-- Source: [file:line]
-```
-
-### Axis 5: Dependencies (`dependencies.md`)
-
-Read package manifests and lock files for exact dependency information:
-
-```markdown
-# Dependencies — [Project Name]
-
-> Analyzed on YYYY-MM-DD
-
-## Production Dependencies
-| Package | Version | Purpose | Used In |
-|---------|---------|---------|---------|
-| express | 4.18.2 | HTTP server | src/app.ts:1 |
-| prisma | 5.8.0 | ORM | src/db/client.ts:1 |
-| ...     | ...     | ...     | ...     |
-
-## Dev Dependencies
-| Package | Version | Purpose |
-|---------|---------|---------|
-| jest | 29.7.0 | Unit testing |
-| ...     | ...     | ...     |
-
-## Dependency Health
-- **Total production deps:** [count]
-- **Total dev deps:** [count]
-- **Lock file:** [yarn.lock / package-lock.json / pnpm-lock.yaml] present: [yes/no]
-- **Outdated indicators:** [any pinned old major versions detected]
-
-## Internal Dependencies (monorepo only)
-| Package | Path | Depends On |
-|---------|------|-----------|
-| @app/core | packages/core | - |
-| @app/web | packages/web | @app/core |
-```
-
-For the "Purpose" column, check how the package is actually imported and used
-in the codebase — don't just guess from the package name.
-
-### Axis 6: Architecture Design Doc (`architecture.md`)
-
-This is the key document. It compresses all 5 category files into a navigable
-design overview. Think of it as the blueprint that answers: "How is this project
-built and why?"
-
-```markdown
-# Architecture Design Doc — [Project Name]
-
-> Analyzed on YYYY-MM-DD
-> This document summarizes the detailed analysis in sibling files.
-
-## System Overview
-
-**What it is:** [1-2 sentences based on what the code actually does]
-**Stack:** [language] + [framework] + [database] + [key libraries]
-**Source:** [project path]
-
-## Architecture Layers
-
-[Describe the actual layers found in the code. Example:]
-
-```
-┌─────────────────────────────────┐
-│         Routes / Pages          │  src/routes/, src/pages/
-├─────────────────────────────────┤
-│     Controllers / Handlers      │  src/controllers/
-├─────────────────────────────────┤
-│       Services / Logic          │  src/services/
-├─────────────────────────────────┤
-│     Repositories / DAL          │  src/repositories/
-├─────────────────────────────────┤
-│        Database (PostgreSQL)    │  prisma/schema.prisma
-└─────────────────────────────────┘
-```
-
-## Key Features Summary
-| Feature | Entry Point | Core Logic | Data |
-|---------|-------------|------------|------|
-| Auth | routes/auth.ts:12 | services/auth.ts:18 | users, sessions |
-| ...  | ... | ... | ... |
-
-→ Details: [features.md](features.md)
-
-## Data Flow
-[Describe how data flows through the system based on what you read.
-Trace 1-2 representative flows end-to-end.]
-
-**Example: User Login**
-1. `POST /api/auth/login` → `auth.controller.ts:25`
-2. Validates input → `auth.service.ts:20`
-3. Queries user → `user.repository.ts:10` → `users` table
-4. Compares password hash → `auth.service.ts:28`
-5. Generates JWT → `auth.service.ts:35`
-6. Returns token → `auth.controller.ts:40`
-
-## Data Model Overview
-| Table | Key Columns | Relationships |
-|-------|-------------|---------------|
-| users | id, email, role_id | → roles, → posts |
-| ...   | ... | ... |
-
-→ Details: [data-model.md](data-model.md)
-
-## Technical Decisions
-[List architectural decisions you can infer from the code — not opinions,
-but observable choices:]
-- Monorepo / single repo: [which, based on directory structure]
-- API style: REST / GraphQL / gRPC [based on route definitions]
-- Auth strategy: JWT / session / OAuth [based on auth code]
-- Deployment: [based on Docker/k8s/serverless configs]
-
-→ Stack details: [tech-stack.md](tech-stack.md)
-→ Patterns: [code-patterns.md](code-patterns.md)
-→ Dependencies: [dependencies.md](dependencies.md)
-
-## File Map
-[Top-level directory tree with purpose annotations]
-```
+Each axis has a full output-format template in `resources/templates/`.
+Read the template before you write the corresponding file — it defines the
+exact sections, columns, and evidence format the user expects.
+
+| Axis | What to read | Output template |
+|------|--------------|-----------------|
+| 1 Tech Stack | package.json / tsconfig / Dockerfile / CI configs / lockfiles | [resources/templates/tech-stack.md](resources/templates/tech-stack.md) |
+| 2 Features | routes, controllers, services, data access layers | [resources/templates/features.md](resources/templates/features.md) |
+| 3 Data Model | schema files, migrations, ORM model decorators | [resources/templates/data-model.md](resources/templates/data-model.md) |
+| 4 Code Patterns | 5–10 representative files across layers | [resources/templates/code-patterns.md](resources/templates/code-patterns.md) |
+| 5 Dependencies | package manifests + lock files + actual imports | [resources/templates/dependencies.md](resources/templates/dependencies.md) |
+| 6 Architecture | synthesis of axes 1–5 | [resources/templates/architecture.md](resources/templates/architecture.md) |
+
+### Axis-specific notes
+
+**Axis 1 — Tech Stack**: detect exact versions + the config file/line where each
+value is declared. No guessing from filenames; open the config.
+
+**Axis 2 — Features**: for each feature, trace the full code path (entry →
+controller → service → data access) and quote the actual function behavior.
+Report what the code does, not what you think it should do.
+
+**Axis 3 — Data Model**: if no schema files exist, fall back to raw SQL in
+migrations, ORM decorators, or NoSQL collection usage. If nothing is found,
+write `"No database schema detected in source files."`
+
+**Axis 4 — Code Patterns**: include actual code snippets from the file, not
+paraphrases. Document what you observed across the 5–10 files you read.
+
+**Axis 5 — Dependencies**: for the "Purpose" column, check how the package is
+actually imported and used — not the package description.
+
+**Axis 6 — Architecture**: this is a synthesis document. Do not invent
+architectural claims — compress what axes 1–5 already established, with
+pointers back to the detail files.
 
 ## Phase 3: Category Document Generation
 

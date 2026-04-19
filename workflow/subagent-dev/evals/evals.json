@@ -9,7 +9,7 @@
     },
     {
       "id": 2,
-      "prompt": "서��에이전트로 플랜 실행해줘. 병렬로 돌릴 수 있는 태스크는 병렬로.",
+      "prompt": "서브에이전트로 플랜 실행해줘. 병렬로 돌릴 수 있는 태스크는 병렬로.",
       "expected_output": "Analyzes task dependencies, dispatches independent tasks in parallel, sequential for dependent ones. Each subagent gets fresh context with only what it needs.",
       "files": []
     },

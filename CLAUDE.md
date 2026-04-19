@@ -1,6 +1,6 @@
 # claude-skills
 
-> Project-specific Claude Code skills. Workflow, Figma automation, and DevOps review.
+> Project-specific Claude Code skills. Planning, workflow analysis, and code quality.
 
 ## Routing
 
@@ -8,12 +8,6 @@
 User Request
     ↓
 CLAUDE.md (this file)
-    ├→ Figma component URL + "common/shared/공통"
-    │   → /figma-component-writer
-    │
-    ├→ Figma URL + "page/screen/implement/구현"
-    │   → /figma-to-code
-    │
     ├→ Rough prompt + "refine and plan" / "정리해서 플랜" / "整理してプラン"
     │   → /prompt-to-plan
     │
@@ -22,6 +16,9 @@ CLAUDE.md (this file)
     │
     ├→ Workflow analysis ("trace flow", "sequence diagram", "워크플로우 분석")
     │   → /workflow-blueprint (initial) or /workflow-blueprint-update (refresh)
+    │
+    ├→ "audit my skills" / "스킬 검수" / "スキル監査"
+    │   → /skill-auditor
     │
     └→ Other → direct /skill-name
 ```
@@ -35,8 +32,6 @@ CLAUDE.md (this file)
 | write-plan | Bite-sized 2-5min tasks, zero-context assumption | #planning #tasks |
 | design-doc | Generate per-feature design document with fixed template | #docs #design |
 | subagent-dev | Fresh subagent per task, two-stage review | #execution #parallel |
-| tdd | RED-GREEN-REFACTOR, no code without failing test | #testing #quality |
-| verify-complete | Evidence-based verification gate | #verification |
 | workflow-blueprint | Deep workflow trace with Mermaid sequence diagrams | #analysis #workflow #diagrams |
 | workflow-blueprint-update | Incremental workflow doc update via git diff | #analysis #workflow #update |
 
@@ -44,20 +39,12 @@ CLAUDE.md (this file)
 | Skill | Description | Tags |
 |-------|-------------|------|
 | devops-japanese-comments | Japanese comment enforcement | #quality #i18n |
-| devops-test-gen | Auto-generate tests for changed code | #testing |
-
-### figma/
-| Skill | Description | Tags |
-|-------|-------------|------|
-| figma-component-writer | Orchestrate: Figma → angular-web-common | #figma #agent |
-| figma-to-code | Figma URL → Angular code with common mapping | #figma #agent |
 
 ### utility/
 | Skill | Description | Tags |
 |-------|-------------|------|
 | project-analyzer | Deep 6-axis codebase analysis | #analysis |
-| project-scan | Scan codebase — tech stack, features, data model, patterns | #analysis #onboarding |
-| fork-sync | Sync forked GitHub repo with upstream (fetch → merge → push) | #git #fork |
+| skill-auditor | Audit skills against Anthropic + project rubric, propose upgrades | #audit #meta |
 
 ---
 

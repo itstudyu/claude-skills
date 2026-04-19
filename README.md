@@ -1,6 +1,6 @@
 # claude-skills
 
-Project-specific Claude Code skills for workflow, Figma automation, and DevOps review.
+Project-specific Claude Code skills for planning, workflow analysis, and code quality.
 
 ## Install
 
@@ -19,8 +19,6 @@ cd claude-skills
 | `/write-plan` | Bite-sized 2-5min task planning |
 | `/design-doc` | Generate per-feature design document with fixed template |
 | `/subagent-dev` | Fresh subagent per task + two-stage review |
-| `/tdd` | Test-driven development (RED-GREEN-REFACTOR) |
-| `/verify-complete` | Evidence-based verification gate |
 | `/workflow-blueprint` | Deep workflow trace with Mermaid sequence diagrams |
 | `/workflow-blueprint-update` | Incremental workflow doc update via git diff |
 
@@ -28,17 +26,9 @@ cd claude-skills
 | Skill | Description |
 |-------|-------------|
 | `/devops-japanese-comments` | Japanese comment enforcement |
-| `/devops-test-gen` | Auto-generate tests |
-
-### figma/ — Figma Automation
-| Skill | Description |
-|-------|-------------|
-| `/figma-component-writer` | Orchestrate Figma → angular-web-common |
-| `/figma-to-code` | Figma URL → Angular code |
 
 ### utility/
 | Skill | Description |
 |-------|-------------|
 | `/project-analyzer` | Deep 6-axis codebase analysis |
-| `/project-scan` | Fast codebase overview for onboarding |
-| `/fork-sync` | Sync forked GitHub repo with upstream |
+| `/skill-auditor` | Audit skills, propose upgrade diffs for review |

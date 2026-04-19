@@ -34,7 +34,7 @@ echo "Installing claude-skills from $SCRIPT_DIR"
 echo ""
 
 # ─── Symlink skills (category/skill-name/SKILL.md) ───────────
-CATEGORIES="workflow review figma utility"
+CATEGORIES="workflow review utility"
 COUNT=0
 
 for category in $CATEGORIES; do

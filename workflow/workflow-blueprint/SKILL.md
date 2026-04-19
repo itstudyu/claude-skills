@@ -3,29 +3,18 @@ name: workflow-blueprint
 description: |
   Deep workflow flow analysis that traces every entry point through middleware,
   controllers, services, repositories, and database queries — then generates
-  Mermaid sequence diagrams for each workflow. Produces docs/workflow/ directory
-  with per-workflow documentation and a visual INDEX.
-
-  Use this skill whenever the user wants to understand how data flows through
-  a project end-to-end, trace an API endpoint from request to database, generate
-  sequence diagrams for code paths, onboard to a codebase by understanding its
-  workflows, or prepare for a refactor by mapping existing flows. Also use when
-  the user asks "how does this endpoint work", "trace the flow", "show me the
-  data path", or after /project-scan when deeper workflow understanding is needed.
-
-  Trigger phrases:
-  - "workflow blueprint", "trace workflows", "workflow analysis", "flow diagram"
-  - "sequence diagram", "trace the API flow", "map the data flow"
-  - "how does this endpoint work end to end", "trace from route to database"
-  - "워크플로우 분석", "워크플로우 청사진", "플로우 추적", "API 흐름 파악"
-  - "시퀀스 다이어그램 생성", "진입점부터 DB까지 추적"
-  - "ワークフロー分析", "フロー追跡", "シーケンス図生成", "APIフローの可視化"
-
-  Proactively suggest this skill when:
-  - User just ran /project-scan and wants to go deeper
-  - User is onboarding and asking about how features work
-  - User is planning a refactor of request handling or service layer
-  - User asks "what happens when I call this API"
+  Mermaid sequence diagrams for each workflow. Produces docs/workflow/ with
+  per-workflow docs + INDEX. Use this skill whenever the user wants to trace
+  how data flows end-to-end, map an API from request to database, generate
+  sequence diagrams for code paths, onboard to a codebase, or prepare a
+  refactor by mapping existing flows. Trigger phrases: "workflow blueprint",
+  "trace workflows", "trace the flow", "sequence diagram", "flow diagram",
+  "how does this endpoint work", "trace from route to database",
+  "워크플로우 분석", "워크플로우 청사진", "플로우 추적", "시퀀스 다이어그램 생성",
+  "진입점부터 DB까지 추적", "ワークフロー分析", "フロー追跡", "シーケンス図生成",
+  "APIフローの可視化". Proactively suggest this skill when the user is
+  onboarding, planning a refactor of request handling, or asking "what
+  happens when I call this API".
 allowed-tools:
   - Read
   - Grep
@@ -40,15 +29,14 @@ Deep workflow analysis that traces every code path from entry point to database
 and generates Mermaid sequence diagrams. Every claim must reference file:line.
 
 <HARD-GATE>
+No speculation. No guessing.
 Every participant, arrow, and step in sequence diagrams MUST reference actual code
 you read. If you cannot trace a call to a specific file and line, write
-"not traced — indirect/dynamic dispatch" instead of guessing.
-Do NOT generate diagrams from framework conventions or assumptions.
+"not traced — indirect/dynamic dispatch" — never infer from framework conventions.
 </HARD-GATE>
 
 ## When to Run
 
-- After `/project-scan` when the user wants deeper flow understanding
 - When onboarding to a codebase and needing end-to-end data flow visibility
 - Before refactoring workflows, middleware, or service layers
 - When `docs/workflow/` does not exist yet
@@ -73,8 +61,8 @@ If docs/project-overview.md exists:
   → Read it for context (tech stack, features list, directory structure).
   → Use this to prioritize which entry points to trace first.
 If not:
-  → Suggest running /project-scan first for faster analysis.
-  → Can proceed without it, but entry point discovery will take longer.
+  → Proceed without it. Entry point discovery will rely on conventional
+    locations (routes/, controllers/, handlers/) and may take longer.
 ```
 
 ### 0-3. Confirm scope and save location

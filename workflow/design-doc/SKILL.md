@@ -8,9 +8,8 @@ description: |
   it uses, what APIs it calls, what business rules it follows, and what screens it has.
   Use this skill whenever the user says "create design doc", "write spec for this feature",
   "document this feature", "설계서 만들어", "설계서 작성", "기능 문서화", "이 기능 정리해줘",
-  "設計書作成", "機能ドキュメント", or when /project-scan suggests creating design docs
-  for detected features. Proactively suggest this skill when the user is about to modify
-  a feature that has no design doc yet.
+  "設計書作成", "機能ドキュメント". Proactively suggest this skill when the user is about
+  to modify a feature that has no design doc yet.
 allowed-tools:
   - Read
   - Grep
@@ -28,7 +27,6 @@ it touches, what APIs it exposes, and how the UI works.
 
 ## When to Use
 
-- After `/project-scan` identifies features that need documentation
 - Before modifying an undocumented feature
 - When onboarding someone to a specific feature
 - When the user wants to formalize how a feature works
@@ -41,8 +39,8 @@ Determine what feature to document. The user might say:
 - A feature name from `docs/project-overview.md` (if it exists)
 
 If the user is vague, check `docs/project-overview.md` for the feature list and ask
-which one they want to document. If no overview exists, suggest running `/project-scan`
-first.
+which one they want to document. If no overview exists, ask the user to name the
+feature explicitly and point to representative files.
 
 ## Step 2: Analyze the Feature
 

@@ -1,8 +1,15 @@
 ---
 name: prompt-to-plan
 description: |
-  Transforms rough user input into structured implementation specs, then enters
-  Plan Mode to build actionable plans. Only when explicitly requested.
+  Transforms rough user input into structured implementation specs using proven prompt
+  engineering frameworks (Anthropic, CO-STAR, 7R), then enters Plan Mode to build
+  actionable implementation plans. Two mandatory gates: Refinement (refined spec
+  presented and approved) and Plan (plan presented and approved). Use this skill
+  whenever the user says "refine and plan", "rough prompt", "정리해서 플랜",
+  "프롬프트 다듬어서 플랜", "整理してプラン", "ざっくり要件からプラン",
+  or otherwise asks to convert a half-formed request into a structured implementation
+  plan. Proactively suggest this skill when the user's request is vague,
+  contradictory, or missing context that must be refined before coding.
 allowed-tools:
   - Read
   - Grep

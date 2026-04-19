@@ -1,0 +1,23 @@
+{
+  "skill_name": "skill-auditor",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Audit workflow/prompt-to-plan and tell me what's wrong",
+      "expected_output": "A per-skill audit report is written to docs/skill-audit/YYYY-MM-DD/prompt-to-plan.md with file:line-cited findings grouped under 4 axes (A: Frontmatter, B: Description, C: Body, D: Project conventions). The report includes a score, classification (green/yellow/red), and top-3 upgrade recommendations. No files under workflow/prompt-to-plan/ are modified. The chat summary shows the score and points the user to the report path and suggests running UPGRADE mode if there are Fails.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Audit all skills in this repo",
+      "expected_output": "docs/skill-audit/YYYY-MM-DD/INDEX.md is created with one row per skill (8 rows covering workflow/*, review/*, utility/*), each showing skill name, score, Pass/Warn/Fail counts, and classification. Per-skill reports are generated alongside INDEX.md. No source skill files are modified. The chat summary prints the INDEX table, highlights top priority findings (e.g. 'N skills missing HARD-GATE', 'M skills exceed 500-line limit'), and suggests the highest-priority skill to UPGRADE next.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Upgrade workflow/prompt-to-plan",
+      "expected_output": "The skill refuses to proceed because no prior AUDIT report exists under docs/skill-audit/. The refusal message explains the two-mode workflow (AUDIT must run first), points to the latest-report lookup path (docs/skill-audit/*/INDEX.md), and offers to run AUDIT first. Zero files are modified. If an AUDIT report older than 7 days exists, the skill warns and asks whether to proceed with stale data or re-audit.",
+      "files": []
+    }
+  ]
+}

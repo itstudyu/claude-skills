@@ -15,6 +15,7 @@ allowed-tools:
   - Edit
   - Grep
   - Glob
+  - Bash
 ---
 
 # Japanese Comments Enforcement
