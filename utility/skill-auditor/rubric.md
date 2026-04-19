@@ -4,9 +4,13 @@ Scored checklist used by the `skill-auditor` skill. 17 offline items across
 4 axes (A–D) + 3 optional online items (E1–E3). Every item is self-contained:
 source URL + verbatim quote + deterministic pass criterion.
 
-> **Rubric version:** 1.1.0 (2026-04-19)
-> Changelog: added Axis E (E1 source freshness, E2 external comparison,
-> E3 similar-skill discovery) — gated on `--online` flag.
+> **Rubric version:** 1.2.0 (2026-04-19)
+> Changelog:
+> - 1.1.0: added Axis E (E1 source freshness, E2 external comparison,
+>   E3 similar-skill discovery) — gated on `--online` flag.
+> - 1.2.0: added Trusted Sources Registry with tiered semantics
+>   (authoritative / widely-adopted / community-curated); E2 now iterates
+>   Tier 1–2 refs, E3 escalates to Fail only on ≥2-source corroboration.
 > When official sources change, refresh quotes per Appendix A.
 
 ## Contents
@@ -282,42 +286,58 @@ against live sources. Off by default to keep default runs deterministic.
 
 ### E2. External skill comparison (reference patterns)
 
-- **Check:** The audited skill's structure is compared against Anthropic's
-  reference skills (`github.com/anthropics/skills`). Flag obvious deviations:
-  missing section types that reference skills use, frontmatter-field usage
-  patterns, progressive-disclosure depth.
-- **Method:** WebFetch `https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/SKILL.md`
-  and (optionally) one or two other reference skills relevant to the audited
-  category. Extract section headings + frontmatter field set. Compare with the
-  audited skill; report structural gaps as advisory findings.
-- **Source:** https://github.com/anthropics/skills — canonical reference
-  collection maintained by Anthropic.
+- **Check:** The audited skill's structure is compared against reference
+  skills from the Trusted Sources Registry. Flag obvious deviations:
+  missing section types that ≥2 reference skills carry, unusual
+  frontmatter-field usage, inconsistent progressive-disclosure depth.
+- **Method:**
+  1. Start with Tier 1/2 (`github.com/anthropics/skills`):
+     WebFetch `https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/SKILL.md`.
+  2. If the audited skill targets a category skill-creator doesn't cover
+     (e.g. DX audit, frontend design), `WebSearch` the Trusted Sources
+     Registry for the closest reference (e.g. "site:github.com/anthropics/skills
+     <category>"), then WebFetch the closest match. Stop after 3 fetches
+     to bound cost.
+  3. Extract section headings + frontmatter field set from each fetched
+     reference. Build the union.
+  4. Compare with the audited skill; report structural gaps found in ≥2
+     references as advisory findings.
+- **Source:** Trusted Sources Registry, Tiers 1–2.
 - **Pass:** No structural gap, OR the gap is justified by the skill's
   specialization.
 - **Warn:** Structural gap with no in-body justification (e.g. no "When to
-  Use" section while 4/5 reference skills carry one).
+  Use" section while ≥2 reference skills carry one).
 - **Risk:** low — findings are advisory, not mandatory.
-- **Tool-assist:** WebFetch
+- **Tool-assist:** WebFetch + WebSearch
 
 ### E3. Similar-skill discovery (duplicate / overlap detection)
 
-- **Check:** No widely-used public skill covers the same trigger space with a
-  significantly better-known name or richer feature set. This protects against
-  reinventing an existing skill under a different name.
-- **Method:** Use the `find-skills` Skill (via the Skill tool) with the
-  audited skill's top 3 trigger phrases as queries. Report any public skill
-  whose description overlaps ≥60% of the audited skill's trigger set.
-- **Source:** `find-skills` is maintained as a discovery utility by gstack
-  and similar toolchains.
-- **Pass:** No overlap, OR overlap is with a sibling skill in the same repo
-  (intentional).
-- **Warn:** External skill overlaps ≥60% of triggers AND has ≥3× the
-  community usage signal (star count, MCP registry presence).
-- **Fail:** External skill fully supersedes the audited skill (≥80% overlap
-  + better maintenance signal). Recommend consolidation in the report — do
-  NOT auto-delete.
+- **Check:** No widely-used public skill covers the same trigger space with
+  a significantly better-known name or richer feature set. This protects
+  against reinventing an existing skill under a different name.
+- **Method:** Run in this priority order; stop at the first that succeeds:
+  1. **Primary** — `Skill(skill: "find-skills", args: "<top 3 trigger phrases>")`.
+     If the call errors with `Unknown skill`, fall through to step 2.
+  2. **Secondary** — WebFetch `https://registry.modelcontextprotocol.io`
+     search API (or the MCP registry homepage) with the top trigger phrases.
+     Extract any MCP skill/tool with ≥60% trigger overlap.
+  3. **Tertiary** — WebSearch `"<skill trigger phrase>" site:github.com topic:claude-skills`
+     and `topic:claude-code-skills`. WebFetch each top-3 SKILL.md and
+     measure trigger overlap against the audited skill.
+  Stop at step 2 if MCP registry yields ≥2 matches. Escalate to Fail only
+  when ≥2 independent Trusted Sources agree on ≥80% overlap.
+- **Source:** Trusted Sources Registry, Tier 3 (plus `find-skills` Tier
+  3-primary if installed).
+- **Pass:** No overlap from any Tier 3 source, OR overlap is with a sibling
+  skill in the same repo (intentional).
+- **Warn:** External skill overlaps ≥60% of triggers from a single Tier 3
+  source AND has ≥3× the community usage signal (star count, MCP registry
+  presence).
+- **Fail:** External skill supersedes the audited skill (≥80% overlap
+  corroborated across ≥2 Tier 3 sources). Recommend consolidation in the
+  report — do NOT auto-delete.
 - **Risk:** medium (suggests renames or deprecations).
-- **Tool-assist:** Skill (`find-skills`)
+- **Tool-assist:** Skill (`find-skills`) + WebFetch + WebSearch
 
 ---
 
@@ -334,10 +354,53 @@ embedded quotes manually:
 
 ### Canonical Sources (maintained set)
 
+Primary sources for offline rubric quotes (A1–D4). These are
+**verbatim-quoted** in rubric items and refreshed manually per Appendix A.
+
 - https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
 - https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview
 - https://code.claude.com/docs/en/skills
 - https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md
+
+### Trusted Sources Registry (online-mode corroboration)
+
+These sources are consulted by Axis E (E1/E2/E3) when `--online` is active.
+They are **not** verbatim-quoted in rubric items — they provide live
+corroboration signals. Each entry lists the domain, what it's used for,
+and which rubric item consumes it.
+
+| Tier | Source | Usage | Item |
+|------|--------|-------|------|
+| 1 (authoritative) | platform.claude.com | Anthropic skill-authoring rules | E1 |
+| 1 | code.claude.com | Claude Code skill-authoring rules | E1 |
+| 1 | github.com/anthropics/skills | Official reference skill collection | E1, E2 |
+| 2 (widely-adopted) | github.com/anthropics/skills/tree/main/skills | Category-specific reference SKILL.md | E2 |
+| 2 | github.com/anthropics/claude-code | Claude Code product reference (features, slash commands, hooks) | E2 fallback |
+| 2 | docs.anthropic.com (if distinct from platform) | API / product docs for context | E2 fallback |
+| 3 (community-curated) | registry.modelcontextprotocol.io | Public MCP servers/skills → E3 overlap detection | E3 |
+| 3 | github.com/topics/claude-skills | Community skill repos — trigger overlap search | E3 |
+| 3 | github.com/topics/claude-code-skills | Community skill repos — trigger overlap search | E3 |
+| 3 | `find-skills` Skill (if installed) | Aggregated local + community registry | E3 primary |
+
+**Tier semantics:**
+
+- **Tier 1** — Authoritative. Findings Fail/Warn carry weight.
+- **Tier 2** — Widely adopted but not normative. Findings are Warn at most.
+- **Tier 3** — Community signals. Findings are advisory (report-only) unless
+  overlap exceeds 80% across multiple Tier 3 sources simultaneously (→ Fail).
+
+### Trusted Sources — rules of thumb
+
+1. **Never fetch a domain not in this registry.** If a new authoritative
+   source appears, add it here first, then update the E-item's Method.
+2. **Cross-check Tier 3 findings with ≥2 independent sources before escalating
+   to Fail.** One overlapping skill in one registry is not enough evidence.
+3. **Link rot protocol** — if a Tier 1 URL 404s, record it in the audit
+   report and fall back to the closest live Tier 2 equivalent. Do NOT
+   silently substitute.
+4. **`WebSearch` scope** — allowed only to locate canonical URLs within the
+   Trusted Sources Registry (e.g. finding the exact reference SKILL.md for a
+   given category). Not for free-form web research.
 
 ### Why Default-Offline (and When to Use --online)
 

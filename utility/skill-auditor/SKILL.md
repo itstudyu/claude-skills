@@ -196,24 +196,39 @@ global. Run per-skill for E2 and E3.
 
 **E2 — External skill comparison**
 
+Sources: Trusted Sources Registry (Tiers 1–2) in `rubric.md`.
+
 1. `WebFetch https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/SKILL.md`
-   (and optionally one more reference skill from the same category as the
-   audited skill). Use `WebSearch` to locate relevant reference skills when
-   the category isn't covered by the skill-creator repo directly.
-2. Extract section headings + frontmatter fields.
-3. Diff against the audited skill. Emit advisory findings only — never Fail
-   solely on structural difference, because the audited skill may legitimately
-   specialize.
+   as the baseline.
+2. If the audited skill's category isn't represented by skill-creator,
+   use `WebSearch` to find the closest reference SKILL.md inside
+   `github.com/anthropics/skills` (search query form:
+   `site:github.com/anthropics/skills <category-keyword>`). WebFetch the
+   best match.
+3. Stop after 3 WebFetch calls to bound cost.
+4. Extract section headings + frontmatter fields from every fetched
+   reference. Build the union.
+5. Diff against the audited skill. Report gaps that ≥2 references share as
+   advisory findings. Never Fail solely on structural difference —
+   specialization is valid.
 
 **E3 — Similar-skill discovery**
 
-1. Call `Skill(skill: "find-skills", args: "<top 3 trigger phrases>")`.
-2. If `find-skills` is not available in this environment (Skill tool call
-   errors with "Unknown skill"), emit E3 as SKIP with reason
-   `"find-skills not installed"`.
-3. Otherwise parse the returned skill list; report any overlap ≥60% of the
-   audited skill's trigger set. Flag ≥80% overlap as Fail (recommend
-   consolidation).
+Run in strict fallback order; escalate to Fail only if ≥2 independent
+Trusted Tier-3 sources agree on ≥80% overlap.
+
+1. **Primary:** `Skill(skill: "find-skills", args: "<top 3 trigger phrases>")`.
+   If the Skill tool errors with `Unknown skill`, fall through.
+2. **Secondary:** WebFetch the MCP Registry
+   (`https://registry.modelcontextprotocol.io`) search endpoint or
+   homepage; parse matches.
+3. **Tertiary:** `WebSearch "<top trigger phrase>" site:github.com topic:claude-skills`
+   AND `topic:claude-code-skills`. WebFetch top-3 SKILL.md results each;
+   compute trigger overlap.
+4. If all three fall through (tool unavailable + registry unreachable +
+   zero search hits), emit E3 as SKIP with reason
+   `"no Tier-3 source responsive"`. Do NOT Fail on silence — lack of
+   evidence is not evidence of lack.
 
 All E-findings go into the same audit report under a new
 `### Axis E — Online Corroboration` section, each tagged `(online)`.
