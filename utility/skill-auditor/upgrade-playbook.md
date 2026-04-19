@@ -13,6 +13,7 @@ the rubric rationale.
 - [Axis C Entries](#axis-c-entries) (C1–C5)
 - [Axis D Entries](#axis-d-entries) (D1–D4)
 - [Axis E Entries (online-only)](#axis-e-entries-online-only) (E1–E3)
+- [Axis F Entries (longevity & compounding)](#axis-f-entries-longevity--compounding) (F1–F4)
 
 ## How to Read This Playbook
 
@@ -808,3 +809,153 @@ user's intent won't resolve cleanly. Consolidate or specialize.
   downgrade the finding to Warn and keep both.
 - Never auto-delete an existing skill to resolve E3 — always propose
   migration first.
+
+---
+
+## Axis F Entries (longevity & compounding)
+
+Rules in this axis come from Karpathy's LLM-wiki gist (see `rubric.md`
+Appendix B). They check whether the skill is a compounding artifact, not
+a one-shot aid.
+
+### F1 — Index + schema consistency
+
+**Rubric source:** Karpathy gist — "Maintain an index file … cataloging all wiki pages"
+**Risk:** low
+
+#### BEFORE
+
+`skill-catalog.md` row for `my-skill` uses different column order than
+the 8 sibling rows:
+
+```
+| my-skill | Some description | #tag | my-area/my-skill/ |
+```
+
+(rest of file uses `Skill | Path | Description | Tags`)
+
+#### AFTER
+
+```
+| my-skill | my-area/my-skill/ | Some description | #tag |
+```
+
+#### Rationale
+
+Consistent column order lets readers — human and LLM — scan the catalog
+by position. Divergent rows break parsing and silently demote the skill
+in discovery.
+
+#### Edge cases
+
+- If the whole catalog migrates to a new schema, update every row in one
+  transaction; never mix old + new layouts.
+
+---
+
+### F2 — Append-only audit archive
+
+**Rubric source:** Karpathy gist — "Keep an append-only chronological log"
+**Risk:** medium
+
+#### BEFORE
+
+Running `skill-auditor` today rewrites `docs/skill-audit/2026-04-12/INDEX.md`
+with today's data — historical audit lost.
+
+#### AFTER
+
+Today's run writes a new directory `docs/skill-audit/2026-04-19/` and
+leaves `2026-04-12/` untouched. Only post-UPGRADE re-audit overwrites
+the affected skill's report within the same day's directory (per
+SKILL.md Phase 5).
+
+#### Rationale
+
+Historical audits are the evidence trail for rubric-drift detection
+(E1) and for tracking whether specific skills regress over time. Rewriting
+them destroys that evidence.
+
+#### Edge cases
+
+- If a partial audit failed mid-run, mark its directory with a
+  `INCOMPLETE.md` file rather than deleting it.
+
+---
+
+### F3 — Anti-pattern section quality
+
+**Rubric source:** Karpathy gist (explicit Do / Do-Not blocks) + softaworks/skill-judge Anti-Pattern Quality dimension
+**Risk:** low
+
+#### BEFORE
+
+A 250-line skill whose body is entirely happy-path instructions ("Do X",
+"Then do Y") with no prohibitions:
+
+```markdown
+## Workflow
+1. Read the config
+2. Apply the transform
+3. Write the output
+```
+
+#### AFTER
+
+```markdown
+## Workflow
+1. Read the config
+2. Apply the transform
+3. Write the output
+
+## Anti-patterns
+
+- **Do NOT transform in place.** A crashed write leaves the user with
+  corrupt state. Always write to `<name>.tmp` then atomic-rename.
+- **Do NOT infer schema from filename.** Open the config and verify —
+  filename conventions rot.
+```
+
+#### Rationale
+
+Failure modes are more informative than success recipes. Karpathy's gist
+and skill-judge both treat explicit "do not / because" blocks as a
+first-class quality signal.
+
+#### Edge cases
+
+- Skills <100 lines of procedural guidance are exempt. Don't pad with
+  invented anti-patterns.
+
+---
+
+### F4 — Schema-linting self-consistency
+
+**Rubric source:** Karpathy gist — "Lint the wiki periodically: check contradictions, flag stale claims, identify orphan pages"
+**Risk:** medium
+
+#### BEFORE
+
+`<skill-dir>/notes.md` mentions the skill as `/my_skill` (underscore
+typo) while SKILL.md frontmatter declares `name: my-skill`. Also:
+`<skill-dir>/draft.md` exists but SKILL.md never links to it.
+
+#### AFTER
+
+1. Edit `notes.md` to use `/my-skill` consistently.
+2. Either link `draft.md` from SKILL.md's references table, move it to
+   `resources/` or `templates/`, or delete it if stale.
+
+#### Rationale
+
+Orphan files are dead context that Claude may partially load; mismatched
+names confuse discovery. A periodic lint catches both before they
+accumulate.
+
+#### Edge cases
+
+- Siblings under `resources/` or `templates/` are assumed to be loaded
+  dynamically — not linking them from SKILL.md is OK.
+- If the orphan is a historical artifact the user wants to preserve,
+  link it from SKILL.md under a "History" section rather than leaving it
+  unreferenced.

@@ -426,6 +426,22 @@ To update these docs after code changes, run /workflow-blueprint-update
 | Frontend-only project | Trace: Component → Hook/Store → API Client → External API |
 | Very large codebase (100+ endpoints) | Discover all, ask user to select subset, analyze in batches |
 
+## Anti-patterns
+
+Long analyses drift toward plausible-but-unfounded claims. Refuse these:
+
+- **Do NOT invent participants you did not read.** Every diagram box must
+  trace to a file:line you opened. Mark untraced dispatch as
+  `(not traced — indirect dispatch)` rather than drawing the arrow — a
+  hallucinated shape misleads more than an incomplete one.
+- **Do NOT infer call order from framework conventions.** Read the actual
+  calling function; conventions drift per project (e.g. Express
+  middleware order follows `app.use` sequence, not defaults).
+- **Do NOT collapse conditional branches into a single arrow.** If the
+  controller dispatches differently for authenticated vs anonymous users,
+  draw two arrows. Collapsing loses the decision the diagram exists to
+  show.
+
 ## Language and Output
 
 - Respond in the user's language

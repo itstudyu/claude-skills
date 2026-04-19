@@ -4,13 +4,17 @@ Scored checklist used by the `skill-auditor` skill. 17 offline items across
 4 axes (A–D) + 3 optional online items (E1–E3). Every item is self-contained:
 source URL + verbatim quote + deterministic pass criterion.
 
-> **Rubric version:** 1.2.0 (2026-04-19)
+> **Rubric version:** 1.3.0 (2026-04-19)
 > Changelog:
 > - 1.1.0: added Axis E (E1 source freshness, E2 external comparison,
 >   E3 similar-skill discovery) — gated on `--online` flag.
 > - 1.2.0: added Trusted Sources Registry with tiered semantics
 >   (authoritative / widely-adopted / community-curated); E2 now iterates
 >   Tier 1–2 refs, E3 escalates to Fail only on ≥2-source corroboration.
+> - 1.3.0: added Axis F (Longevity & Compounding) — F1 index consistency,
+>   F2 append-only archive, F3 anti-pattern guidance, F4 schema lint —
+>   inspired by Karpathy's LLM-wiki gist (see Appendix B). Registry now
+>   includes skills.sh, softaworks/skill-judge, and Karpathy's gist.
 > When official sources change, refresh quotes per Appendix A.
 
 ## Contents
@@ -22,7 +26,9 @@ source URL + verbatim quote + deterministic pass criterion.
 - [Axis C — Body Structure](#axis-c--body-structure) (C1–C5)
 - [Axis D — Project Conventions](#axis-d--project-conventions) (D1–D4)
 - [Axis E — Online Corroboration](#axis-e--online-corroboration---online-mode-only) (E1–E3, optional)
+- [Axis F — Longevity & Compounding](#axis-f--longevity--compounding) (F1–F4)
 - [Appendix A: Source Refresh Procedure](#appendix-a-source-refresh-procedure)
+- [Appendix B: Karpathy LLM-Wiki Principles](#appendix-b-karpathy-llm-wiki-principles)
 
 ## How to Read This Rubric
 
@@ -341,6 +347,110 @@ against live sources. Off by default to keep default runs deterministic.
 
 ---
 
+## Axis F — Longevity & Compounding
+
+These rules come from Karpathy's LLM-wiki gist (Appendix B). They check
+whether a skill is a **persistent, compounding artifact** — something that
+keeps accruing value across sessions — rather than a one-shot query-time
+aid that has to be re-derived each run. All F items run offline; they are
+static checks on the skill's convention surface.
+
+### F1. Index + schema consistency
+
+- **Check:** The repo has both (a) a schema/convention file (`CLAUDE.md`
+  or `AGENTS.md`) declaring how skills are organized, and (b) an index
+  file (`skill-catalog.md` or equivalent) cataloging every skill. The
+  audited skill appears in both and its row matches the schema's declared
+  format.
+- **Method:** Read `CLAUDE.md` + `skill-catalog.md`. Verify the audited
+  skill's row in `skill-catalog.md` conforms to the column order declared
+  (or implied by the majority of rows). Verify `CLAUDE.md` references the
+  same skill under the same name.
+- **Source:** Karpathy gist — "Maintain an index file … cataloging all
+  wiki pages" + "Create a schema file (e.g., CLAUDE.md) defining wiki
+  structure, conventions, and workflows".
+- **Pass:** Both files present, audited skill appears in both with
+  matching formatting.
+- **Warn:** Row present but column order or tag format diverges from
+  other rows.
+- **Fail:** Skill missing from `skill-catalog.md` or not referenced in
+  `CLAUDE.md`. (This overlaps D2/D3 — F1 is the *structural consistency*
+  layer on top of *presence*.)
+- **Risk:** low (formatting fix in one row).
+- **Tool-assist:** —
+
+### F2. Append-only audit archive
+
+- **Check:** Prior audits are preserved under
+  `docs/skill-audit/YYYY-MM-DD/` without in-place rewriting. Each audit
+  run writes a new dated directory; older reports are not modified except
+  for the same-day re-audit after UPGRADE (which overwrites only the
+  affected skill's report and the day's INDEX).
+- **Method:** Glob `docs/skill-audit/*/INDEX.md`. If ≥2 exist, verify
+  their dates are distinct and the older files' timestamps haven't been
+  rewritten today. If only 1 exists, mark SKIP (not enough history to
+  evaluate).
+- **Source:** Karpathy gist — "Keep an append-only chronological log
+  documenting ingests, queries, and maintenance actions" + "Use
+  consistent naming conventions for log entries (e.g., `## [DATE]
+  operation | description`)".
+- **Pass:** ≥2 dated audit directories present; no back-dated overwrite
+  detected.
+- **Warn:** Same-day re-audit detected but only the affected skill's
+  report was rewritten (expected UPGRADE behavior) — mark Warn if the
+  INDEX lost historical entries.
+- **Fail:** Prior audit directory was deleted or older dates were
+  overwritten wholesale.
+- **Risk:** medium (touches audit history).
+- **Tool-assist:** —
+
+### F3. Anti-pattern section quality
+
+- **Check:** If the skill body has more than 100 lines of procedural
+  guidance, it should include at least one explicit "Do NOT / Avoid /
+  Anti-pattern" block with specific reasoning — not just happy-path
+  instructions.
+- **Method:** If SKILL.md body >100 lines: grep for `NEVER`, `Do not`,
+  `Avoid`, `Anti-pattern`, `❌`, `Don't`. Count blocks containing ≥1
+  reasoning sentence after the prohibition.
+- **Source:** Karpathy gist — "DO NOT allow the LLM to unilaterally
+  rewrite sections without human verification" (example of explicit
+  anti-pattern with reasoning). Also softaworks/skill-judge "Anti-Pattern
+  Quality" dimension (15 pts in their rubric).
+- **Pass:** ≥1 anti-pattern block with reasoning, OR body ≤100 lines
+  (anti-pattern section not required for short skills).
+- **Warn:** Anti-pattern keyword found but no reasoning sentence follows
+  ("Don't do X." without the *why*).
+- **Fail:** Body >100 lines with zero prohibition language.
+- **Risk:** low (additive edit to SKILL.md).
+- **Tool-assist:** —
+
+### F4. Schema-linting self-consistency
+
+- **Check:** The audited skill's sibling reference files (*.md under
+  `<skill-dir>/`, excluding evals/ and evals-workspace/) do not
+  contradict each other: same skill name, same `/slash-command`,
+  compatible version/date if declared, and no orphaned siblings (every
+  sibling should be linked from SKILL.md at least once).
+- **Method:**
+  1. Glob siblings.
+  2. For each sibling, grep for `name:` or the skill's kebab name — flag
+     if the mentioned name differs from SKILL.md's frontmatter `name`.
+  3. For each sibling, check SKILL.md body for a link to that sibling
+     (`](sibling-filename.md)` or `[sibling-filename](...)`) — flag
+     orphans.
+- **Source:** Karpathy gist — "Lint the wiki periodically: check
+  contradictions, flag stale claims, identify orphan pages".
+- **Pass:** No name contradictions, no orphan siblings.
+- **Warn:** Orphan sibling exists but is a template/resource that may be
+  loaded dynamically (matches `resources/*`, `templates/*`).
+- **Fail:** Name contradiction (sibling uses different skill name than
+  frontmatter) OR orphan sibling not under `resources/` or `templates/`.
+- **Risk:** medium (fixing orphan may involve rename or linkage).
+- **Tool-assist:** —
+
+---
+
 ## Appendix A: Source Refresh Procedure
 
 When Anthropic's official skill docs are updated, refresh this rubric's
@@ -377,6 +487,9 @@ and which rubric item consumes it.
 | 2 (widely-adopted) | github.com/anthropics/skills/tree/main/skills | Category-specific reference SKILL.md | E2 |
 | 2 | github.com/anthropics/claude-code | Claude Code product reference (features, slash commands, hooks) | E2 fallback |
 | 2 | docs.anthropic.com (if distinct from platform) | API / product docs for context | E2 fallback |
+| 2 | gist.github.com/karpathy/442a6bf555914893e9891c11519de94f | Karpathy's LLM-wiki principles — consulted by Axis F (see Appendix B) | F-axis |
+| 2 | skills.sh (vercel-labs/skills registry) | Install-count leaderboard for Tier 3 overlap corroboration | E3 |
+| 2 | github.com/softaworks/agent-toolkit/tree/main/skills/skill-judge | Independent skill-quality rubric (8-axis / 120-pt system) — cross-compared during rubric refresh | E1, F3 |
 | 3 (community-curated) | registry.modelcontextprotocol.io | Public MCP servers/skills → E3 overlap detection | E3 |
 | 3 | github.com/topics/claude-skills | Community skill repos — trigger overlap search | E3 |
 | 3 | github.com/topics/claude-code-skills | Community skill repos — trigger overlap search | E3 |
@@ -408,3 +521,54 @@ Default runs never fetch the network, so scores are reproducible across runs
 and Anthropic-docs outages. Use `--online` when (a) the rubric version is
 more than 30 days old and you want drift detection (E1), or (b) you're
 introducing a brand-new skill and want reference/duplicate checks (E2, E3).
+
+---
+
+## Appendix B: Karpathy LLM-Wiki Principles
+
+Source: https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f
+
+The gist outlines how a human + LLM can build a **persistent, compounding
+knowledge artifact** instead of re-querying an LLM from scratch each time.
+Skills in this repo aim to be that kind of artifact. Axis F encodes the
+checkable parts of the gist. The full set of principles (for human
+reference, not mechanically scored):
+
+**Human-LLM division of labor**
+- Human curates sources, asks the right questions, verifies outputs.
+- LLM does grunt work: ingestion, cross-referencing, synthesis, linting.
+- **Never** let the LLM unilaterally rewrite sections — verification first.
+
+**Persistent, compounding artifact**
+- Build once; re-read many times. Do not re-derive knowledge per query.
+- Synthesis and cross-references are pre-computed, not regenerated.
+- Source documents stay **immutable**; summaries are separate artifacts.
+
+**Concrete workflow rules**
+- Maintain an **index file** cataloging every page + summary (→ F1).
+- Keep an **append-only chronological log** with consistent naming
+  (`## [DATE] operation | description`) for parsability (→ F2).
+- Update 10–15 pages per source ingested; touch cross-references
+  immediately.
+- **Lint periodically**: check contradictions, flag stale claims, identify
+  orphan pages (→ F4).
+
+**Schema + configuration**
+- Declare structure/conventions/workflows in a schema file
+  (`CLAUDE.md` / `AGENTS.md`).
+- Co-evolve the schema with actual use cases (→ F1).
+
+**Search strategy**
+- At scale, keyword search alone degrades — implement hybrid search
+  (BM25 + vector + re-ranking). Single-source discovery is fragile;
+  corroborate across ≥2 sources (see Trusted Sources rules-of-thumb #2).
+
+**Anti-patterns**
+- Assuming the artifact will self-maintain without structured workflows.
+- Treating generated summaries as replacements for source documents.
+- Claiming scalability while depending on "small enough" scale —
+  acknowledge the boundary explicitly.
+
+**Human involvement is non-negotiable** in regulated domains (aerospace,
+finance, military) — and in this repo, every UPGRADE edit still requires
+per-item approval (SKILL.md Phase 3).

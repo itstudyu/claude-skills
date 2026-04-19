@@ -37,9 +37,9 @@ mark it SKIP and explain why. Do NOT infer author intent. Do NOT speculate.
 
 ## Two Modes + Online Flag
 
-- **AUDIT** (default, read-only, offline) — Score skills against the 17
-  offline items (A1–D4), emit per-skill reports + INDEX.md. Never modifies
-  source files. Deterministic — no network.
+- **AUDIT** (default, read-only, offline) — Score skills against the 21
+  offline items (A1–D4 + F1–F4), emit per-skill reports + INDEX.md. Never
+  modifies source files. Deterministic — no network.
 - **AUDIT --online** — Adds Axis E (E1 rubric-quote freshness via WebFetch,
   E2 external-skill comparison against `github.com/anthropics/skills`,
   E3 similar-skill discovery via the `find-skills` Skill). Findings are
@@ -71,7 +71,7 @@ Trigger phrases covered in frontmatter. Also invoke proactively:
 AUDIT Mode:
   Phase 0 — Scope discovery + Flipped-Interaction confirm
   Phase 1 — Load rubric.md (canonical snapshot, no network)
-  Phase 2 — Per-skill scoring loop (17 items × 4 axes)
+  Phase 2 — Per-skill scoring loop (21 offline items across axes A–D + F)
   Phase 3 — Report generation to docs/skill-audit/YYYY-MM-DD/
   Phase 4 — Summary output + UPGRADE suggestion
 
@@ -86,10 +86,18 @@ UPGRADE Mode:
 
 ## Rubric
 
-The full scored checklist lives in [rubric.md](rubric.md) — 17 items across
-4 axes (A: Frontmatter, B: Description, C: Body structure, D: Project
-conventions). Each item carries its source URL + verbatim quote so the
-rubric is self-contained and deterministic.
+The full scored checklist lives in [rubric.md](rubric.md). Offline items:
+17 across axes A–D (A: Frontmatter, B: Description, C: Body structure,
+D: Project conventions) + Axis F (4 items: longevity & compounding —
+index/schema consistency, append-only audit archive, anti-pattern
+quality, schema-lint self-consistency). Online items: 3 across axis E
+(gated on `--online`). Each item carries its source URL + verbatim quote
+so the rubric is self-contained and deterministic.
+
+Axis F encodes the checkable parts of Karpathy's LLM-wiki gist
+(https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) —
+persistent, compounding knowledge artifacts beat query-time re-derivation.
+See `rubric.md` Appendix B for the full principle list.
 
 ## Upgrade Playbook
 
@@ -166,7 +174,7 @@ For each target skill:
 1. Read `SKILL.md` in full.
 2. Glob sibling markdown files (`<skill-dir>/*.md` excluding SKILL.md).
 3. Read `<skill-dir>/evals/evals.json` if it exists.
-4. For each rubric item A1–D4:
+4. For each rubric item A1–D4 and F1–F4:
    - Execute the Method described in rubric.md
    - Record `{id, verdict: Pass|Warn|Fail|Skip, evidence: "file:line — snippet"}`
    - Every verdict **must** cite file:line evidence or be marked Skip with
