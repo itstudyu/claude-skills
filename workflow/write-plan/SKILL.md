@@ -14,7 +14,6 @@ allowed-tools:
   - Grep
   - Glob
   - Write
-  - Edit
 ---
 
 # Writing Plans

@@ -337,7 +337,7 @@ empty template sections rather than filling them for completeness.
 
 **Reasoning guidance**: Use outcome-oriented phrasing ("evaluate tradeoffs",
 "identify edge cases") rather than "think step by step" or "think hard" — these
-are regular text on Claude 4.6, not thinking budget controls.
+are regular text on current Claude models, not thinking budget controls.
 
 **Instruction style**: General goals with constraints produce better reasoning
 than hand-written step-by-step procedures in `<task>`.
@@ -361,13 +361,13 @@ than hand-written step-by-step procedures in `<task>`.
 
 Detect if the user mentions a target model and adjust delimiter style accordingly.
 
-### Claude 4.6 Notes
+### Current Claude Notes
 
-When the refined spec will be executed by Claude 4.6 (the default):
+When the refined spec will be executed by a current-generation Claude model:
 
 - **No prefilling**: Prefilled assistant responses are not supported.
   Use explicit instructions instead.
-- **Scope boundaries required**: Opus 4.6 tends to create extra files and
+- **Scope boundaries required**: Opus-class models tend to create extra files and
   unnecessary abstractions. Include in `<task>`: "implement only what is
   specified, no additional features or abstractions." Explicitly state what
   is OUT of scope.

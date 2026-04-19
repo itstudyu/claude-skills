@@ -1,85 +1,54 @@
 # Audit Report — subagent-dev
 
-> Generated 2026-04-19 by `skill-auditor`.
-> Rubric version: 1.0.0 (2026-04-19)
-> Source: workflow/subagent-dev/SKILL.md
-
-## Frontmatter Excerpt
-
-```yaml
----
-name: subagent-dev
-description: |
-  Execute implementation plans by dispatching a fresh subagent per task, with two-stage
-  review (spec compliance + code quality) after each. Supports parallel dispatch for
-  independent tasks. Use this skill whenever the user says "use subagents", "dispatch
-  agents", "parallel execution", "サブエージェント実行", "서브에이전트", or when an
-  implementation plan exists and tasks are mostly independent. Proactively suggest
-  this skill over execute-plan when subagents are available — fresh context per task
-  produces higher quality results than sequential execution in a long session.
-allowed-tools:
-  - Read
-  - Grep
-  - Glob
-  - Write
-  - Edit
-  - Bash
-  - Agent
----
-```
+> Generated 2026-04-19 by `skill-auditor` (AUDIT `--online`)
+> Rubric version: 1.3.0
+> Source: workflow/subagent-dev/SKILL.md (367 lines)
 
 ## Score
 
-**0.97** (green) — 15 Pass / 1 Warn / 0 Fail / 1 Skip
-
-- Description length: 595 chars
-- SKILL.md line count: 372
+**1.00** (green) — 18 Pass / 0 Warn / 0 Fail / 3 Skip (offline)
+Axis E: 2 Pass / 1 Warn (advisory, not counted in core score).
 
 | Axis | Items | Pass | Warn | Fail | Skip |
 |------|-------|------|------|------|------|
-| A — Frontmatter | 4 | 3 | 1 | 0 | 0 |
+| A — Frontmatter | 4 | 3 | 0 | 0 | 1 |
 | B — Description | 4 | 4 | 0 | 0 | 0 |
 | C — Body Structure | 5 | 5 | 0 | 0 | 0 |
 | D — Project Conventions | 4 | 3 | 0 | 0 | 1 |
+| F — Longevity & Compounding | 4 | 2 | 0 | 0 | 2 |
+| E — Online Corroboration | 3 | 2 | 1 | 0 | 0 |
 
 ## Per-Item Findings
 
-### Axis A — Frontmatter Compliance
-
-- **A1** name format — **Pass** — `SKILL.md:2` `name: subagent-dev`
-- **A2** description ≤1024 chars — **Pass** — `SKILL.md:3-10` ~595 chars
-- **A3** XML-tag-free — **Pass** — no `<Tag` tokens in description block
-- **A4** allowed-tools hygiene — **Warn** — `SKILL.md:11-18` declares Read/Grep/Glob/Write/Edit/Bash/Agent, but Bash/Grep/Glob are not directly called by the controller (subagents invoke them). **Recommendation:** trim to controller-invoked tools (Read, Agent/Task, TodoWrite) and move subagent-side tools into the dispatched-subagent prompt instructions.
-
-### Axis B — Description Quality
-
-- **B1** third-person — **Pass** — `SKILL.md:4` "Execute implementation plans by dispatching..." (imperative, third-person)
-- **B2** multilingual — **Pass** — `SKILL.md:7` Hangul '서브에이전트' + Katakana 'サブエージェント実行'
-- **B3** proactive phrasing — **Pass** — `SKILL.md:6` "Use this skill whenever" + `SKILL.md:8` "Proactively suggest this skill"
-- **B4** ≥3 triggers — **Pass** — `SKILL.md:6-7` 5 quoted triggers
-
-### Axis C — Body Structure
-
-- **C1** ≤500 lines — **Pass** — `SKILL.md:372` lines
-- **C2** reference depth = 1 — **Pass** — only SKILL.md in directory
-- **C3** TOC for long siblings — **Pass** — no siblings
-- **C4** no time-sensitive content — **Pass** — no matches
-- **C5** name consistent — **Pass** — `README.md:21` / `CLAUDE.md:34` `/subagent-dev` matches
-
-### Axis D — Project Conventions
-
-- **D1** evals schema — **Pass** — `evals/evals.json:3-22` 3 evals, consistent shape. **Note:** line 12 contains a corrupted Hangul byte `'서��에이전트'`; repair to `'서브에이전트'`.
-- **D2** skill-catalog.md — **Pass** — `skill-catalog.md:10`
-- **D3** CLAUDE.md + README.md — **Pass** — `CLAUDE.md:34`, `README.md:21`
-- **D4** HARD-GATE conditional — **Skip** — `SKILL.md:175,342,365` only 'verify' matches (1 distinct of 6); <2 → HARD-GATE not required
+- **A1–A3 — Pass**. **A4 — Skip**: allowed-tools = `Read + TodoWrite + Agent`;
+  no Write/Edit/Bash listed, so the hygiene rule doesn't apply.
+- **B1–B4 — Pass**: third-person, KO+JA, proactive phrasing, 5 quoted
+  triggers.
+- **C1 — Pass**: 367 lines. **C2 — Pass**: no siblings. **C3 — Skip-equivalent**
+  (no siblings). **C4 — Pass**. **C5 — Pass**.
+- **D1 — Pass**: 3 Variant-A evals. **D2/D3 — Pass**. **D4 — Skip**: 3 trigger
+  keywords all "verify" in test/fix-verification context (lines 171, 338, 361);
+  not forensic-evidence context. Rule does not apply.
+- **F1 — Pass**. **F2 — Skip**. **F3 — Pass**: body >100 lines; "Red Flags"
+  section (`:240-269`) is an explicit anti-pattern block with reasoning.
+  **F4 — Skip** (no siblings).
+- **E1 — Pass**. **E2 — Pass**.
+- **E3 — Warn (advisory)**: `obra/superpowers` framework contains a
+  `subagent-driven-development` skill with near-identical trigger space
+  ("dispatches fresh subagent per task with two-stage review: spec compliance,
+  then code quality"). Overlap ~80% with a single Tier-3 source. Cannot
+  escalate to Fail (rubric requires ≥2 independent corroborating sources).
+  - **Recommendation:** add a "Related skills / Prior art" section
+    acknowledging obra/superpowers and clarifying project-specific
+    differentiators (model-selection table at lines 98-112, local TodoWrite
+    integration, Anthropic parallel-dispatch examples).
 
 ## Top-3 Upgrade Recommendations
 
-1. **A4** (medium) — Prune allowed-tools to controller-invoked tools only (Read + Agent/Task + TodoWrite); push Bash/Grep/Glob/Write/Edit into dispatched-subagent instructions. → See `upgrade-playbook.md#A4`
-2. **D1** (low) — Fix corrupted Hangul byte `'서��에이전트'` at `evals/evals.json:12` to `'서브에이전트'`. → See `upgrade-playbook.md#D1`
+1. **E3 — add Prior-Art attribution block** (advisory).
+2. (none)
+3. (none)
 
 ## Next Steps
 
-To apply these recommendations, invoke `skill-auditor` in **UPGRADE** mode:
-
-> "Upgrade subagent-dev"
+Skill is green. Optional UPGRADE for E3 attribution.

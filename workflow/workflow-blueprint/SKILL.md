@@ -19,7 +19,6 @@ allowed-tools:
   - Read
   - Grep
   - Glob
-  - Bash
   - Write
 ---
 
@@ -210,71 +209,13 @@ continuation."
 
 ## Step 4: Generate Sequence Diagram
 
-For each traced workflow, generate a Mermaid sequenceDiagram.
+For each traced workflow, generate a Mermaid `sequenceDiagram`.
 
-### 4-1. Mermaid Syntax Rules
-
-```mermaid
-sequenceDiagram
-    participant Client
-    participant Router as POST /api/auth/login
-    participant Guard as AuthGuard
-    participant Controller as AuthController
-    participant Service as AuthService
-    participant Repo as UserRepository
-    participant DB as PostgreSQL
-
-    Client->>+Router: POST /api/auth/login {email, password}
-    Router->>+Guard: validateRequest()
-    Guard-->>-Router: passed
-    Router->>+Controller: login(dto)
-    Controller->>+Service: authenticate(email, password)
-    Service->>+Repo: findByEmail(email)
-    Repo->>+DB: SELECT * FROM users WHERE email = $1
-    DB-->>-Repo: user row
-    Repo-->>-Service: User entity
-    Note over Service: bcrypt.compare(password, hash)
-    Service->>+Repo: createSession(userId)
-    Repo->>+DB: INSERT INTO sessions ...
-    DB-->>-Repo: session row
-    Repo-->>-Service: Session entity
-    Service-->>-Controller: {accessToken, refreshToken}
-    Controller-->>-Client: 200 OK {tokens}
-```
-
-### 4-2. Syntax Correctness Checklist
-
-Follow these rules strictly to produce valid Mermaid:
-
-- `participant Name` — no quotes needed if name has no spaces
-- `participant Alias as "Display Name"` — use quotes for names with spaces/special chars
-- `->>+` opens an activation bar, `-->>-` closes it. They must be balanced.
-- `->>` for synchronous calls, `-->>` for responses/returns
-- `-x` for failed/error responses
-- `Note over A: text` for inline annotations (single participant)
-- `Note over A,B: text` for notes spanning participants
-- `alt`/`else`/`end` for conditional branches — must be balanced
-- `opt`/`end` for optional paths
-- `loop`/`end` for repeated operations
-- Keep participant count under 10 per diagram. Split if needed.
-- Every `+` activation must have a matching `-` deactivation.
-
-### 4-3. Error Path Diagrams
-
-For significant error paths (auth failure, validation error, not found),
-generate a separate diagram or use `alt`/`else` blocks:
-
-```mermaid
-sequenceDiagram
-    participant Client
-    participant Controller as AuthController
-    participant Service as AuthService
-
-    Client->>+Controller: login(invalid_credentials)
-    Controller->>+Service: authenticate(email, wrong_password)
-    Service-->>-Controller: throw UnauthorizedException
-    Controller-->>-Client: 401 Unauthorized
-```
+Full example, syntax-correctness checklist, and error-path diagram pattern
+live in [mermaid-syntax.md](mermaid-syntax.md). Read that file before
+emitting the first diagram — especially the activation-bar balance rule
+(every `+` needs a matching `-`) and the participant-count cap (≤10 per
+diagram; split if needed).
 
 ## Step 5: Generate Workflow Document
 
@@ -411,36 +352,13 @@ Summary:
 To update these docs after code changes, run /workflow-blueprint-update
 ```
 
-## Edge Cases
+## Edge Cases and Anti-patterns
 
-| Case | Handling |
-|------|---------|
-| No entry points found | Report "No entry points detected" with list of files scanned |
-| Dynamic routing (e.g., `app.use(router)`) | Trace router file imports to find actual routes |
-| Decorator-based routing | Read decorator metadata to extract paths and methods |
-| Abstract/interface services | Follow to concrete implementation, document both |
-| Multiple DB connections | Note which connection each query uses |
-| ORM query builders | Read the builder chain to determine the actual query |
-| No DB (pure computation) | Omit "Data Touched" section, note "No database interaction" |
-| Monorepo with multiple services | Ask user which service to analyze, or analyze each separately |
-| Frontend-only project | Trace: Component → Hook/Store → API Client → External API |
-| Very large codebase (100+ endpoints) | Discover all, ask user to select subset, analyze in batches |
-
-## Anti-patterns
-
-Long analyses drift toward plausible-but-unfounded claims. Refuse these:
-
-- **Do NOT invent participants you did not read.** Every diagram box must
-  trace to a file:line you opened. Mark untraced dispatch as
-  `(not traced — indirect dispatch)` rather than drawing the arrow — a
-  hallucinated shape misleads more than an incomplete one.
-- **Do NOT infer call order from framework conventions.** Read the actual
-  calling function; conventions drift per project (e.g. Express
-  middleware order follows `app.use` sequence, not defaults).
-- **Do NOT collapse conditional branches into a single arrow.** If the
-  controller dispatches differently for authenticated vs anonymous users,
-  draw two arrows. Collapsing loses the decision the diagram exists to
-  show.
+Corner cases encountered during tracing and the drift patterns to refuse
+live in [edge-cases.md](edge-cases.md). Consult it before skipping a
+non-obvious entry point, and re-read the Anti-patterns section before
+emitting diagrams for long or complex flows — the three "Do NOT" rules
+there are the ones that routinely break in extended analyses.
 
 ## Language and Output
 

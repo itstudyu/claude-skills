@@ -1,41 +1,14 @@
-# Audit Report — skill-auditor
+# Audit Report — skill-auditor (self-audit)
 
-> Generated 2026-04-19 by `skill-auditor` (self-audit).
-> Rubric version: 1.0.0 (2026-04-19)
-> Source: utility/skill-auditor/SKILL.md
-
-## Frontmatter Excerpt
-
-```yaml
----
-name: skill-auditor
-description: |
-  Audit existing Claude Code skills in this repo against Anthropic's official
-  skill-authoring best-practices and this project's own conventions, then
-  propose upgrade diffs for review. Two modes: AUDIT (read-only scoring with
-  file:line evidence) and UPGRADE (per-item approved edits). Use this skill
-  whenever the user says "audit my skills", "audit skill X", "check skill
-  compliance", "review all skills", "스킬 검수", "스킬 감사", "스킬 업그레이드",
-  "스킬 체크", "スキル監査", "スキル検査", "スキル改善", or when reviewing
-  SKILL.md files for frontmatter/structure/convention compliance.
-  Proactively suggest this skill after any new skill is created or after
-  editing an existing SKILL.md — stale or non-conformant skills drift
-  silently and degrade Claude's trigger accuracy.
-allowed-tools:
-  - Read
-  - Grep
-  - Glob
-  - Write
-  - Edit
----
-```
+> Generated 2026-04-19 by `skill-auditor` (AUDIT `--online`)
+> Rubric version: 1.3.0
+> Source: utility/skill-auditor/SKILL.md (358 lines)
 
 ## Score
 
-**1.00** (green) — 17 Pass / 0 Warn / 0 Fail / 0 Skip
-
-- Description length: 737 chars
-- SKILL.md line count: 273
+**1.00** (green) — 19 Pass / 0 Warn / 0 Fail / 2 Skip (offline)
+Axis E: 2 Pass / 1 Warn (advisory — E1 rubric self-drift + E3 overlap with
+`softaworks/skill-judge`).
 
 | Axis | Items | Pass | Warn | Fail | Skip |
 |------|-------|------|------|------|------|
@@ -43,42 +16,64 @@ allowed-tools:
 | B — Description | 4 | 4 | 0 | 0 | 0 |
 | C — Body Structure | 5 | 5 | 0 | 0 | 0 |
 | D — Project Conventions | 4 | 4 | 0 | 0 | 0 |
+| F — Longevity & Compounding | 4 | 3 | 0 | 0 | 1 |
+| E — Online Corroboration | 3 | 2 | 1 | 0 | 0 |
 
 ## Per-Item Findings
 
-### Axis A — Frontmatter Compliance
-
-- **A1** name format — **Pass** — `SKILL.md:2` `name: skill-auditor`
-- **A2** description ≤1024 chars — **Pass** — `SKILL.md:3-14` 737 chars
-- **A3** XML-tag-free — **Pass** — no `<[A-Za-z/]` in description YAML value (HARD-GATE at `SKILL.md:29` is in body, not description)
-- **A4** allowed-tools hygiene — **Pass** — `SKILL.md:19-20` declares Write/Edit; body uses Write at `SKILL.md:170` ("3. Write INDEX.md") and Edit at `SKILL.md:257` ("All edits via Edit tool")
-
-### Axis B — Description Quality
-
-- **B1** third-person — **Pass** — `SKILL.md:4` first 40 chars = "Audit existing Claude Code skills in thi"
-- **B2** multilingual — **Pass** — `SKILL.md:9-10` Hangul ('스킬 검수') + Katakana ('スキル監査')
-- **B3** proactive phrasing — **Pass** — `SKILL.md:8` "Use this skill whenever" + `SKILL.md:12` "Proactively suggest this skill"
-- **B4** ≥3 triggers — **Pass** — `SKILL.md:8-11` 11 quoted trigger strings
-
-### Axis C — Body Structure
-
-- **C1** ≤500 lines — **Pass** — `SKILL.md:273` lines
-- **C2** reference depth = 1 — **Pass** — `upgrade-playbook.md:369-420` sibling-like links appear only inside markdown code fences (example BEFORE/AFTER snippets), not real references
-- **C3** TOC for long siblings — **Pass** — `rubric.md:10-18` TOC (280-line file); `upgrade-playbook.md:8-14` TOC (713-line file); `audit-report-template.md` is 101 lines (not subject)
-- **C4** no time-sensitive content — **Pass** — `SKILL.md:161` "today's date" and `SKILL.md:192` "Latest AUDIT is N days old" are operational phrasing, not time-anchored claims
-- **C5** name consistent — **Pass** — `README.md:34` / `CLAUDE.md:21` `/skill-auditor` matches frontmatter `name`
-
-### Axis D — Project Conventions
-
-- **D1** evals schema — **Pass** — `evals/evals.json:3-22` 3 evals all using consistent `{id, prompt, expected_output, files}` variant
-- **D2** skill-catalog.md — **Pass** — `skill-catalog.md:16`
-- **D3** CLAUDE.md + README.md — **Pass** — `CLAUDE.md:47` and `README.md:34`
-- **D4** HARD-GATE — **Pass** — `SKILL.md:29-33` HARD-GATE is conditional ("Every Pass/Warn/Fail verdict must cite file:line evidence"; "If a check cannot be verified, mark it SKIP")
+- **A1–A4 — Pass**: `Write` (4 verb refs) + `Edit` (8 verb refs) both
+  justified extensively (UPGRADE-mode Edit-tool workflow).
+- **B1–B4 — Pass**: third-person ("Audit existing Claude Code skills..."),
+  KO+JA triggers, "Proactively suggest" phrase, 11 distinct quoted triggers.
+- **C1 — Pass**: 358 lines. **C2 — Pass**: `upgrade-playbook.md:371-422`
+  shows illustrative cross-sibling links inside code blocks
+  (`[reference.md](reference.md)` etc.), but these are examples documenting
+  *what* to write into a user's skill — not actual cross-refs from within
+  skill-auditor's own sibling network. All real sibling references flow
+  through SKILL.md. **C3 — Pass**: `rubric.md` (574 lines) and
+  `upgrade-playbook.md` (961 lines) both have `## Contents` in first 30
+  lines. **C4 — Pass**: no time-sensitive matches. **C5 — Pass**.
+- **D1 — Pass**: 3 Variant-A evals. **D2/D3 — Pass**: `skill-catalog.md:16`,
+  `CLAUDE.md:47`, `README.md:34`. **D4 — Pass**: 63 trigger keywords +
+  explicit `<HARD-GATE>` at `:32-36`.
+- **F1 — Pass**. **F2 — Skip**. **F3 — Pass**: body >100 lines; "Scope
+  Boundaries (What This Skill Does NOT Do)" section (`:121-133`) lists 6
+  reasoned anti-patterns; additional prohibitions scattered in Phase
+  descriptions. **F4 — Pass**: all 3 siblings (rubric.md, upgrade-playbook.md,
+  audit-report-template.md) are linked from SKILL.md (`:89, :104, :110`).
+  No orphans, no name contradictions.
+- **E1 — Self-drift advisory (meta)**: per INDEX.md E1 section, rubric
+  quotes need refresh (A1 XML-tag rule missing; A4 skill-creator quote
+  absent in live source; B3 and A1 wordings slightly stale). Marked Warn
+  at the INDEX level; skill itself is Pass.
+- **E2 — Pass**: structural pattern consistent with project.
+- **E3 — Warn**: `softaworks/agent-toolkit/skills/skill-judge` is a
+  widely-known skill-quality rubric (8 dimensions, 120 pts). Our rubric
+  already cites it in the Trusted Sources Registry (Tier 2) and in F3's
+  Source reference — so the overlap is acknowledged within the rubric. But
+  it is **not** acknowledged in SKILL.md's body.
+  - Trigger overlap with skill-judge ~60% (audit/review/improve SKILL.md).
+  - Differentiators: project-convention axis D (D1–D4), two-mode
+    AUDIT/UPGRADE flow with per-item approval gates, Axis E online drift
+    detection, Axis F longevity/compounding checks, append-only archive
+    policy, rubric self-refresh procedure (Appendix A).
+  - Risk: medium
+  - **Recommendation:** add a "Related rubrics" section to SKILL.md citing
+    skill-judge and explaining when each applies (skill-judge = content-
+    agnostic knowledge-delta focus; skill-auditor = project-integrated
+    convention enforcement + upgrade workflow).
 
 ## Top-3 Upgrade Recommendations
 
-No actionable findings — skill passes all rubric checks.
+1. **E1 rubric self-refresh** (medium risk): bump to 1.3.1, add XML-tag
+   check to A1, re-source A4 quote, update A1/B3 verbatim quotes to match
+   live doc wording.
+2. **E3 — add Related-rubrics section to SKILL.md** citing skill-judge
+   differentiator (advisory, medium risk).
+3. (no further findings)
 
 ## Next Steps
 
-No action needed.
+For rubric-refresh, edit `utility/skill-auditor/rubric.md` directly and bump
+the version. For the Related-rubrics section, run UPGRADE or do a direct
+Edit.

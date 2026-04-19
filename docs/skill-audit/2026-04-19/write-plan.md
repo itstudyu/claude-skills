@@ -1,81 +1,106 @@
 # Audit Report — write-plan
 
-> Generated 2026-04-19 by `skill-auditor`.
-> Rubric version: 1.0.0 (2026-04-19)
-> Source: workflow/write-plan/SKILL.md
+> Generated 2026-04-19 by `skill-auditor` (AUDIT `--online`)
+> Rubric version: 1.3.0
+> Source: workflow/write-plan/SKILL.md (159 lines)
 
 ## Frontmatter Excerpt
 
 ```yaml
----
 name: write-plan
 description: |
-  Create comprehensive, step-by-step implementation plans from specs or requirements
-  before writing any code. Plans include exact file paths, complete code blocks, test
-  commands, and verification steps — no placeholders, no hand-waving. Use this skill
-  whenever the user says "write a plan", "make a plan", "create implementation plan",
-  "plan this out", "break this into tasks", "プラン作成", "計画を書いて", "플랜 작성해줘",
-  "구현 계획 세워줘", or before any implementation that involves more than a single file
-  change. Proactively suggest this skill when a spec is ready — implementation
-  without a plan leads to rework.
+  Create comprehensive, step-by-step implementation plans from specs or
+  requirements before writing any code. [...]
 allowed-tools:
   - Read
   - Grep
   - Glob
   - Write
   - Edit
----
 ```
 
 ## Score
 
-**1.00** (green) — 15 Pass / 0 Warn / 0 Fail / 2 Skip
-
-- Description length: 598 chars
-- SKILL.md line count: 160
+**0.972** (green) — 17 Pass / 1 Warn / 0 Fail / 3 Skip
 
 | Axis | Items | Pass | Warn | Fail | Skip |
 |------|-------|------|------|------|------|
-| A — Frontmatter | 4 | 4 | 0 | 0 | 0 |
+| A — Frontmatter | 4 | 3 | 1 | 0 | 0 |
 | B — Description | 4 | 4 | 0 | 0 | 0 |
 | C — Body Structure | 5 | 4 | 0 | 0 | 1 |
 | D — Project Conventions | 4 | 3 | 0 | 0 | 1 |
+| F — Longevity & Compounding | 4 | 2 | 0 | 0 | 2 |
+| E — Online Corroboration | 3 | 2 | 1 | 0 | 0 |
 
 ## Per-Item Findings
 
-### Axis A — Frontmatter Compliance
+### Axis A — Frontmatter
 
-- **A1** name format — **Pass** — `SKILL.md:2` `name: write-plan`
-- **A2** description ≤1024 chars — **Pass** — `SKILL.md:3-11` ~598 chars
-- **A3** XML-tag-free — **Pass** — no `<[A-Za-z/]` in description block
-- **A4** allowed-tools hygiene — **Pass** — `SKILL.md:156` Write referenced in "Save Location"; Edit used for plan-update steps
+- **A1. name format — Pass**: `write-plan` valid.
+- **A2. description ≤1024 — Pass**: 608 chars.
+- **A3. XML-free — Pass**.
+- **A4. allowed-tools hygiene — Warn**
+  - Evidence: `SKILL.md:17` lists `Edit` in allowed-tools, but body has
+    8 Write verb refs and 0 Edit verb refs. The skill writes plan files with
+    Write; never edits existing files.
+  - Source: github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md
+    — principle: only request tools you actually use.
+  - Risk: medium
+  - **Recommendation:** remove `Edit` from allowed-tools. Re-add if a future
+    feature requires updating existing plan files in place (e.g., marking
+    task checkboxes post-execution).
 
 ### Axis B — Description Quality
 
-- **B1** third-person — **Pass** — `SKILL.md:4` "Create comprehensive, step-by-step…" (imperative, third-person)
-- **B2** multilingual — **Pass** — `SKILL.md:8` Hangul "플랜 작성해줘" + Japanese "プラン作成 / 計画を書いて"
-- **B3** proactive phrasing — **Pass** — `SKILL.md:6` "Use this skill whenever" + `SKILL.md:10` "Proactively suggest"
-- **B4** ≥3 triggers — **Pass** — `SKILL.md:7-9` 9 quoted triggers (EN/KO/JA)
+- **B1–B4 — Pass** (third-person, KO+JA triggers, proactive phrasing,
+  9 distinct quoted triggers).
 
 ### Axis C — Body Structure
 
-- **C1** ≤500 lines — **Pass** — `SKILL.md:160` lines
-- **C2** reference depth = 1 — **Pass** — no sibling markdown files exist
-- **C3** TOC for long siblings — **Skip** — no siblings
-- **C4** no time-sensitive content — **Pass** — no matches for trigger phrases
-- **C5** name consistent — **Pass** — `CLAUDE.md:15` `/write-plan` matches
+- **C1. ≤500 lines — Pass**: 159 lines.
+- **C2. One-level deep — Pass**: no sibling .md files.
+- **C3. TOC — Skip**: no siblings >150 lines (no siblings at all).
+- **C4. No time-sensitive — Pass**: no matches.
+- **C5. Name consistent — Pass**.
 
 ### Axis D — Project Conventions
 
-- **D1** evals schema — **Pass** — `evals/evals.json:1-23` 3 evals, consistent Variant A
-- **D2** skill-catalog.md — **Pass** — `skill-catalog.md:13`
-- **D3** CLAUDE.md + README.md — **Pass** — `CLAUDE.md:32`, `README.md:19`
-- **D4** HARD-GATE conditional — **Skip** — only 'verify' keyword present (<2 distinct of required set)
+- **D1. evals.json schema — Pass**: 3 evals, Variant A.
+- **D2. skill-catalog.md — Pass**: `skill-catalog.md:13`.
+- **D3. CLAUDE.md + README.md — Pass**: `CLAUDE.md:32`, `README.md:19`.
+- **D4. HARD-GATE — Skip**: 2 trigger hits (both "verify" in TDD test-run
+  steps at `:90, :102`), but context is test-execution, not forensic
+  evidence-bearing. Rule does not apply.
+
+### Axis F — Longevity & Compounding
+
+- **F1. Index/schema consistency — Pass**.
+- **F2. Append-only archive — Skip**.
+- **F3. Anti-pattern section quality — Pass**: `SKILL.md:116-126` "No
+  Placeholders" section with 7 explicit prohibitions and reasoning.
+- **F4. Schema-lint self-consistency — Skip**: no siblings to lint.
+
+### Axis E — Online Corroboration
+
+- **E1. Rubric freshness — Pass** (delegated).
+- **E2. External comparison — Pass**.
+- **E3. Similar-skill discovery — Warn**
+  - Evidence: `obra/superpowers` framework includes a `/write-plan` command
+    with nearly identical shape (bite-sized TDD tasks, zero-context
+    assumption, checkbox syntax, commit-at-end step). Trigger overlap ~70%.
+  - Differentiator: our version has a stricter "No Placeholders" discipline
+    (lines 116-126) and explicit `subagent-dev` handoff in `## Execution
+    Handoff` (lines 140-154).
+  - Risk: medium
+  - **Recommendation:** add a brief "Prior art" note linking to
+    obra/superpowers and clarifying the project's differentiators.
 
 ## Top-3 Upgrade Recommendations
 
-No upgrades required — all scored items Pass.
+1. **A4 — prune unused `Edit`** (medium risk) — single line in frontmatter.
+2. **E3 — attribution + differentiator block** (advisory).
+3. (no further findings)
 
 ## Next Steps
 
-Skill is fully compliant. No UPGRADE invocation needed.
+> "Upgrade write-plan"

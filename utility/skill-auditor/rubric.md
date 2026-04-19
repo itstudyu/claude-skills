@@ -4,7 +4,7 @@ Scored checklist used by the `skill-auditor` skill. 17 offline items across
 4 axes (A–D) + 3 optional online items (E1–E3). Every item is self-contained:
 source URL + verbatim quote + deterministic pass criterion.
 
-> **Rubric version:** 1.3.0 (2026-04-19)
+> **Rubric version:** 1.3.1 (2026-04-19)
 > Changelog:
 > - 1.1.0: added Axis E (E1 source freshness, E2 external comparison,
 >   E3 similar-skill discovery) — gated on `--online` flag.
@@ -15,6 +15,10 @@ source URL + verbatim quote + deterministic pass criterion.
 >   F2 append-only archive, F3 anti-pattern guidance, F4 schema lint —
 >   inspired by Karpathy's LLM-wiki gist (see Appendix B). Registry now
 >   includes skills.sh, softaworks/skill-judge, and Karpathy's gist.
+> - 1.3.1: E1-drift fixes — A1 now also checks `name: Cannot contain XML
+>   tags` (new live rule); A1/B3 verbatim quotes refreshed to match live
+>   docs; A4 re-sourced from skill-creator to platform.claude.com
+>   security-considerations (skill-creator no longer carries the quote).
 > When official sources change, refresh quotes per Appendix A.
 
 ## Contents
@@ -75,10 +79,10 @@ silently break skill discovery.
 
 ### A1. name field format
 
-- **Check:** `name` is lowercase letters / digits / hyphens only, ≤64 chars, not a reserved word ("anthropic", "claude").
-- **Method:** Read SKILL.md lines 1–20, extract `name:` value, apply regex `^[a-z0-9]+(-[a-z0-9]+)*$` and `len ≤ 64`, reject if matches `(?i)(anthropic|claude)`.
-- **Source:** https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview — "name: Maximum 64 characters ... only lowercase letters, numbers, and hyphens ... Cannot contain reserved words: 'anthropic', 'claude'."
-- **Pass:** All three checks true.
+- **Check:** `name` is lowercase letters / digits / hyphens only, ≤64 chars, not a reserved word ("anthropic", "claude"), and contains no XML tags.
+- **Method:** Read SKILL.md lines 1–20, extract `name:` value, apply regex `^[a-z0-9]+(-[a-z0-9]+)*$` and `len ≤ 64`, reject if matches `(?i)(anthropic|claude)`, reject if matches `<[A-Za-z/]`.
+- **Source:** https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview — "Maximum 64 characters / Must contain only lowercase letters, numbers, and hyphens / Cannot contain XML tags / Cannot contain reserved words: 'anthropic', 'claude'."
+- **Pass:** All four checks true.
 - **Warn:** Never — binary.
 - **Risk:** low (rename is mechanical) → **high** if the skill is referenced in `CLAUDE.md` routing block or other skills' bodies (requires cross-file update).
 - **Tool-assist:** SkillCheck-Free
@@ -106,7 +110,7 @@ silently break skill discovery.
 
 - **Check:** Every dangerous tool (`Write`, `Edit`, `Bash`) listed in `allowed-tools` is actually referenced at least once in the SKILL.md body or is justified by a workflow phase that needs it. Listing tools the skill never uses inflates its blast radius.
 - **Method:** Read `allowed-tools` list, for each of `Write|Edit|Bash` grep SKILL.md body for the tool name, verb forms ("write", "edit", "run", "execute"), or a justifying phrase.
-- **Source:** https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md — principle: "only request tools you actually use".
+- **Source:** https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview — security-considerations section: "Audit thoroughly ... Skills that fetch data from external URLs pose particular risk ... Tool misuse: Malicious Skills can invoke tools (file operations, bash commands, code execution) in harmful ways." Principle: minimize granted-tool surface to what the body actually uses.
 - **Pass:** Every dangerous tool has at least one body reference.
 - **Warn:** Dangerous tool referenced only in commented-out / placeholder block.
 - **Risk:** medium (removing a tool can break execution; always per-item approval).
@@ -143,7 +147,7 @@ so descriptions must be assertive, specific, and written in third-person.
 
 - **Check:** Description contains explicit invitation for Claude to offer the skill without being asked. Literal phrases: "Proactively suggest", "Use this skill whenever", "Trigger when", or equivalent pushy wording.
 - **Method:** Case-insensitive grep for any of: `proactively suggest`, `use this skill whenever`, `trigger when`, `make sure to use`.
-- **Source:** https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md — "Claude has a tendency to 'undertrigger' skills. To combat this, please make the skill descriptions a little bit 'pushy'."
+- **Source:** https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md — "currently Claude has a tendency to 'undertrigger' skills -- to not use them when they'd be useful. To combat this, please make the skill descriptions a little bit 'pushy'."
 - **Pass:** At least one phrase present.
 - **Risk:** low (append a single sentence).
 - **Tool-assist:** —

@@ -1,17 +1,17 @@
 # Audit Report — prompt-to-plan
 
-> Generated 2026-04-19 by `skill-auditor`.
-> Rubric version: 1.0.0 (2026-04-19)
-> Source: workflow/prompt-to-plan/SKILL.md
+> Generated 2026-04-19 by `skill-auditor` (AUDIT `--online`)
+> Rubric version: 1.3.0
+> Source: workflow/prompt-to-plan/SKILL.md (399 lines)
 
 ## Frontmatter Excerpt
 
 ```yaml
----
 name: prompt-to-plan
 description: |
-  Transforms rough user input into structured implementation specs, then enters
-  Plan Mode to build actionable plans. Only when explicitly requested.
+  Transforms rough user input into structured implementation specs using proven
+  prompt engineering frameworks (Anthropic, CO-STAR, 7R), then enters Plan Mode
+  to build actionable implementation plans. [...]
 allowed-tools:
   - Read
   - Grep
@@ -21,120 +21,107 @@ allowed-tools:
   - AskUserQuestion
   - EnterPlanMode
   - ExitPlanMode
----
 ```
 
 ## Score
 
-**0.81** (yellow) — 13 Pass / 0 Warn / 3 Fail / 1 Skip
-
-- Description length: 148 chars
-- SKILL.md line count: 392
+**0.972** (green) — 17 Pass / 1 Warn / 0 Fail / 3 Skip
 
 | Axis | Items | Pass | Warn | Fail | Skip |
 |------|-------|------|------|------|------|
-| A — Frontmatter | 4 | 4 | 0 | 0 | 0 |
-| B — Description | 4 | 1 | 0 | 3 | 0 |
-| C — Body Structure | 5 | 5 | 0 | 0 | 0 |
+| A — Frontmatter | 4 | 3 | 0 | 0 | 1 |
+| B — Description | 4 | 4 | 0 | 0 | 0 |
+| C — Body Structure | 5 | 4 | 1 | 0 | 0 |
 | D — Project Conventions | 4 | 3 | 0 | 0 | 1 |
+| F — Longevity & Compounding | 4 | 3 | 0 | 0 | 1 |
+| E — Online Corroboration | 3 | 2 | 1 | 0 | 0 |
 
 ## Per-Item Findings
 
-### Axis A — Frontmatter Compliance
+### Axis A — Frontmatter
 
-#### A1. name field format — **Pass**
-- **Evidence:** `SKILL.md:2` — `name: prompt-to-plan`
-- **Source:** platform.claude.com/docs/…/overview — "only lowercase letters, numbers, and hyphens"
-- **Risk:** low
-
-#### A2. description ≤1024 chars — **Pass**
-- **Evidence:** `SKILL.md:3-5` — description ~148 chars, within 1..1024
-- **Source:** platform.claude.com/docs/…/overview — "Maximum 1024 characters"
-- **Risk:** medium
-
-#### A3. description XML-tag-free — **Pass**
-- **Evidence:** `SKILL.md:3-5` — no XML-like tags in the description block
-- **Risk:** low
-
-#### A4. allowed-tools hygiene — **Pass**
-- **Evidence:** `SKILL.md:6-14` — no Write/Edit/Bash declared in allowed-tools; trivially passes
-- **Risk:** medium
+- **A1. name format — Pass**: `name: prompt-to-plan` valid kebab-case.
+- **A2. description ≤1024 — Pass**: 674 chars.
+- **A3. XML-free — Pass**: no XML tags in description.
+- **A4. allowed-tools hygiene — Skip**: no Write/Edit/Bash in allowed-tools
+  (only Read/Grep/Glob/WebSearch/WebFetch + mode-enter tools). Rule doesn't
+  apply.
 
 ### Axis B — Description Quality
 
-#### B1. Third-person framing — **Pass**
-- **Evidence:** `SKILL.md:4` — starts with 'Transforms rough user input...'; no banned pronoun prefix
-- **Source:** …/best-practices — "Always write in third person."
-- **Risk:** low
-
-#### B2. Multilingual triggers (EN / KO / JA) — **Fail**
-- **Evidence:** `SKILL.md:3-5` — description has no Hangul or Hiragana/Katakana characters
-- **Source:** Project convention — other 8 skills all carry KO+JA triggers
-- **Risk:** low
-- **Recommendation:** Add Korean and Japanese trigger phrases (e.g. '정리해서 플랜', '整理してプラン') to the description to enable multilingual routing.
-
-#### B3. Proactive-suggest phrasing — **Fail**
-- **Evidence:** `SKILL.md:3-5` — description lacks 'proactively suggest' / 'use this skill whenever' / 'trigger when' / 'make sure to use'
-- **Source:** github.com/anthropics/skills/…/skill-creator — "skill descriptions a little bit 'pushy'"
-- **Risk:** low
-- **Recommendation:** Add a proactive phrasing cue such as 'use this skill whenever the user asks to refine a rough prompt into a plan'.
-
-#### B4. ≥3 concrete trigger phrases — **Fail**
-- **Evidence:** `SKILL.md:3-5` — description contains zero quoted trigger phrases
-- **Source:** …/best-practices — "Be specific and include key terms."
-- **Risk:** low
-- **Recommendation:** Include at least three quoted example triggers in the description (EN/KO/JA).
+- **B1. Third-person — Pass**: opens "Transforms rough user input..."
+- **B2. Multilingual triggers — Pass**: KO + JA present.
+- **B3. Proactive-suggest — Pass**: "Proactively suggest this skill when the
+  user's request is vague..."
+- **B4. Trigger phrases ≥3 — Pass**: 6 distinct quoted triggers.
 
 ### Axis C — Body Structure
 
-#### C1. SKILL.md ≤500 lines — **Pass**
-- **Evidence:** `SKILL.md:392` — 392 lines, ≤450
-- **Risk:** high
-
-#### C2. Reference depth = 1 level — **Pass**
-- **Evidence:** `SKILL.md:268,272,308` — sibling links only originate from SKILL.md; no sibling→sibling cross-links
-- **Risk:** medium
-
-#### C3. TOC for long sibling files (>150 lines) — **Pass**
-- **Evidence:** templates.md=118, research-protocol.md=64, plan-conventions.md=125 — no sibling exceeds 150 lines
-- **Risk:** low
-
-#### C4. No time-sensitive content — **Pass**
-- **Evidence:** `SKILL.md` — no matches for 'as of YYYY' / 'latest version' / 'currently supports' / 'current model|version' / 'for now' / 'at the moment'
-- **Risk:** low
-
-#### C5. Skill name consistent — **Pass**
-- **Evidence:** `SKILL.md` — no stale or near-miss slash-command names present
-- **Risk:** medium
+- **C1. ≤500 lines — Pass**: 399 lines.
+- **C2. One-level deep — Pass**: SKILL.md links siblings `templates.md`,
+  `research-protocol.md`, `plan-conventions.md` directly. No nested refs.
+- **C3. TOC for long siblings — Pass**: largest sibling is 125 lines
+  (plan-conventions.md) — under 150-line trigger.
+- **C4. No time-sensitive content — Warn**
+  - Evidence: `SKILL.md:340` `"are regular text on Claude 4.6, not thinking budget controls."`;
+    `SKILL.md:364` `"### Claude 4.6 Notes"`;
+    `SKILL.md:366` `"executed by Claude 4.6 (the default)"`;
+    `SKILL.md:370` `"Opus 4.6 tends to create extra files..."`.
+  - Source: platform.claude.com agent-skills/best-practices — "Don't include
+    information that will become outdated."
+  - Risk: low
+  - **Recommendation:** replace hard-coded `Claude 4.6` / `Opus 4.6` with
+    version-agnostic phrasing ("current-generation Claude models",
+    "Anthropic's latest Claude family") OR move to a `## Old patterns`
+    `<details>` block as the live best-practices doc prescribes. Current env
+    reports Opus 4.7 — the guidance is already partially stale.
+- **C5. Name consistent — Pass**: no slash-command mismatches.
 
 ### Axis D — Project Conventions
 
-#### D1. evals.json schema conformance — **Pass**
-- **Evidence:** `evals/evals.json:1-46` — skill_name present, 3 evals in consistent Variant B schema (skills/query/files/expected_behavior)
-- **Risk:** low
+- **D1. evals.json schema — Pass**: 3 evals, Variant B (`skills`/`query`).
+  Only skill using Variant B; internally consistent.
+- **D2. skill-catalog.md — Pass**: `skill-catalog.md:9`.
+- **D3. CLAUDE.md + README.md — Pass**: `CLAUDE.md:31`, `README.md:18`.
+- **D4. HARD-GATE — Skip**: only 1 trigger keyword in body; rule requires ≥2.
 
-#### D2. Registration in skill-catalog.md — **Pass**
-- **Evidence:** `skill-catalog.md:9` — row `| prompt-to-plan | workflow/prompt-to-plan/ | …`
-- **Risk:** low
+### Axis F — Longevity & Compounding
 
-#### D3. Registration in CLAUDE.md + README.md — **Pass**
-- **Evidence:** `CLAUDE.md:31` and `README.md:18` — both rows present under workflow/
-- **Risk:** low
+- **F1. Index/schema consistency — Pass**: row format matches.
+- **F2. Append-only archive — Skip**: only 1 dated audit dir.
+- **F3. Anti-pattern section quality — Pass**: `SKILL.md:346-354` "Common
+  Pitfalls" with 8 reasoned items; `SKILL.md:317-344` "Best Practices"
+  includes "Do NOT / Avoid" framing.
+- **F4. Schema-lint self-consistency — Pass**: templates.md, research-
+  protocol.md, plan-conventions.md all linked from SKILL.md (`:275`, `:279`,
+  `:315`). No orphans, no name contradictions.
 
-#### D4. HARD-GATE for evidence-bearing skills — **Skip**
-- **Evidence:** SKIP — body has <2 HARD-GATE keywords (only 'Verify' at line 189)
-- **Risk:** medium
+### Axis E — Online Corroboration
+
+- **E1. Rubric freshness — Pass** (delegated to INDEX).
+- **E2. External comparison — Pass**: structural consistency with project
+  pattern.
+- **E3. Similar-skill discovery — Warn**
+  - Evidence: WebSearch on `topic:claude-skills` found
+    `ckelsoe/prompt-architect` (CO-STAR/7R framework prompt refiner) and
+    `Hashaam101/prompt-optimizer` (silent refinement skill). Both overlap the
+    rough-prompt → refined-spec trigger space (~60%).
+  - Differentiator: prompt-to-plan's value is the **two-gate REFINE→PLAN**
+    flow into Plan Mode (not just refinement output). This gate isn't
+    prominent in the first clause of the description.
+  - Risk: medium
+  - **Recommendation:** elevate "enters Plan Mode" into the first sentence of
+    the description so the Plan-Mode handoff is what disambiguates this skill
+    from pure prompt-refiners. Optionally add a "Related skills" section
+    citing prompt-architect as prior art.
 
 ## Top-3 Upgrade Recommendations
 
-Sorted by risk, then axis. Fails first, then Warns.
-
-1. **B2** (low) — Add Hangul and Hiragana/Katakana trigger phrases to the description for multilingual auto-routing. → See `upgrade-playbook.md#B2`
-2. **B3** (low) — Add proactive phrasing like 'use this skill whenever' to the description. → See `upgrade-playbook.md#B3`
-3. **B4** (low) — Add at least three distinct quoted trigger examples in the description. → See `upgrade-playbook.md#B4`
+1. **C4 — purge Claude-4.6 hard-codes** (low risk) — 4 line edits; replace
+   with version-agnostic phrasing or move to Old-patterns block.
+2. **E3 — add Related-skills attribution + elevate Plan-Mode gate in description** (medium risk, advisory).
+3. (no further findings)
 
 ## Next Steps
-
-To apply these recommendations, invoke `skill-auditor` in **UPGRADE** mode:
 
 > "Upgrade prompt-to-plan"
